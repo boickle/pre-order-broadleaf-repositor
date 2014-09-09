@@ -9,12 +9,12 @@
     <!-- A dummy mail sender has been set to send emails for testing purposes only
          To view the emails sent use "DevNull SMTP" (download separately) with the following setting:
             Port: 30000 -->
-    <!-- <bean id="blMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host"><value>localhost</value></property>
-        <property name="port"><value>30000</value></property>
+    <bean id="blMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host"><value>smtp.sendgrid.net</value></property>
+        <property name="port"><value>587</value></property>
         <property name="protocol"><value>smtp</value></property>
-        <property name="username"><value>customerservice@heatclinic.com</value></property>
-        <property name="password"><value></value></property>
+        <property name="username"><value>ts-egatesoln</value></property>
+        <property name="password"><value>Welcome1</value></property>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.starttls.enable">true</prop>
@@ -48,11 +48,11 @@
     <bean id="blMessageCreator" class="org.broadleafcommerce.common.email.service.message.ThymeleafMessageCreator">
         <constructor-arg ref="blEmailTemplateEngine"/>
         <constructor-arg ref="blMailSender"/>
-    </bean> -->
-
-    <bean id="blMessageCreator" class="org.broadleafcommerce.common.email.service.message.NullMessageCreator">
-        <constructor-arg ref="blMailSender"/>
     </bean>
+
+<!--     <bean id="blMessageCreator" class="org.broadleafcommerce.common.email.service.message.NullMessageCreator"> -->
+<!--         <constructor-arg ref="blMailSender"/> -->
+<!--     </bean> -->
     
     <bean id="blEmailInfo" class="org.broadleafcommerce.common.email.service.info.EmailInfo">
         <property name="fromAddress"><value>support@mycompany.com</value></property>

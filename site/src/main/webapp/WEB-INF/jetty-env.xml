@@ -18,10 +18,10 @@ IT IS NOT RECOMMENDED TO USE JETTY IN A PRODUCTION ENVIRONMENT.
         <Arg>jdbc/web</Arg>
         <Arg>
             <New class="org.apache.commons.dbcp.BasicDataSource">
-                <Set name="driverClassName">org.hsqldb.jdbcDriver</Set>
-                <Set name="url">jdbc:hsqldb:hsql://localhost/broadleaf</Set>
-                <Set name="username">sa</Set>
-                <Set name="password"></Set>
+                <Set name="driverClassName">org.postgresql.Driver</Set>
+                <Set name="url">jdbc:postgresql://localhost:5432/POPS</Set>
+                <Set name="username">postgres</Set>
+                <Set name="password">admin</Set>
             </New>
         </Arg>
     </New>
@@ -30,10 +30,10 @@ IT IS NOT RECOMMENDED TO USE JETTY IN A PRODUCTION ENVIRONMENT.
         <Arg>jdbc/secure</Arg>
         <Arg>
             <New class="org.apache.commons.dbcp.BasicDataSource">
-                <Set name="driverClassName">org.hsqldb.jdbcDriver</Set>
-                <Set name="url">jdbc:hsqldb:hsql://localhost/broadleaf</Set>
-                <Set name="username">sa</Set>
-                <Set name="password"></Set>
+                <Set name="driverClassName">org.postgresql.Driver</Set>
+                <Set name="url">jdbc:postgresql://localhost:5432/POPS</Set>
+                <Set name="username">postgres</Set>
+                <Set name="password">admin</Set>
             </New>
         </Arg>
     </New>
@@ -42,10 +42,10 @@ IT IS NOT RECOMMENDED TO USE JETTY IN A PRODUCTION ENVIRONMENT.
         <Arg>jdbc/storage</Arg>
         <Arg>
             <New class="org.apache.commons.dbcp.BasicDataSource">
-                <Set name="driverClassName">org.hsqldb.jdbcDriver</Set>
-                <Set name="url">jdbc:hsqldb:hsql://localhost/broadleaf</Set>
-                <Set name="username">sa</Set>
-                <Set name="password"></Set>
+                <Set name="driverClassName">org.postgresql.Driver</Set>
+                <Set name="url">jdbc:postgresql://localhost:5432/POPS</Set>
+                <Set name="username">postgres</Set>
+                <Set name="password">admin</Set>
             </New>
         </Arg>
     </New>

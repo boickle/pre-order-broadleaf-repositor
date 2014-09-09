@@ -7,6 +7,15 @@
             <param name="ConversionPattern" value="[%5p] %d{HH:mm:ss} %c{1} - %m%n" />
         </layout>
     </appender>
+    
+    <appender name="logfile" class="org.apache.log4j.FileAppender">
+        <param name="file" value="logs/site.log" />
+        <param name="append" value="true" />
+        <param name="threshold" value="debug" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%5p] %d{dd MMM yyyy HH:mm:ss} %c{1} - %m%n" />
+        </layout>
+    </appender>
 
     <logger name="org.broadleafcommerce"> <level value="warn" /> </logger>
     <logger name="org.hibernate"> <level value="warn" /> </logger>
@@ -15,8 +24,8 @@
     <logger name="org.springframework.web.servlet"> <level value="warn" /> </logger>
     
     <root>
-        <priority value="warn" />
-        <appender-ref ref="console" />
+        <priority value="debug" />
+        <appender-ref ref="logfile" />
     </root>
 
 </log4j:configuration>

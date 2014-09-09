@@ -43,9 +43,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 @Controller
 @RequestMapping("/cart")
 public class CartController extends BroadleafCartController {
+    
+    protected static final Log LOG = LogFactory.getLog(CartController.class);	
     
     @Override
     @RequestMapping("")
@@ -106,6 +111,9 @@ public class CartController extends BroadleafCartController {
     public String add(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
             @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
         try {
+        	
+        	LOG.info("Inside Add to Cart!");
+        	
             return super.add(request, response, model, addToCartItem);
         } catch (AddToCartException e) {
             Product product = catalogService.findProductById(addToCartItem.getProductId());
@@ -117,6 +125,8 @@ public class CartController extends BroadleafCartController {
     public String updateQuantity(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes,
             @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, UpdateCartException, RemoveFromCartException {
         try {
+        	LOG.info("Inside updateQuantity!");
+        	
             return super.updateQuantity(request, response, model, addToCartItem);
         } catch (UpdateCartException e) {
             if (e.getCause() instanceof InventoryUnavailableException) {
