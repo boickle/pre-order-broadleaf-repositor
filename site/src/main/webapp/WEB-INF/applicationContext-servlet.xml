@@ -82,6 +82,7 @@
         </property>
     </bean>
     
+    <!--  JMAK testing myown template -->
     <!-- Set up the view resolver to be used by Spring -->
     <bean class="org.broadleafcommerce.common.web.BroadleafThymeleafViewResolver">
         <property name="templateEngine" ref="blWebTemplateEngine" />
@@ -97,6 +98,7 @@
                 <entry key="checkout/confirmation" value="layout/fullPageNoNavLayout" />
                 <entry key="layout/" value="NONE" />
                 <entry key="content/NONE" value="NONE" />
+                <entry key="myown/" value="layout/myown" />
             </map>
         </property>
     </bean>

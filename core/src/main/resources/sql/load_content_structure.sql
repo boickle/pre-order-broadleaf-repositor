@@ -27,8 +27,10 @@ INSERT INTO BLC_LOCALE (LOCALE_CODE, DEFAULT_FLAG, FRIENDLY_NAME, CURRENCY_CODE)
 -- The following items create page templates.    
 -- In the example below, there is only one page templates "basic" providing a header, footer, and sidebar around the content
 -- The full path to the template is .../WEB_INF/jsp/templates/content/default.html
-INSERT INTO BLC_PAGE_TMPLT (PAGE_TMPLT_ID, TMPLT_NAME, TMPLT_DESCR, TMPLT_PATH) VALUES (1, 'Default Template', 'Provides a basic layout with header and footer surrounding the content and title.', '/content/default') ;
+INSERT INTO BLC_PAGE_TMPLT (PAGE_TMPLT_ID, TMPLT_NAME, TMPLT_DESCR, TMPLT_PATH) VALUES (1, 'Default Template123', 'Provides a basic layout with header and footer surrounding the content and title.', '/content/default') ;
 
+-- JMAK TEST
+INSERT INTO BLC_PAGE_TMPLT (PAGE_TMPLT_ID, TMPLT_NAME, TMPLT_DESCR, TMPLT_PATH) VALUES (3, 'My own Template', 'my own template', '/content/myown') ;
 --
 -- Field groups define a list of dynamic fields.    Field groups can be associated with page
 -- templates or structured content types.    The field group below defines two fields named
@@ -43,6 +45,10 @@ INSERT INTO BLC_FLD_DEF(FLD_DEF_ID, NAME, FRIENDLY_NAME, FLD_TYPE, SECURITY_LEVE
 -- Map both templates to the field groups
 --
 INSERT INTO BLC_PGTMPLT_FLDGRP_XREF(PAGE_TMPLT_ID, FLD_GROUP_ID, GROUP_ORDER) VALUES (1,1,0);
+
+-- JMAK TEST
+INSERT INTO BLC_PGTMPLT_FLDGRP_XREF(PAGE_TMPLT_ID, FLD_GROUP_ID, GROUP_ORDER) VALUES (3,1,0);
+
 
 --  
 -- NONE template

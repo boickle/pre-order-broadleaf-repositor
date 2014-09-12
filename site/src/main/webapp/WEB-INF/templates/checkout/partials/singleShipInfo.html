@@ -35,7 +35,7 @@
                 and !#fields.hasErrors('*')} ? 'hide'">
 
             <div class="left_content">
-                <input type="hidden" name="address.country" value="US" />
+             <!--   <input type="hidden" name="address.country" value="US" /> -->
 
                 <div class="form100" th:if="${showBillingInfoSection}">
                     <input id="use_billing_address" type="checkbox" th:field="*{useBillingAddress}" />
@@ -93,6 +93,23 @@
                     <input type="text" th:field="*{address.postalCode}" class="field25 clearable" th:classappend="${#fields.hasErrors('address.postalCode')}? 'fieldError'" />
                 </div>
 
+
+			<!-- JMAK TEST country -->
+            <div class="form30">
+                <label for="country"><span th:text="#{cart.country}">Country</span></label>
+
+                <select id="country" th:field="*{address.country}" size="1" style="width: 48px;"
+                        class="required cloneable"
+                        th:classappend="${#fields.hasErrors('address.country')}? 'fieldError'">
+                    <option value="">--</option>
+                    <option th:each="country : ${countries}"
+                            th:value="${country.abbreviation}"
+                            th:text="${country.name}">
+
+                     </option>
+                </select>
+            </div>
+            
             </div>
 
             <div class="right_content">

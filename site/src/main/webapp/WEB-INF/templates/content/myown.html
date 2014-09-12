@@ -1,0 +1,10 @@
+<h1>My own content template</h1>
+
+
+    <section id="left_column">
+        <header>
+            <h1 th:text="${BLC_PAGE.pageFields[title]}"></h1>
+        </header>
+        <div class="clearfix"></div>
+        <div th:utext="${BLC_PAGE.pageFields[body]}"/>
+    </section>
