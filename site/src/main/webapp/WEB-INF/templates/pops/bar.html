@@ -1,0 +1,11 @@
+<h1>Got Stuff?</h1>
+<div  th:if="${mystuff != null}">
+<h2 th:text="${mystuff.data1}">mystuff data1 default value</h2>
+<h2 th:text="${mystuff.data2}">mystuff data2 default value</h2>
+<h2 th:text="${mystuff.data3}">mystuff data3 default value</h2>
+<br/>
+
+<div th:inline="text">
+inline: [[*{mystuff.data1}]]
+</div>
+</div>

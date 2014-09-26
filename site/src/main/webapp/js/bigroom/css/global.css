@@ -1,0 +1,496 @@
+/* Global CSS */
+html {
+	
+}
+
+body {
+	font-family:Helvetica;
+	background:#FFF;
+	padding-top:110px;
+}
+
+/* Header UI Component */
+#header {
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	border-top:5px solid #FF1600;
+	z-index:999;
+	
+}
+
+#header .navbar-default {
+	border-bottom:1px solid #DDD;
+}
+
+#header .container {
+	position: relative;
+}
+
+/* Logo */
+#header img.logo {
+	max-height:32px;	
+}
+
+#header a i {
+	color:#FF1600;
+	font-size:150%;
+	cursor:pointer;
+	margin:15px 10px;
+	vertical-align: middle;
+}
+
+/* Media Query for gridItem on tablet and desktop */
+@media (min-width: 768px) {
+
+	#header a i {
+		font-size:225%;
+		margin:10px;
+	}
+
+}
+
+#header .navbar-default > .container > .row > div {
+	border-right:1px solid #EEE;
+} 
+
+#header a {
+	color:#666;
+	text-decoration:none;
+}
+
+/* Footer */
+#footer { 
+	margin-top:4rem;
+	padding:2rem;
+	border-top:1px solid #EEE;
+	text-align:center;
+}
+
+#footer p {
+	padding:1rem;
+	color:#666;
+}
+
+/* Footer Media Query for Phones */
+@media (min-width: 768px) {
+	
+	#footer p {
+		text-align:left;
+	}
+	
+	#footer span {
+		display:block;
+		text-align:right;
+	}
+
+}
+
+/* Flight Bar */
+
+#header .flightBar .navbar-default {
+	background:#EEE;
+	border-bottom:1px solid #DDD;
+	font-size:12px;
+	color:#333;
+}
+
+#header .flightBar .navbar-default .container {
+	padding:0;
+}
+
+body.CategoryList #header .flightBar .navbar-default {
+	background:rgba(255,255,255,0.7);
+	border-bottom:2px #FFF solid;
+}
+
+.flightBar .divider {
+	margin:0 5px;
+} 
+
+.mealNotification .container {
+	
+
+	background:rgba(233, 230, 223,1);
+	padding:0;
+}
+
+.mealNotification div {
+	border:none;
+}
+
+.mealNotification p {
+	
+}
+
+.mealNotification img {
+	margin-right:15px;
+}
+
+/* View Containers */
+.view {
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	z-index:998;
+	overflow:auto;
+}
+
+.view-content {
+	padding:2rem;
+}
+
+/* Grid Items */
+
+.gridItem  {
+	margin:0;
+	border-bottom:none;	
+}
+
+.gridItem .btn.btn-primary {
+	min-width:100px;
+}
+	
+/* Category Image Overlay */
+.gridItemImage {
+	display:block;
+	padding:1rem;
+	height:225px;
+	background:no-repeat center center;
+	background-size: cover;
+	color:#FFF;
+	position:relative;
+	cursor:pointer;
+}
+
+.gridItemImageOverlay {
+	position:absolute;
+	bottom:0;
+	left:0;
+	right:0;
+	padding:2rem;
+	background:rgba(0,0,0,0.5);
+	margin:0;
+}
+
+.gridItemImage:hover * {
+	color:#FFF;
+}
+
+/* Category Item Detail */
+.gridItemDetails {
+	padding:1rem 0;
+	display:none;
+}
+
+.gridItemAction {
+	text-align:right;
+}
+
+.gridItemTitle {
+	margin-top:7px;
+}
+
+/* Media Query for gridItem on tablet and desktop */
+@media (min-width: 768px) {
+	
+	.gridItem  {
+		margin:1rem;
+		border-bottom:1px dotted #CCC;	
+	}
+
+	.gridItemDetails {
+		display:block;
+	}
+
+	.gridItemImage span {
+		display:none;
+	}
+	
+}
+
+
+/* List Item */
+
+.listItem {
+	margin:0px 0 15px 15px;
+	padding-bottom:15px;
+	border-bottom:1px dotted #EEE;
+}
+
+.listItemImage {
+	height:175px;
+	max-width:175px;
+}
+
+.listItemDetails {
+	padding:0px 25px;
+}
+
+.listItemDetails strong {
+	color:#FF1600;
+}
+
+.listItem .btn {
+	margin-top:18px;
+	display:inline-block;
+	
+}
+
+/* Meal List Item */
+
+.listItemImage {
+	height:250px;
+	max-width:250px;
+}
+
+.mealListItem .listItemDetails {
+	padding:25px;
+}
+
+/* Common Grid View Styles */
+body.CategoryList #viewContainer,
+body.SubCategoryList #viewContainer,
+body.ProductList #viewContainer {
+	padding:0;
+}
+
+/* Grid Controls */
+.gridControls {
+	position:relative;
+	padding:0 10px 10px 10px;
+
+}
+
+#navigationButton {
+	padding:10px;
+	margin:15px 10px 0 0px;
+	border-radius:5px;
+	color:#FFF;
+	background:#FF1600;
+	cursor:pointer;
+}
+
+#globalNavigation {
+	margin:10px 0px 0px 0px;
+	/*position:absolute;
+	top:68px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	z-index:998;*/
+}
+
+#globalNavigation a {
+	color:#000;
+	cursor:pointer;
+}
+
+.gridNavButton .fa-bars {
+	font-size:150%;
+	margin:0px 5px 0 2px;
+	vertical-align: bottom;
+}
+
+#globalNavigation .active {
+
+}
+
+@media (min-width: 768px) {
+	
+	.gridControls {
+		position:relative;
+		padding:0 10px;
+	}
+	
+	#globalNavigation {
+		/*top:64px;
+		left:10px;
+		right:10px;
+		max-width:370px;*/
+	}
+
+}
+
+/* Category List */
+body.CategoryList{
+	
+}
+
+body.CategoryList .flight
+
+
+body.CategoryList #globalNavigation .subCategoryList {
+	display:none;
+}
+
+body.CategoryList .flightBar .navbar-default {
+
+}
+
+body.CategoryList .jumbotron  {
+	background:url('/img/bigroom/preOrderBG.jpg') no-repeat center top;
+	background-size:cover;
+	color:#FFF;
+	display:block;
+	margin:0;
+	min-height:500px;
+	padding-top:100px;
+}
+
+body.CategoryList .categoryList {
+	margin-top:5px;
+}
+
+/* Media Query for Payment Exp dropdowns on tablet and desktop */
+@media (min-width: 950px) {
+	
+	body.CategoryList .jumbotron  {
+			
+	}
+
+	
+}
+
+body.CategoryList .jumbotron  {
+	
+}
+
+body.CategoryList .jumbotron .container {
+		
+}
+
+
+.categoryList {
+	
+}
+
+/* Sub Category List View */
+body.SubCategoryList {
+	
+}
+
+/* Product Detail View */
+body.ProductDetail {
+
+}
+
+.productDetail {
+	background:#FFF;
+	margin:10px 0 0 10px;
+}
+
+.productImage {
+	width:100%;
+	margin-bottom:15px;
+}
+
+.productContent h1,
+.productContent h3 {
+	margin-top:0;
+}
+
+.productQty {
+	max-width:65px;
+}
+
+.productDetail form {
+	margin:25px 0 15px;
+}
+
+.productPriceSale {
+	color:#FF1600;
+	text-transform:uppercase;
+}
+
+.productDescription {
+	
+}
+
+/*Checkout */
+
+form h3 {
+	border-bottom:1px solid #EEE;
+	padding-bottom:15px;
+	margin-bottom:15px;
+}
+
+.form-horizontal .control-label {
+	text-align:left;
+}
+
+.form-control {
+	margin-bottom:15px;
+}
+
+select.form-control {
+	display:inline;
+}
+
+/* Media Query for Payment Exp dropdowns on tablet and desktop */
+@media (min-width: 768px) {
+	
+	.form-control {
+		margin-bottom:auto;
+	}
+	
+	select.form-control {
+		width:130px;	
+	}
+	
+	select.form-control + select.form-control {
+		margin-left:6px;
+		
+	}
+
+}
+
+body.Shipping #viewContainer,
+body.Payment #viewContainer, 
+body.Review #viewContainer,
+body.OrderCompleted #viewContainer,
+body.OrderDetail  #viewContainer     {
+	max-width:600px;
+	background:#FFF;
+}
+
+/* Review */
+
+
+/* Order Completed */
+
+body.OrderCompleted .cartItem .button,
+body.OrderDetail .cartItem .button  {
+	display:none;
+}
+
+
+body.MealSelect .view-content {
+	background:#FFF;
+}
+
+body.MealSelect .view-content .meal-item {
+	padding:2rem;
+}
+
+body.MealSelect .view-content .grid-item {
+		margin-bottom:2rem;
+}
+
+body.UIStyleGuide {
+	background:#FFF;
+}
+
+body.UIStyleGuide .container {
+	min-width:1600px;
+	height:4500px;
+	background:url('../img/UIStyleGuide.jpg') no-repeat center top;
+
+}
+
+body.PreSelectionHome  {
+	background:url('../img/preselection.jpg') no-repeat left top;
+}

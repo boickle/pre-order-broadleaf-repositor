@@ -1,21 +1,111 @@
-<!DOCTYPE HTML>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-<head th:include="/layout/partials/head (pageTitle=${product.name + '- Broadleaf Demo - Heat Clinic'})"></head>
+<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="no-js lt_ie9"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt_ie10 ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+	
+<head th:include="/myfolder/include/head"></head>
 
-<body>
-    <div id="notification_bar"></div>
-    <header th:substituteby="layout/partials/header" />
 
-    <div id="content" class="width_setter group" role="main">
-    
-        <nav th:substituteby="layout/partials/nav" />
-        
-        <section id="left_column" th:object="${product}">
-        
+
+<body class="">
+		
+	<!-- Header Start -->
+	<div id="header" th:include="/myfolder/include/header"></div>
+	<!-- Header End -->
+
+	<!-- Splash -->
+	<div class="jumbotron text-uppercase text-center">
+		
+		<div class="container">
+			
+			<h1>Welcome to Pre-Order</h1>
+			
+			<p>Browse hundreds of products delivered right to your seat</p>
+				
+			<p> <a id="shopNow" class="btn btn-primary btn-lg" role="button"> Shop Now</a> </p>
+		
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript">
+	
+		// ON DOM Load
+		$(function() {
+		
+			$('.jumbotron .container *').animo( { animation: 'bounceIn' });
+		
+		});
+		
+	</script>
+	
+	
+	<!-- /Splash -->			
+	<!-- View Container Start -->
+	<div id="viewContainer" class="container">	
+		
+	<!-- ProductDetail View JS Start -->
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("ProductDetail"); 
+		
+		// show the cart button
+		Cart.showButton();
+
+	});
+		
+	</script>
+	<!-- ProductDetail View JS End -->
+
+	<!-- ProductDetail View HTML Start -->
+	<div class="categoryList"> 
+		
+		<ol class="breadcrumb" th:if="${#lists.size(breadcrumb) > 1}">
+		
+		  <li th:class="${(iterStat.last)?'active':''}" th:each="breadcrumblink,iterStat : ${breadcrumb}" >
+			<div th:if="${iterStat.last}" th:remove="tag" th:utext="${breadcrumblink.name}" />
+		  	<a th:if="${not iterStat.last}" th:href="@{${breadcrumblink.url}}" th:utext="${breadcrumblink.name}"></a>
+		  </li>
+		  
+		</ol>		
+
+				
+		<div class="row row-no-gutter">
+			
+			<div class="hidden-xs col-sm-3">
+				
+				<div id="globalNavigation">
+		
+<ul class="list-group">
+   <li class="list-group-item" th:each="category : ${categories}">
+      <a class="home" 
+      th:href="@{${category.url}}"  
+      th:utext="${category.nameWithArrowStyle}">
+      </a>
+      <ul class="list-group subCategoryList">
+         <li th:each="subcat : ${category.children}">
+            <a th:utext="${subcat.name}" th:href="@{${subcat.url}}" />
+         </li>
+      </ul>
+   </li>
+</ul>
+	
+				</div>				
+			</div>
+			
+			<div class="col-xs-12 col-sm-9">
+				
+
+			<div class="productDetail">
+										
+						
+	<!-- Product Item -->		
+	        <section id="left_column" th:object="${product}">
             <div id="product_content" class="product_container">
                 <h2 th:text="*{name}"></h2>
                 
@@ -35,7 +125,9 @@
                 <th:block th:with="checkInventory=*{defaultSku.inventoryType?.type == 'CHECK_QUANTITY'},
                                    availableInventory=${checkInventory ? #object.defaultSku.quantityAvailable != null and #object.defaultSku.quantityAvailable != 0 : true},
                                    inCart=${cart.containsSku(#object.defaultSku) and #lists.isEmpty(product.productOptions)}">
-                    <blc:form method="POST" th:action="@{/cart/add}">
+
+
+                    <blc:form name="theform" method="POST" th:action="@{/cart/add}">
                         <div class="product-option-nonjs" th:each="productOption : *{productOptions}" th:object="${productOption}">
                             <div class="form50">
                                 <label th:text="*{label}"></label>
@@ -63,64 +155,29 @@
                                 <input type="hidden" name="quantity" value="1" />
                                 <input type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
                             </div>
+                            
+                      <!--      <span data-title="Test Product" data-price="30.00" data-itemid="123" 
+                      class="btn btn-primary text-uppercase" onclick="Cart.addItem(this);" style="" th:value="#{product.buyNow}"></span> -->
+
                             <p class="error" th:if="${param.errorMessage}" th:text="${param.errorMessage[0]}"></p>
                         </div>
                     </blc:form>
                 </th:block>
-    
-                <div th:if="${customer.loggedIn}" th:remove="tag">
-
-                    <blc:form method="POST" th:action="@{/account/wishlist/add}">
-                        <div class="product-option-nonjs" th:each="productOption : *{productOptions}" th:object="${productOption}">
-                            <div class="form50">
-                                <label th:text="*{label}"></label>
-                                <select th:name="${'itemAttributes[' + productOption.attributeName + ']'}">
-                                    <option th:each="optionValue : *{allowedValues}" th:object="${optionValue}" th:text="*{attributeValue}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div th:class="${'productActions' + product.id}">
-
-                            <blc:named_order orderVar="wishlist" orderName="wishlist" />
-
-                            <div class="in_wishlist" th:classappend="${!wishlist.containsSku(product.defaultSku)}? ' hidden'">
-                                <a class="inWishlist small-button gray-button" th:href="@{/account/wishlist}">In Wishlist!</a>
-                            </div>
-                            <div class="add_to_wishlist" th:classappend="${wishlist.containsSku(product.defaultSku)}? ' hidden'">
-                                <input type="hidden" name="productId" th:value="*{id}" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <input type="submit" class="addToWishlist small dark" value="+ Add to Wishlist" />
-                            </div>
-                        </div>
-                    </blc:form>
-                </div>
-                    
-                <p>
-                    Share this Sauce:
-                    <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-                        <a class="addthis_button_preferred_1"></a>
-                        <a class="addthis_button_preferred_2"></a>
-                        <a class="addthis_button_preferred_3"></a>
-                        <a class="addthis_button_preferred_4"></a>
-                        <a class="addthis_button_compact"></a>
-                        <a class="addthis_counter addthis_bubble_style"></a>
-                    </div>
-                    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-5006d3e47d6ace5d"></script>
-                </p>
+    			<br/><br/><br/>
                 
             </div>
             
             <div id="product_main_image" th:if="*{media['primary']}">
                 <a th:href="@{*{#strings.replace(media['primary'].url + '?browse', 'jpg?browse', 'jpg')}}" class='jqzoom' id='zoom1' rel="gal1">
-                    <img th:src="@{*{media['primary'].url}+ '?browse'}" alt='' align="left" id="main_image" />
-                </a>
+                    <img th:src="@{*{media['primary'].url}+ '?browse'}" alt='' align="left" id="main_image" /> 
+                </a> 
             </div>
             
             <div id="product_thumbs_container">
                 <ul id="product_thumbs" class="clearfix">
                     <li>
                         <a th:if="*{media['primary']}" href="javascript:;" class="zoomThumbActive" th:rel="${'{ gallery: ''gal1'', smallimage: ''__@{*{media['primary'].url}+'?browse'}__'', largeimage: ''__@{*{media['primary'].url}}__'' }'}" th:attr="data-tags=*{media['primary'].tags}">
-                            <img th:src="@{*{media['primary'].url}}" alt="Bottle Closeup" />
+                            <img th:src="@{*{media['primary'].url}}" alt="Bottle Closeup" /> 
                         </a>
                         <p th:if="*{#maps.size(media) > 1}" class="thumbs_nav">Swipe to see more... (<span th:text="'1 of ' + *{#maps.size(media) > 3 ? 3 : #maps.size(media)}"></span>)</p>
                         
@@ -135,115 +192,266 @@
                     </li>
                 </ul>
             </div>
-            
-            <div class="clearfix"></div>
-                <div id="customer-reviews-container">
-                    <blc:ratings itemId="${product.id}" />
-                    <div th:if="${ratingSummary}" th:object="${ratingSummary}">
-                        <span class="title">Community Rating</span>
-                        <div id="community-rating-container">
-                            <blc:form id="community-rating" class="star-rating" th:attr="data-community-rating=*{averageRating}">
-                                <input type="radio" class="star {split:4}" /> 
-                                <input type="radio" class="star {split:4}" /> 
-                                <input type="radio" class="star {split:4}" /> 
-                                <input type="radio" class="star {split:4}" /> 
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                                <input type="radio" class="star {split:4}" />
-                            </blc:form>
-                            <br/>
-                            <div class="total-reviews">
-                                (<span th:text="*{numberOfReviews}"></span><span th:if="*{numberOfReviews} == 1"> review</span><span th:if="*{numberOfReviews} > 1"> reviews</span>)
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                            <blc:ratings itemId="${product.id}" />
-                            <div th:if="${currentCustomerReview}" th:object="${currentCustomerReview}" class="customer-reviews current-customer-review">
-                                <h4>Your Review</h4>
-                                <p class="voting-summary" th:if="*{notHelpfulCount()} + *{helpfulCount()} > 0">
-                                    <span th:text="*{helpfulCount()}">9</span> of 
-                                    <span th:text="*{notHelpfulCount()} + *{helpfulCount()}">10</span> found the following review helpful
-                                </p>
-                                <blc:form class="customer-rating" th:attr="data-customer-rating=*{ratingDetail.rating}">
-                                    <input type="radio" class="star" />
-                                    <input type="radio" class="star" />
-                                    <input type="radio" class="star"/>
-                                    <input type="radio" class="star" />
-                                    <input type="radio" class="star" />
-                                </blc:form>
-                                <span class="reviewer-info">
-                                    on <span th:text="*{#dates.format(reviewSubmittedDate, 'MMMM d, yyyy')}">1-2-2010</span>
-                                </span>
-                                <div class="clearfix"></div>
-                                <blockquote th:if="!*{#strings.isEmpty(reviewText)}" th:text="'&quot;' + *{reviewText} + '&quot;'">Review Text</blockquote>                         
-                            </div>
-                        <div class="helpful-reviews">
-                            <h4>Customer Reviews</h4>
-                            <ul class="customer-reviews">
-                                <li th:each="review, iterStat : *{reviews}" th:object="${review}" th:if="${iterStat.count} lt 4">
-                                    <p class="voting-summary" th:if="*{notHelpfulCount()} + *{helpfulCount()} > 0">
-                                        <span th:text="*{helpfulCount()}">9</span> of 
-                                        <span th:text="*{notHelpfulCount()} + *{helpfulCount()}">10</span> found the following review helpful
-                                    </p>
-                                    <blc:form class="customer-rating" th:attr="data-customer-rating=*{ratingDetail.rating}">
-                                        <input type="radio" class="star" />
-                                        <input type="radio" class="star" />
-                                        <input type="radio" class="star"/>
-                                        <input type="radio" class="star" />
-                                        <input type="radio" class="star" />
-                                    </blc:form>
-                                    <span class="reviewer-info">
-                                        by <span class="penname" th:text="${review.customer.firstName}">John</span> on  
-                                        <span th:text="*{#dates.format(reviewSubmittedDate, 'MMMM d, yyyy')}">1-2-2010</span>
-                                    </span>
-                                    <div class="clearfix"></div>
-                                    <blockquote th:if="!*{#strings.isEmpty(reviewText)}" th:text="'&quot;' + *{reviewText} + '&quot;'">Review Text</blockquote>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div th:if="${customer.loggedIn}">
-                        <div th:if="${ratingSummary}">
-                            <a th:unless="${currentCustomerReview}" class="create-review" th:href="@{'/reviews/product/' + ${product.id}}">Create a review</a> 
-                        </div>
-                        <div th:unless="${ratingSummary}">
-                            <a th:href="@{'/reviews/product/' + ${product.id}}" class="create-review">Be the first to write a review!</a>
-                        </div>
-                    </div>
-                    <div th:unless="${customer.loggedIn}">
-                        <a th:if="${ratingSummary}" href="#" th:href="@{/login}" class="small dark account">Login to create a review</a>
-                        <a th:unless="${ratingSummary}" th:href="@{/login}" class="account">Login and be the first to write a review!</a>
-                    </div>
-                </div>          
         </section>
     
-        <section id="right_column">
-            <header>Featured Products</header>
-            <div id="options">
-                <div class="section">
-                     <blc:related_products productId="${product.id}"/>   
-                    <ul id="featured_products" class="group">
-                        <li th:each="relatedProduct : ${relatedProducts}" th:object="${relatedProduct.relatedProduct}" th:include="catalog/partials/productListItem" class="product_container"></li>
-                    </ul>
-                </div>                                  
-            </div>
-        </section>              
+    </div>
+
+	<!-- /Product Item -->
+		</div>
+
+				
+			</div>
+			
+		</div>
+
+	</div>
+	<!-- CategoryList View HTML END -->
+	
+ 
+	<!-- View Container End -->
+	
+	<!-- Footer Start-->
+	<div id="footer" class="container-fluid">
+		
+		<div class="row">
+			
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<p>&copy; 2014 AIR CANDADA AND AFFILIATES</p>
+				
+			</div>
+				
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<span>
+					<img src="http://localhost/img/bigroom/egate.jpg" />
+				</span>
+				
+			</div>
+						
+		</div>
+		
+		
+	</div> 
+	<!-- Footer End -->
+	
+	
+<!-- Add to Cart -->
+<div class="modal fade" id="cartView" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Your Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+       
+			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a href="http://egate.bigroomstudios.com/Payment" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
     </div>
     
-    <footer th:substituteby="layout/partials/footer" />
+  </div>
+  
+</div>
+
+
+<!-- Add to Cart -->
+<div class="modal fade" id="addedToCart" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Added to Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+        
+        <p>You added the following item!</p>	  
+              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a href="http://egate.bigroomstudios.com/Payment" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
+    </div>
     
+  </div>
+  
+</div>	
+<script>
+function doAddToCart() {
+  alert("about to do submit add to to cart");
+  var button = document.getElementById('cartLink'); 
+  //Cart.addItem(button); // bigroom animation
+  document.theform.submit();
+}
+</script>
 </body>
+	
 </html>
+
+
+        
+    

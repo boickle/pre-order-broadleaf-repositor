@@ -1,0 +1,19 @@
+Making a list of categories, and sub categories...
+
+<ul>
+ <li th:each="category : ${categories}">
+            <a class="home" th:href="@{${category.url}}"  th:text="${category.name}"></a><br/>
+			 <ul>
+			<li th:each="subcat : ${category.children}">
+			<a th:text="${subcat.name}" th:href="@{${subcat.url}}" />
+				
+				<ul th:if="${subcat.children != null}">
+					<li th:each="subcat2 : ${subcat.children}">
+					<a th:text="${subcat2.name}" th:href="@{${subcat2.url}}" />
+					</li>
+				</ul>
+				
+			</li>
+			</ul>
+        </li>
+</ul>        

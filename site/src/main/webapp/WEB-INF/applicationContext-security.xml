@@ -25,9 +25,17 @@
     <sec:http pattern="/fonts/**" security="none" />
     <sec:http pattern="/img/**" security="none" />
     <sec:http pattern="/js/**" security="none" />
+    <sec:http pattern="/static/**" security="none" />  
+    <sec:http pattern="/demo/**" security="none" />  
+
     <sec:http pattern="/**/${asset.server.url.prefix.internal}/**" security="none" />
-    <sec:http pattern="/favicon.ico" security="none" />       
+    <sec:http pattern="/favicon.ico" security="none" />  
     
+    		<!--  JMAK TEST  
+         <sec:http pattern="/myform/**" security="none" /> 
+-->
+    
+
     <!-- Set up Spring security for the application -->
     <sec:http auto-config="false" authentication-manager-ref="blAuthenticationManager" disable-url-rewriting="true">
         <!-- We handle session fixation protection ourselves  -->
@@ -85,12 +93,14 @@
         <property name="userPropertyToUse" value="id" />
     </bean>
     
+    <!-- JMAK added /myform -->
     <bean id="blCsrfFilter" class="org.broadleafcommerce.common.security.handler.CsrfFilter" >
         <property name="excludedRequestPatterns">
             <list>
                 <value>/null-checkout/**</value>
                 <value>/null-giftcard/**</value>
                 <value>/hosted/null-checkout/**</value>
+                <value>/myform/**</value>
             </list>
         </property>
     </bean>

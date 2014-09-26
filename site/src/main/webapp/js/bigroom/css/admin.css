@@ -1,0 +1,152 @@
+html {
+	overflow-y:scroll;
+}
+
+body {
+	padding:75px 15px 15px 15px;
+}
+
+#header {
+}
+
+
+.btn {
+	min-width:40px;
+	border-radius:5px;
+	margin-right:10px;
+}
+
+h3 .btn {
+	color:#FFF;
+	margin-left:10px;
+}
+
+h1{
+	margin-top:0;
+}
+
+#header img.logo {
+	margin-left:27px;
+}
+
+.filterControls {
+	padding:15px;
+	margin-bottom:15px;
+	
+}
+
+.filterControls h3 {
+	margin-top:0;	
+}
+
+.filterControls .form-control {
+	margin-bottom:15px;
+	width:100%;
+}
+
+.filterControls .btn {
+	margin-top:24px;
+}
+
+.page-header {
+	margin-top:0;
+}
+
+.list-group a {
+	cursor:pointer;
+}
+
+.list-group .btn-info {
+	margin-right:5px;
+	border-radius:5px;
+}
+
+form select.form-control {
+	width:100%;
+}
+
+table.table img {
+	max-width:64px;
+}
+
+table.table td {
+	max-width:300px;
+}
+
+ol.breadcrumb {
+	background:#EEE;
+	margin:0 0 25px 0;
+}
+
+ol.breadcrumb .active {
+	color:#39C;
+}
+
+.img-responsive {
+	max-height: 245px;
+}
+
+.panel-body .form-control {
+	margin-bottom: 10px;
+}
+
+.panel-body.panelTable {
+	padding:0;
+}
+
+.panel-body.panelTable .table {
+	margin:0;
+	border:none;
+}
+
+.panelNoPadding {
+	padding:0;
+}
+
+.panelActions {
+	margin-top:15px;
+	border-top:1px solid #EEE;
+	padding-top:15px;
+}
+
+/* Tab Pane */
+.tab-pane {
+	margin:0;
+	padding:15px 15px 0 15px;
+	border:1px solid #DDD;
+	border-top:none;
+	border-radius:0px 0px 5px 5px;
+}
+
+.tab-pane h3 {
+	margin-top:0;
+}
+
+.tab-pane .input-group,
+.tab-pane select.form-control {
+	margin-bottom:10px;
+}
+
+.adminVisuals canvas {
+	margin:15px 0px 0px 15px;
+}
+
+.adminVisuals table {
+	margin:15px;
+}
+
+strong.label{
+	font-size:100%;
+}
+
+.fileinput-button input {
+position: absolute;
+top: 0;
+right: 0;
+margin: 0;
+opacity: 0;
+-ms-filter: 'alpha(opacity=0)';
+font-size: 200px;
+direction: ltr;
+cursor: pointer;
+}

@@ -1,0 +1,36 @@
+My field:<br/>
+<h2 th:text="${myfield}">myfield default value</h2>
+<p/>
+
+<h1>Hi there!</h1>
+
+<div  th:if="${mystuff != null}">
+My stuff:<br/>
+<h2 th:text="${mystuff.data1}">mystuff data1 default value</h2>
+<h2 th:text="${mystuff.data2}">mystuff data2 default value</h2>
+<h2 th:text="${mystuff.data3}">mystuff data3 default value</h2>
+<br/>
+
+<div th:inline="text">
+inline: [[*{mystuff.data1}]]
+</div>
+</div>
+
+<h1>Testing form post</h1>
+
+<blc:form name="myform" method="POST">
+Text1 <input type="text" name="data1" /><br/>
+Text2 <input type="text" name="data2" /><br/>
+num3 <input type="text" name="data3" /><br/>
+<input type="button" value="submit" onclick="doSubmit()" />
+</blc:form>
+<br/>
+
+<script>
+function doSubmit() {
+  document.myform.action="/myform/datapost";
+  document.myform.submit();
+}
+
+</script>
+

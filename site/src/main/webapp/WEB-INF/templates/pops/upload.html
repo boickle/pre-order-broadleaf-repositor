@@ -1,0 +1,14 @@
+
+<h1>Test Upload MyForm</h1>
+
+<blc:form method="post" 
+    enctype="multipart/form-data"  
+    th:action="@{${'/myform/uploadMyFile'}}"
+    id="assetUploadForm">
+    
+		File to upload: <input  type="file" name="file"/><br /> 
+    <input id="btnSubmit" type="submit"/>
+</blc:form>
+
+
+

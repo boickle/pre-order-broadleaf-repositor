@@ -1,0 +1,78 @@
+/* Cart CSS */
+
+#cartContainer {
+	text-align:left;
+	background:#FFF;
+	top:58px;
+	padding-top:15px;
+}
+
+#cartContainer .container {
+	max-width:600px;
+}
+
+a#cartButton {
+	
+
+}
+
+a#cartButton:hover {
+	color:#ff2b17;
+}
+
+#cartItemList {
+	border-top:1px solid #EEE;
+}
+
+/* Cart Item */
+.cartItem {
+	padding:1rem 0;
+}
+
+.cartItem .btn.btn-default {
+	min-width:32px;
+	height:32px;
+	margin:5px;
+}
+
+
+.cartItem .form-control {
+	max-width:55px;	
+	margin:5px 0px 0px 5px;
+	display:inline;
+}
+	
+.cartItemImage {
+
+}
+
+.cartItemImage img {
+	width:42px;
+	height:42px;
+
+}
+
+.cartItemTitle,
+.cartItemPrice  {
+	margin-left:15px;
+	display:block;
+}
+
+.cartItemPrice {
+	color:#FF1600;
+}
+
+.cartItemTotalPrice {
+	font-weight:bold;
+	display:block;
+	padding-top:13px;
+}
+
+#cartFooter {
+	text-align:right;
+}
+
+#cartFooter .btn {
+	color:#FFF;
+	margin-top:10px;
+}

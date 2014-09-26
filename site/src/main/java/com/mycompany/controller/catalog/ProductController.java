@@ -16,23 +16,74 @@
 
 package com.mycompany.controller.catalog;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.broadleafcommerce.common.currency.domain.BroadleafCurrency;
+import org.broadleafcommerce.common.locale.domain.Locale;
+import org.broadleafcommerce.core.catalog.domain.Product;
+import org.broadleafcommerce.core.web.catalog.ProductHandlerMapping;
 import org.broadleafcommerce.core.web.controller.catalog.BroadleafProductController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.mycompany.pops.Constants;
+import com.mycompany.pops.Dao;
+import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.pojo.Category;
 
 /**
  * This class works in combination with the CategoryHandlerMapping which finds a category based upon
  * the passed in URL.
  */
+
+
 @Controller("blProductController")
 public class ProductController extends BroadleafProductController {
     
+	protected static final Log LOG = LogFactory.getLog(ProductController.class);
+	
+	private String getLocale(HttpServletRequest request) {
+		String locale=null;
+		HttpSession s = request.getSession();
+		if (s!=null) {
+			Locale l = (Locale) s.getAttribute("blLocale");
+			if (l!=null) {
+				locale = l.getLocaleCode();
+				LOG.info("trying to read the session variable for locale: "+locale);
+				
+				BroadleafCurrency currency = (BroadleafCurrency) s.getAttribute("blCurrency");
+				if (currency!=null) {
+					LOG.info("currency code is: "+currency.getCurrencyCode());
+				}
+				else {
+					LOG.info("I don't have a currency code from session");
+				}
+			}
+		}
+		return locale;
+	}
+
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return super.handleRequest(request, response);
+        ModelAndView m = super.handleRequest(request, response);
+        
+        Product product = (Product) request.getAttribute(ProductHandlerMapping.CURRENT_PRODUCT_ATTRIBUTE_NAME);
+        long productID = product.getId();
+        
+        // [JMAK] Adding left-nav and breadcrumb
+		Dao u = new DaoImpl();
+		String locale = getLocale(request);
+		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,locale);
+		
+		m.addObject("breadcrumb",u.getBreadCrumbForProduct(productID,locale));
+		m.addObject("categories", l);
+        return m;
     }
 
 }

@@ -73,6 +73,10 @@ public class CartController extends BroadleafCartController {
             super.add(request, response, model, addToCartItem);
             
             if (addToCartItem.getItemAttributes() == null || addToCartItem.getItemAttributes().size() == 0) {
+            	
+            	long productID = addToCartItem.getProductId();
+                LOG.info("I am adding "+addToCartItem.getQuantity()+" of product "+productID+" to cart");
+            	
                 responseMap.put("productId", addToCartItem.getProductId());
             }
             responseMap.put("productName", catalogService.findProductById(addToCartItem.getProductId()).getName());

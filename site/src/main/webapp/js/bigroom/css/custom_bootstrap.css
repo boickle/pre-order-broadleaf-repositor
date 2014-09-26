@@ -1,0 +1,128 @@
+/* Custom Bootstrap Styles
+ * 
+ * We use these classes to add or modify styles 
+ * for common UI components found in Twitter BS.
+ * 
+ * 
+*/
+
+/* Navigation Bar */
+#header .navbar-default {
+	border:none;
+	margin:0;
+	background:#FFF;
+	border-radius:0px;
+}
+
+#header .navbar-brand {
+	height: auto;
+	padding:1rem 0;
+}
+
+/* Allow a grid system with no gutter */
+.row-no-gutter {
+  margin-right:0;
+  margin-left:0;
+}
+.row-no-gutter > [class*='col-'] {
+  padding-right:0;
+  padding-left:0;
+}
+
+
+/* Buttons */
+
+.btn {
+	border-radius:0px;
+		min-width:150px;
+}
+
+
+.btn-default {
+	background:#e6e6e6;
+	border:none;
+}
+
+
+/* Primary Button */
+.btn.btn-primary {
+	background:#ff0000;	
+	border:none;
+	min-width:150px;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus {
+	background:#ff2b17;
+}
+
+.btn.btn-primary:active {
+	background:#e51300;
+}
+
+/*Bread Crumb */
+
+ol.breadcrumb {
+	background:#E9E6DF;
+	padding:10px;
+	margin:15px 0 5px 0;
+	color:#FFF;
+	
+}
+
+ol.breadcrumb a {
+	color:#8d8c88;
+	text-decoration: none;
+}
+
+ol.breadcrumb .active {
+	color:#FE0000;
+}
+
+/* Pagination */
+
+ul.pagination {
+	display:block;
+	margin:2rem auto;
+	max-width:300px;
+}
+
+ul.pagination a { 
+	border:none;
+	color:#666;
+}
+
+ul.pagination .active a,
+ul.pagination .active a:hover {
+	background:#ff0000;	
+	border-color:#ff0000;
+}
+
+/* Jumbtron */
+.jumbotron  {
+	
+	background-size:cover;
+	display:none;
+}
+
+.jumbotron h1,
+.jumbotron p {
+	color:#000;
+}
+
+
+/* List Group */
+
+.list-group .list-group {
+	margin:10px 0 0 0 ;
+}
+
+.list-group .list-group .list-group-item {
+	border:none;
+	margin-left:10px;
+}
+
+/* Accordion */
+#accordion {
+	margin-top:15px;
+}

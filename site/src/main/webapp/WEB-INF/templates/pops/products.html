@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="no-js lt_ie9"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt_ie10 ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+	
+<head th:include="/myfolder/include/head"></head>
+
+<body class="">
+	
+		
+	<!-- Header Start -->
+	<div id="header" th:include="/myfolder/include/header"></div>
+	<!-- Header End -->
+	
+			
+	<!-- View Container Start -->
+	<div id="viewContainer" class="container">	
+		
+	<!-- ProductList View JS Start -->
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("ProductList"); 
+		
+		// show the cart button
+		Cart.showButton();
+		
+		// JS Animation for category blocks		
+		$(".categoryList .row > *").animo( { animation: 'fadeInUp' });
+	
+	});
+		
+	</script>
+	<!-- ProductList View JS End -->
+	
+	<!-- ProductList View HTML Start --> 
+	<div class="categoryList"> 
+		
+	
+
+		<ol class="breadcrumb" th:if="${#lists.size(breadcrumb) > 1}">
+		
+		  <li th:class="${(iterStat.last)?'active':''}" th:each="breadcrumblink,iterStat : ${breadcrumb}" >
+			<div th:if="${iterStat.last}" th:remove="tag" th:utext="${breadcrumblink.name}" />
+		  	<a th:if="${not iterStat.last}" th:href="@{${breadcrumblink.url}}" th:utext="${breadcrumblink.name}"></a>
+		  </li>
+		  
+		</ol>		
+				
+		<div class="row row-no-gutter">
+			
+			<div class="hidden-xs col-sm-3">
+				
+				<div id="globalNavigation">
+		
+<ul class="list-group">
+   <li class="list-group-item" th:each="category : ${categories}">
+      <a class="home" th:href="@{${category.url}}"  th:utext="${category.nameWithArrowStyle}"><i class="fa fa-caret-right"></i> </a>
+      <ul class="list-group subCategoryList">
+         <li th:each="subcat : ${category.children}">
+            <a th:utext="${subcat.name}" th:href="@{${subcat.url}}" />
+         </li>
+      </ul>
+   </li>
+</ul>
+	
+				</div>				
+			</div>
+			
+			<div class="col-xs-12 col-sm-9">
+				
+
+			
+										
+						
+	<!-- Product Item -->		
+	<div class="listItem" th:each="product : ${products}">
+		
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-4 col-sm-4 col-md-3">
+							
+				<!-- Grid Item Image-->
+				<a th:href="@{${product.url}}" class="gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}">  
+		
+				</a>
+				<!-- /Grid Item Image-->
+				
+			</div>
+				
+			<div class="col-xs-8 col-sm-8 col-md-6   listItemDetails">
+	
+				<h3 class="text-uppercase listItemTitle" th:utext="${product.name}"></h3>
+				
+				<p> <strong th:inline="text"><div blc:price="*{product.retail_price}"></div></strong> </p>
+				
+				<p class="listItemDescription" th:utext="${product.description}">
+				 
+				</p>
+				
+				<span class="btn btn-primary hidden-md hidden-lg">Shop</span>
+	
+			</div>
+				
+			<div class="hidden-xs hidden-sm col-md-3 text-right">	
+				
+					<a th:href="@{${product.url}}" class="btn btn-primary">Shop</a>
+			</div>
+	
+		</div>
+	
+	</div>
+	<!-- /Product Item -->
+	
+
+				
+			</div>
+			
+		</div>
+
+		
+		
+<!-- Pagination Start -->
+<ul class="pagination">
+	
+	<li class="disabled"><a href="#">&laquo;</a></li>
+	
+	<li class="active" ><a href="#">1</a></li>
+	
+	<li><a href="#">2</a></li>
+	<li><a href="#">3</a></li>
+	<li><a href="#">4</a></li>
+	<li><a href="#">5</a></li>
+	
+	<li><a href="#">&raquo;</a></li>
+	
+</ul>
+<!-- Pagination End -->	
+	</div>
+	<!-- CategoryList View HTML END -->
+	
+ 
+	</div>
+	<!-- View Container End -->
+	
+	<!-- Footer Start-->
+	<div id="footer" class="container-fluid">
+		
+		<div class="row">
+			
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<p>&copy; 2014 AIR CANDADA AND AFFILIATES</p>
+				
+			</div>
+				
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<span>
+					<img src="http://localhost/img/bigroom/egate.jpg" />
+				</span>
+				
+			</div>
+						
+		</div>
+		
+		
+	</div> 
+	<!-- Footer End -->
+	
+	
+<!-- Add to Cart -->
+<div class="modal fade" id="cartView" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Your Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+       
+			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a href="http://egate.bigroomstudios.com/Payment" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+  
+</div>
+
+
+<!-- Add to Cart -->
+<div class="modal fade" id="addedToCart" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Added to Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+        
+        <p>You added the following item!</p>	  
+              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a href="http://egate.bigroomstudios.com/Payment" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+  
+</div>	
+
+</body>
+	
+</html>

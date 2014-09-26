@@ -1,0 +1,992 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="no-js lt_ie9"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt_ie10 ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+	
+<head>
+	
+	<!-- Meta -->
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="ClearType" content="true"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+	
+	<!-- DNS prefetch -->
+	<link rel="dns-prefetch" href="http://www.google-analytics.com" />
+	
+	<!-- Title / Description -->
+	<title></title>
+	<meta name="description" content="" />
+	
+	<!-- Modernizr -->
+	<script type="text/javascript" src="/js/bigroom/library/modernizr/modernizr-2.8.1.min.js"> </script>
+	
+	<!-- jQuery  -->
+	<script type="text/javascript" src="/js/bigroom/library/jquery/jquery-1.11.1.min.js"> </script>
+	
+	<!-- jQuery scrollTo plugin @ http://lions-mark.com/jquery/scrollTo/ -->
+	<script type="text/javascript" src="/js/bigroom/js/scrollTo.js"> </script>
+	
+	<!-- Animo -->
+	<script type="text/javascript" src="/js/bigroom/library/animo/animo.js"> </script>
+	<link rel="stylesheet" href="/js/bigroom/library/animo/animate+animo.css" type="text/css" />
+	
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/js/bigroom/library/font-awesome/css/font-awesome.min.css" type="text/css" />
+	
+	<!-- Bootstrap -->
+	<script type="text/javascript" src="/js/bigroom/library/bootstrap/js/bootstrap.min.js"> </script>
+	<link rel="stylesheet" href="/js/bigroom/library/bootstrap/css/bootstrap.min.css" type="text/css" />
+	
+	<!-- Custom Bootstrap CSS -->
+	<link rel="stylesheet" href="/js/bigroom/css/custom_bootstrap.css" type="text/css" />
+	
+	<!-- Global CSS -->
+	<link rel="stylesheet" href="/js/bigroom//css/global.css" type="text/css" />
+	
+	<!-- UI Object -->
+	<script type="text/javascript" src="/js/bigroom/js/UI.js"> </script>
+	
+	<!-- Cart  -->
+	<link rel="stylesheet" href="/js/bigroom/css/cart.css" type="text/css" />
+	<script type="text/javascript" src="/js/bigroom/js/Cart.js"></script>
+
+	
+</head>
+
+<body class="">
+	
+		
+	<!-- Header Start -->
+	<div id="header">
+			
+		<nav class="navbar navbar-default" role="navigation">
+	
+			<div class="container">
+				
+				<div class="row">
+			
+					<div class="col-xs-6 col-sm-4 col-md-6">
+					
+						<a class="navbar-brand" href="http://egate.bigroomstudios.com/">
+							<img class="logo" src="http://egate.bigroomstudios.com/img/logo.jpg"/>
+						</a>
+											
+					</div>
+					
+					<div class="col-xs-2 col-sm-2 col-md-2">
+					
+						<a id="timerButton">			
+							<i class="fa fa-clock-o"></i>
+							<span id="timeLeft"></span>
+							<span class="hidden-xs hidden-sm">Remaining</span>
+						</a>
+					
+					</div>
+					
+					<div class="col-xs-2 col-sm-3 col-md-2">
+					
+						<a id="userButton" href="http://egate.bigroomstudios.com/UserDashboard">			
+							<i class="fa fa-user"></i> 
+							<span class="userName hidden-xs">Donald McMains</span>
+						</a>
+					
+					</div>
+	
+					<div class="col-xs-2 col-sm-3 col-md-2">
+					
+						
+	<!-- Cart HTML Start -->
+	<a id="cartButton" data-toggle="modal" data-target="#cartView" >			
+		<span class="badge" id="cartCounter"  style="position:absolute;top:5px;left:40px;">1</span>  <i class="fa fa-shopping-cart"></i> 
+		<span class="hidden-xs">Cart</span>
+	</a>
+		
+	<div id="cartContainer" class="view" style="display:none;">
+		
+		<div class="container">
+
+		<p>You have <strong> <span id="cartCounter">1</span> item</strong> in your cart.</p>
+		
+		<div id="cartItemList">
+			
+				
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+		</div>
+
+		<div id="cartFooter">
+
+			<h3 class="text-uppercase">Total <span id="cartTotal">$30.00</span> </h3> 
+				
+			<a href="http://egate.bigroomstudios.com/Payment" class="btn btn-primary text-uppercase">Checkout</a>	
+
+		</div>
+		
+		</div>
+			
+	</div>
+	
+	<audio id="cartAddSound">
+	  <source src="http://egate.bigroomstudios.com/sound/pop.mp3" type="audio/mpeg" />
+
+	</audio>
+	<!-- Cart HTML End -->
+	
+	
+
+	
+						
+					</div>
+					
+  				</div>
+
+			</div> 
+			  
+		</nav>
+		
+		<div class="mealNotification" style="display: none;">
+			
+			<div class="container">
+				
+				<img class="hidden-xs" src="http://egate.bigroomstudios.com/img/mealNotification.jpg" />
+			
+				<a href="http://egate.bigroomstudios.com/MealSelect" class="hidden-xs"> 
+					<i class="fa fa-cutlery"></i> Pre-Select complimentary meal service is available on your flight!
+				</a>
+				
+				<img class="hidden-sm hidden-md hidden-lg" src="http://egate.bigroomstudios.com/img/mealNotification2.jpg" />
+				
+				<a href="http://egate.bigroomstudios.com/MealSelect" class="hidden-sm hidden-md hidden-lg"> 
+					 Pre-Select available on your flight!
+				</a>
+					
+			</div>
+			
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript" src="http://egate.bigroomstudios.com/js/Countdown.js"></script>
+	<!-- Header End -->
+	
+	
+	<!-- Splash -->
+	<div class="jumbotron text-uppercase text-center">
+		
+		<div class="container">
+			
+			<h1>Welcome to PreOrder</h1>
+			
+			<p>Browse hundreds of products delivered right to your seat</p>
+				
+			<p> <a id="shopNow" class="btn btn-primary btn-lg" role="button"> Shop Now</a> </p>
+		
+		</div>
+		
+	</div>
+	 <!-- /Splash -->
+			
+	<!-- View Container Start -->
+	<div id="viewContainer" class="container">	
+		
+	<!-- CategoryList View JS Start -->
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("CategoryList"); 
+		
+		// show the cart button
+		Cart.showButton();
+		
+		$("#shopNow").click(function() {
+			
+			$('body').scrollTo('#viewContainer');
+			
+		});
+		
+		// JS Animation for category blocks		
+		$(".row > *").animo( { animation: 'flipInX' });
+		
+		setTimeout(function() {
+			
+			$(".mealNotification").show().animo( { animation: 'bounceIn' });
+			
+		},5000);
+	
+	});
+		
+	</script>
+	<!-- CategoryList View JS End -->
+	
+	<!-- CategoryList View HTML Start -->
+	<div class="categoryList"> 
+		
+		
+	<!-- Flight Bar Start -->
+	<div class="flightBar">
+		
+		<nav class="navbar navbar-default" role="navigation">
+			
+			<div class="container">
+				
+				<p class="navbar-text">
+					<i class="fa fa-plane"></i> <b>Flight Info</b> 
+					<span class="divider">|</span> <b>Passenger:</b> Liam Donisvitch
+					<span class="divider"></span> <b>Flight:</b> AC-1824
+					
+					<span class="divider"></span> <b>To:</b> Vancover
+					
+					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> 10:35AM
+					
+					<span class="divider"></span> <b>Arrival:</b> 4:35PM
+					
+				</p>
+								
+			</div>
+			
+		</nav>
+		
+	</div>
+	<!-- /Flight Bar  -->		
+		<!--<ol class="breadcrumb">
+		
+		  <li><a href="http://egate.bigroomstudios.com/CategoryList">Catgeories</a></li>
+		  <li><a href="http://egate.bigroomstudios.com/SubCategoryList">Beauty</a></li>
+		  <li class="active">Perfumes</li>
+		  
+		</ol>-->
+		
+				
+		<div class="row row-no-gutter">
+			
+			<div class="hidden-xs col-sm-3">
+				
+				<div id="globalNavigation">
+		
+	<ul class="list-group">  
+		
+				
+			<li class="list-group-item"> 
+				
+				<a href="http://egate.bigroomstudios.com/SubCategoryList">
+
+										<i class="fa fa-caret-right"></i> 
+										
+					Duty Free
+					
+				</a> 
+				 
+				
+								<ul class="list-group subCategoryList">
+					
+						
+					<li class="list-group-item"> <a href="http://egate.bigroomstudios.com/ProductList"> Fragrance </a> </li>
+				
+						
+					<li class="list-group-item"> <a href="http://egate.bigroomstudios.com/ProductList"> Cosmetics </a> </li>
+				
+						
+					<li class="list-group-item"> <a href="http://egate.bigroomstudios.com/ProductList"> Tobacco </a> </li>
+				
+						
+					<li class="list-group-item"> <a href="http://egate.bigroomstudios.com/ProductList"> Wine &amp; Spirits </a> </li>
+				
+						
+					<li class="list-group-item"> <a href="http://egate.bigroomstudios.com/ProductList"> Luxury Gifts </a> </li>
+				
+						
+					<li class="list-group-item"> <a href="http://egate.bigroomstudios.com/ProductList"> Edibles </a> </li>
+				
+								</ul>
+													
+			</li>
+		
+				
+			<li class="list-group-item"> 
+				
+				<a href="http://egate.bigroomstudios.com/SubCategoryList">
+
+										<i class="fa fa-caret-right"></i> 
+										
+					Electronics
+					
+				</a> 
+				 
+				
+													
+			</li>
+		
+				
+			<li class="list-group-item"> 
+				
+				<a href="http://egate.bigroomstudios.com/SubCategoryList">
+
+										<i class="fa fa-caret-right"></i> 
+										
+					Entertainment
+					
+				</a> 
+				 
+				
+													
+			</li>
+		
+				
+			<li class="list-group-item"> 
+				
+				<a href="http://egate.bigroomstudios.com/SubCategoryList">
+
+										<i class="fa fa-caret-right"></i> 
+										
+					Food &amp; Drink
+					
+				</a> 
+				 
+				
+													
+			</li>
+		
+				
+			<li class="list-group-item"> 
+				
+				<a href="http://egate.bigroomstudios.com/SubCategoryList">
+
+										<i class="fa fa-caret-right"></i> 
+										
+					Jewlery &amp; Watches
+					
+				</a> 
+				 
+				
+													
+			</li>
+		
+				
+			<li class="list-group-item"> 
+				
+				<a href="http://egate.bigroomstudios.com/SubCategoryList">
+
+										<i class="fa fa-caret-right"></i> 
+										
+					Home Goods
+					
+				</a> 
+				 
+				
+													
+			</li>
+		
+		
+	</ul>
+	
+</div>				
+			</div>
+			
+			<div class="col-xs-12 col-sm-9">
+				
+				<div class="row row-no-gutter">
+			
+										
+						
+	<!-- Grid Item -->		
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		
+		<div class="gridItem">
+			
+			<!-- Grid Item Image-->
+			<a href="http://egate.bigroomstudios.com/SubCategoryList" class="gridItemImage" style="background-image: url('http://localhost/img/bigroom/dutyfree.jpg') ">
+			
+				<!-- Grid Item Image Overlay (Displays on Phones) -->
+				<span class="row gridItemImageOverlay">
+					
+					<span class="col-xs-6 gridItemTitle"> Duty Free </span>
+					
+					<span class="col-xs-6 gridItemAction">
+						
+						<span class="btn btn-primary">Shop</span>
+						
+					</span>
+					
+				</span>
+				<!-- /Grid Item Image Overlay -->
+	
+			</a>
+			<!-- /Grid Item Image-->
+			
+			<!-- Grid Item Details (Displays on Tablet + Desktop)-->
+			<div class="row gridItemDetails">
+				
+				<div class="col-xs-6">
+					
+					<p class="gridItemTitle">Duty Free</p>
+					
+				</div>
+				
+				<div class="col-xs-6 gridItemAction"> 
+					
+					<a href="http://egate.bigroomstudios.com/SubCategoryList" class="btn btn-primary">Shop</a>
+					
+				</div>
+				
+			</div>
+			<!-- /Grid Item Details-->
+	
+		</div>
+	
+	</div>
+	<!-- /Grid Item Item -->					
+										
+						
+	<!-- Grid Item -->		
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		
+		<div class="gridItem">
+			
+			<!-- Grid Item Image-->
+			<a href="http://egate.bigroomstudios.com/SubCategoryList" class="gridItemImage" style="background-image: url('http://localhost/img/bigroom/electronics.jpg') ">
+			
+				<!-- Grid Item Image Overlay (Displays on Phones) -->
+				<span class="row gridItemImageOverlay">
+					
+					<span class="col-xs-6 gridItemTitle"> Electronics </span>
+					
+					<span class="col-xs-6 gridItemAction">
+						
+						<span class="btn btn-primary">Shop</span>
+						
+					</span>
+					
+				</span>
+				<!-- /Grid Item Image Overlay -->
+	
+			</a>
+			<!-- /Grid Item Image-->
+			
+			<!-- Grid Item Details (Displays on Tablet + Desktop)-->
+			<div class="row gridItemDetails">
+				
+				<div class="col-xs-6">
+					
+					<p class="gridItemTitle">Electronics</p>
+					
+				</div>
+				
+				<div class="col-xs-6 gridItemAction"> 
+					
+					<a href="http://egate.bigroomstudios.com/SubCategoryList" class="btn btn-primary">Shop</a>
+					
+				</div>
+				
+			</div>
+			<!-- /Grid Item Details-->
+	
+		</div>
+	
+	</div>
+	<!-- /Grid Item Item -->					
+										
+						
+	<!-- Grid Item -->		
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		
+		<div class="gridItem">
+			
+			<!-- Grid Item Image-->
+			<a href="http://egate.bigroomstudios.com/SubCategoryList" class="gridItemImage" style="background-image: url('http://localhost/img/bigroom/entertainment.jpg') ">
+			
+				<!-- Grid Item Image Overlay (Displays on Phones) -->
+				<span class="row gridItemImageOverlay">
+					
+					<span class="col-xs-6 gridItemTitle"> Entertainment </span>
+					
+					<span class="col-xs-6 gridItemAction">
+						
+						<span class="btn btn-primary">Shop</span>
+						
+					</span>
+					
+				</span>
+				<!-- /Grid Item Image Overlay -->
+	
+			</a>
+			<!-- /Grid Item Image-->
+			
+			<!-- Grid Item Details (Displays on Tablet + Desktop)-->
+			<div class="row gridItemDetails">
+				
+				<div class="col-xs-6">
+					
+					<p class="gridItemTitle">Entertainment</p>
+					
+				</div>
+				
+				<div class="col-xs-6 gridItemAction"> 
+					
+					<a href="http://egate.bigroomstudios.com/SubCategoryList" class="btn btn-primary">Shop</a>
+					
+				</div>
+				
+			</div>
+			<!-- /Grid Item Details-->
+	
+		</div>
+	
+	</div>
+	<!-- /Grid Item Item -->					
+										
+						
+	<!-- Grid Item -->		
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		
+		<div class="gridItem">
+			
+			<!-- Grid Item Image-->
+			<a href="http://egate.bigroomstudios.com/SubCategoryList" class="gridItemImage" style="background-image: url('http://localhost/img/bigroom/mealRoastBeefWine.jpg') ">
+			
+				<!-- Grid Item Image Overlay (Displays on Phones) -->
+				<span class="row gridItemImageOverlay">
+					
+					<span class="col-xs-6 gridItemTitle"> Food &amp; Drink </span>
+					
+					<span class="col-xs-6 gridItemAction">
+						
+						<span class="btn btn-primary">Shop</span>
+						
+					</span>
+					
+				</span>
+				<!-- /Grid Item Image Overlay -->
+	
+			</a>
+			<!-- /Grid Item Image-->
+			
+			<!-- Grid Item Details (Displays on Tablet + Desktop)-->
+			<div class="row gridItemDetails">
+				
+				<div class="col-xs-6">
+					
+					<p class="gridItemTitle">Food &amp; Drink</p>
+					
+				</div>
+				
+				<div class="col-xs-6 gridItemAction"> 
+					
+					<a href="http://egate.bigroomstudios.com/SubCategoryList" class="btn btn-primary">Shop</a>
+					
+				</div>
+				
+			</div>
+			<!-- /Grid Item Details-->
+	
+		</div>
+	
+	</div>
+	<!-- /Grid Item Item -->					
+										
+						
+	<!-- Grid Item -->		
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		
+		<div class="gridItem">
+			
+			<!-- Grid Item Image-->
+			<a href="http://egate.bigroomstudios.com/SubCategoryList" class="gridItemImage" style="background-image: url('http://localhost/img/bigroom/accessories.jpg') ">
+			
+				<!-- Grid Item Image Overlay (Displays on Phones) -->
+				<span class="row gridItemImageOverlay">
+					
+					<span class="col-xs-6 gridItemTitle"> Jewlery &amp; Watches </span>
+					
+					<span class="col-xs-6 gridItemAction">
+						
+						<span class="btn btn-primary">Shop</span>
+						
+					</span>
+					
+				</span>
+				<!-- /Grid Item Image Overlay -->
+	
+			</a>
+			<!-- /Grid Item Image-->
+			
+			<!-- Grid Item Details (Displays on Tablet + Desktop)-->
+			<div class="row gridItemDetails">
+				
+				<div class="col-xs-6">
+					
+					<p class="gridItemTitle">Jewlery &amp; Watches</p>
+					
+				</div>
+				
+				<div class="col-xs-6 gridItemAction"> 
+					
+					<a href="http://egate.bigroomstudios.com/SubCategoryList" class="btn btn-primary">Shop</a>
+					
+				</div>
+				
+			</div>
+			<!-- /Grid Item Details-->
+	
+		</div>
+	
+	</div>
+	<!-- /Grid Item Item -->					
+										
+						
+	<!-- Grid Item -->		
+	<div class="col-xs-12 col-sm-6 col-md-4">
+		
+		<div class="gridItem">
+			
+			<!-- Grid Item Image-->
+			<a href="http://egate.bigroomstudios.com/SubCategoryList" class="gridItemImage" style="background-image: url('http://localhost/img/bigroom/homeGoods.jpg') ">
+			
+				<!-- Grid Item Image Overlay (Displays on Phones) -->
+				<span class="row gridItemImageOverlay">
+					
+					<span class="col-xs-6 gridItemTitle"> Home Goods </span>
+					
+					<span class="col-xs-6 gridItemAction">
+						
+						<span class="btn btn-primary">Shop</span>
+						
+					</span>
+					
+				</span>
+				<!-- /Grid Item Image Overlay -->
+	
+			</a>
+			<!-- /Grid Item Image-->
+			
+			<!-- Grid Item Details (Displays on Tablet + Desktop)-->
+			<div class="row gridItemDetails">
+				
+				<div class="col-xs-6">
+					
+					<p class="gridItemTitle">Home Goods</p>
+					
+				</div>
+				
+				<div class="col-xs-6 gridItemAction"> 
+					
+					<a href="http://egate.bigroomstudios.com/SubCategoryList" class="btn btn-primary">Shop</a>
+					
+				</div>
+				
+			</div>
+			<!-- /Grid Item Details-->
+	
+		</div>
+	
+	</div>
+	<!-- /Grid Item Item -->					
+												
+				</div>
+				
+			</div>
+			
+		</div>
+
+		
+		
+<!-- Pagination Start -->
+<ul class="pagination">
+	
+	<li class="disabled"><a href="#">&laquo;</a></li>
+	
+	<li class="active" ><a href="#">1</a></li>
+	
+	<li><a href="#">2</a></li>
+	<li><a href="#">3</a></li>
+	<li><a href="#">4</a></li>
+	<li><a href="#">5</a></li>
+	
+	<li><a href="#">&raquo;</a></li>
+	
+</ul>
+<!-- Pagination End -->	
+	</div>
+	<!-- CategoryList View HTML END -->
+	
+ 
+	</div>
+	<!-- View Container End -->
+	
+	<!-- Footer Start-->
+	<div id="footer" class="container-fluid">
+		
+		<div class="row">
+			
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<p>&copy; 2014 AIR CANDADA AND AFFILIATES</p>
+				
+			</div>
+				
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<span>
+					<img src="http://localhost/img/bigroom/egate.jpg" />
+				</span>
+				
+			</div>
+						
+		</div>
+		
+		
+	</div> 
+	<!-- Footer End -->
+	
+	
+<!-- Add to Cart -->
+<div class="modal fade" id="cartView" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Your Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+       
+			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img src="http://localhost/img/bigroom/beauty.jpg" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle">Test Product</strong>
+				<strong class="cartItemPrice">$30.00</strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" class="form-control text-center" maxlength="3" placeholder="Qty" value="1" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center">$30.00 </span>
+				
+			</div>
+			
+			<div class="col-xs-2 text-right">
+				<span class="btn btn-default"> x </span> 
+			</div>
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a href="http://egate.bigroomstudios.com/Payment" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+  
+</div>
+
+
+<!-- Add to Cart -->
+<div class="modal fade" id="addedToCart" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Added to Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+        
+        <p>You added the following item!</p>	  
+              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a href="http://egate.bigroomstudios.com/Payment" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+  
+</div>	
+
+</body>
+	
+</html>

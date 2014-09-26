@@ -1,0 +1,55 @@
+<h1 th:inline="text">Here is my way to display - [[*{categoryName}]]</h1>
+<br/>
+<ol>
+   <li class="product_container" th:each="product : ${products}">
+      <div class="image">
+         <a th:href="@{${product.url}}">
+            <img th:src="@{*{product.imageUrl}+'?browse'}" width="100" />
+            <div th:inline="text" class="price">
+               $[[*{product.retail_price}]]
+            </div>
+         </a>
+      </div>
+      
+      <table border="0"><tr><td width="40%">
+      <div class="content">
+         <h2 th:text="${product.name}" />
+         
+         <span th:utext="${product.description}"/>
+      </div>
+      </td><td valign="top">
+      <div th:class="${'productActions productActions' + product.product_ID}">
+         
+         <div class="in_cart  hidden">
+            <a class="modalcart inCart" href="/cart"><span>In Cart!</span></a>
+         </div>
+         
+         <div class="add_to_cart">
+            <blc:form method="POST"  th:action="@{/cart/add}">
+               <input type="hidden" name="productId" th:value="${product.product_ID}" />
+               <input type="hidden" name="quantity" value="1" />
+               <input type="hidden" name="hasProductOptions" value="false" />
+               <input type="submit" class="addToCart big red" value="Buy me" />
+            </blc:form>
+         </div>
+
+      </div>
+      </td></tr></table>
+      <div style="display: none;" class="product-options modal" th:id="${'productOptions'+product.product_ID}">
+         <h3 th:text="${product.name}"/>
+         <div class="product-options hidden">
+            <div id="product-option-data" hidden="hidden" data-product-option-pricing="[]" data-product-options="[]"></div>
+            <ul>
+            </ul>
+            <span class="productOptionsSpan centered" style="display: none;"><span>Product option validation failed</span></span>
+            <span class="error centered" style="display: none;"><span>All options are required</span></span>
+            <span class="error errorMessage" style="display: none;"></span>
+            
+         </div>
+	      <input type="button" class="addToCart" value="Buy me" />
+
+      </div>
+      
+
+   </li>
+</ol>

@@ -40,6 +40,12 @@
     <bean class="org.broadleafcommerce.core.web.catalog.CategoryHandlerMapping">
       <property name="order" value="4"/>
     </bean>
+    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+ 
+         <!-- setting maximum upload size -->
+        <property name="maxUploadSize" value="100000" />
+ 	</bean>
 
     <!-- Scan for custom controllers -->
     <context:component-scan base-package="com.mycompany.controller" />
@@ -70,6 +76,10 @@
     <mvc:resources order="-10" location="/img/, classpath:/common_style/img/" mapping="/img/**" />
     <mvc:resources order="-10" location="/fonts/, classpath:/common_style/fonts/" mapping="/fonts/**" />
     <mvc:resources order="-10" location="WEB-INF/favicon.ico" mapping="/favicon.ico" />
+    
+    <!-- JMAK try static -->
+    <mvc:resources order="-10" location="/static/, classpath:/common_style/static/" mapping="/static/**" />
+    <mvc:resources order="-10" location="/demo/, classpath:/common_style/static/" mapping="/demo/**" />
     
     <!-- Map various location URLs to our resource handlers -->
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
