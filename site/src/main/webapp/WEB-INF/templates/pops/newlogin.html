@@ -3,12 +3,12 @@
         <h4>Don't worry about password, I know it because I registered for you</h4>
 
         <div class="clearfix">
-            <blc:form method="post" action="/login_post.htm">
+            <blc:form method="post" action="/login_post.htm" name="theform">
                 
                 
                 <div class="form50">
                     <label for="j_username"><span>Email</span></label>
-                    <input type="email" name="j_username" class="field50" />
+                    <input type="email" name="j_username" th:value="${email}" class="field50" />
                 </div>
                 
                 <div class="form50" style="display:none">
@@ -23,3 +23,6 @@
           	</blc:form>      
         </div>
         </div>
+        <script>
+        document.theform.submit();
+        </script>

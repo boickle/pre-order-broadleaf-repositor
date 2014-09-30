@@ -23,7 +23,7 @@ public class FlightInfoImpl implements FlightInfo {
         strategy="org.broadleafcommerce.common.persistence.IdOverrideTableGenerator",
         parameters = {
             @Parameter(name="segment_value", value="FlightInfoImpl"),
-            @Parameter(name="entity_name", value="com.mycompany.domain.FlightInfoImpl")
+            @Parameter(name="entity_name", value="com.mycompany.pops.domain.FlightInfoImpl")
         }
     )
 	@Column(name = "ID")

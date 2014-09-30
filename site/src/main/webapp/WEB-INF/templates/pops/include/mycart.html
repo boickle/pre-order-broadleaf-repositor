@@ -1,0 +1,54 @@
+	<!-- Add to Cart -->
+<div class="modal fade" id="cartView" tabindex="-1" role="dialog" aria-labelledby="addedToCartLabel" aria-hidden="true">
+	
+  <div class="modal-dialog">
+  	
+    <div class="modal-content">
+    	
+      <div class="modal-header">
+      	
+        <button type="button" class="close" data-dismiss="modal">
+        	
+        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        	
+        </button>
+ 
+       
+        <h4 class="modal-title" id="myModalLabel">Your Cart</h4>
+
+        
+      </div>
+      
+      <div class="modal-body">
+       
+			
+	<!-- Cart Item -->
+	<div class="cartItem">
+										
+		<div class="row row-no-gutter">
+			
+			<div id="mycart" th:include="/cart/cart">
+			</div>
+			
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->              
+      </div>
+      
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+        <a th:href="@{/checkout}" type="button" class="btn btn-primary">Checkout</a>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+  
+</div>
+
+

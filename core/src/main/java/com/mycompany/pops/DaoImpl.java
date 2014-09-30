@@ -11,6 +11,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.sql.rowset.JdbcRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -98,47 +101,30 @@ public class DaoImpl implements Dao{
 	}
 	
 
-	/**
-	 * This is a little wrapper for all the boiler plate things for good old JDBC
-	 * @param sql
-	 * @return
-	 */
-	private ResultSet jdbcSelectWrapper(String sql) {
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
 
-			conn = DriverManager.getConnection(
-					Constants.JDBC_CONNECTION, Constants.JDBC_LOGIN,
-					Constants.JDBC_PASSWORD);
+    private JdbcRowSet jdbcSelectWrapper(String sql) {
+        try {
+               LOG.info("sql=" + sql);
+               
+               RowSetFactory rowSetFactory = RowSetProvider.newFactory();
+               JdbcRowSet rowSet = rowSetFactory.createJdbcRowSet();
+               
+               // Set connection properties 
+                rowSet.setUrl(Constants.JDBC_CONNECTION); 
+                rowSet.setUsername(Constants.JDBC_LOGIN); 
+                rowSet.setPassword(Constants.JDBC_PASSWORD); 
+                // Set SQL Query to execute 
+                rowSet.setCommand(sql); 
+                rowSet.execute();
+               return rowSet;
+        } catch (Exception e) {
+               // Handle errors for Class.forName
+               LOG.error("rowset problem", e);
+        }
 
-			stmt = conn.createStatement();
-			LOG.info("sql=" + sql);
-			 rs = stmt.executeQuery(sql);
+        return null;
+  }
 
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("jdbc problem", e);
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}// end finally try
-		}// end try
-		return rs;
-
-	}
 	
 	private void insertFlightUsingGoodOldJDBC(FlightInfo info) {
 		LOG.info("good old JDBC");
@@ -406,7 +392,6 @@ public class DaoImpl implements Dao{
 
 	public List<Category> getBreadCrumbForProduct(long productID, String locale) {
 		LOG.info("trying to breadcrumb for product "+productID);
-		
 
 		// Get category and name for this product (to be used in breadcrumb)
 		String sql = "select default_category_id, name from blc_product, blc_sku where blc_sku.default_product_id=product_id and product_id= "+productID;
@@ -438,5 +423,47 @@ public class DaoImpl implements Dao{
 		return result;
 	}
 
+
+	public List<Product> getMealsForFlight(String flightNumber, String mealType, String locale) {
+		LOG.info("trying to meals for flight: "+flightNumber+" type:"+mealType);
+		List<Product> result = null;
+
+		String sql = "select product_id,manufacture,blc_product.url,retail_price,name,long_description,blc_media.url" 
+		+ " from blc_product, blc_sku, blc_sku_media_map, blc_media, flight_meal"
+		+ " where blc_product.product_id=meal_id"
+		+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id"
+		+ " and map_key='primary'"
+		+ " and flight_number='"+flightNumber+"'"
+		+ " and meal_type='"+mealType+"'";
+		 
+		ResultSet rs = jdbcSelectWrapper(sql);
+		if (rs!=null) {
+			
+			try {
+				while (rs.next()) {
+					if (result==null) result = new ArrayList<Product>();
+
+					Product p = new Product();
+					p.setProduct_ID(rs.getInt(1));
+					p.setManufacture(rs.getString(2));
+					p.setUrl(rs.getString(3));
+					p.setRetail_price(rs.getDouble(4));
+					p.setName(getTranslation(rs.getInt(1),locale,"Sku","name",rs.getString(5)));
+					p.setDescription(getTranslation(rs.getInt(1),locale,"Sku","longDescription",rs.getString(6)));
+					p.setImageUrl(rs.getString(7));
+
+					LOG.info("I am adding this to "+mealType+":"+p.getName());
+
+					result.add(p);
+					
+				}
+			} catch (SQLException e) {
+				LOG.error("sql exception",e);
+			}
+		}
+
+		LOG.info("I am returning this many items: "+result.size());
+		return result;
+	}
 
 }

@@ -42,7 +42,7 @@
 					
 										<div class="col-xs-2">
 					
-						<a id="mealSelectButton" href="MealSelect.html">			
+						<a id="mealSelectButton" href="/mealSelect">			
 							<i class="fa fa-cutlery"></i>
 							<span class="hidden-xs hidden-sm hidden-md">Meal Select</span>
 						</a>
@@ -61,7 +61,7 @@
 					
 					<div class="col-xs-2 col-sm-3 col-md-2">
 					
-						<a id="userButton" href="UserDashboard.html">			
+						<a id="userButton" href="/dashboard">			
 							<i class="fa fa-user"></i> 
 							<span th:unless="${customer.anonymous}" th:remove="tag">
 				                <span><a class="my-account" th:href="@{/account}" th:text="${customer.firstName+' '+customer.lastName}"></a></span>
@@ -74,20 +74,21 @@
 					<div class="col-xs-2 col-sm-3 col-md-2">
 					
 						
-	<!-- Cart HTML Start 
-	<a id="cartButton" data-toggle="modal" data-target="#cartView" >			
-		<span class="badge" id="cartCounter"  style="position:absolute;top:5px;left:40px;">0</span>  <i class="fa fa-shopping-cart"></i> 
+	<!-- Cart HTML Start --> 
+	<a id="cartCounter" data-toggle="modal" data-target="#cartView" >			
+		<span class="headerCartItemsCount" id="cartCounter"  style="position:absolute;top:5px;left:40px;" th:text="${cart.itemCount}"></span>  
+		<i class="fa fa-shopping-cart"></i> 
 		<span class="hidden-xs">Cart</span>
 	</a>
-	-->	
-	
+
+	<!--
 	 <a id="cartLink" class="modalcart" th:href="@{/cart}">
 
 		<span class="headerCartItemsCount" id="cartCounter"  style="position:absolute;top:5px;left:40px;" th:text="${cart.itemCount}"></span>  
 		<i class="fa fa-shopping-cart"></i> 
 		<span class="hidden-xs">Cart</span>
-		
     </a>
+    -->
 	<div id="cartContainer" class="view" style="display:none;">
 		
 		<div class="container">

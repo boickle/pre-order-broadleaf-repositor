@@ -1,0 +1,196 @@
+<head th:include="/pops/include/head"></head>
+
+<body class="">
+	
+		
+	<!-- Header Start -->
+	<div id="header" th:include="/pops/include/header"></div>
+	<!-- Header End -->
+
+				
+	<!-- View Container Start -->
+	<div id="viewContainer" class="container">	
+		
+	<!-- UserDashboard View JS Start -->
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("UserDashboard"); 
+		
+		// show the cart button
+		Cart.showButton();
+		
+		// JS Animation for category blocks		
+		$(".row > *").animo( { animation: 'flipInX' });
+	
+	});
+		
+	</script>
+	<!-- UserDashboard View JS End -->
+
+	<h2>My Dashboard</h2>
+	
+	<p>Here you can look at your flight, Pre-Orders and Meals</p>
+	
+	<div class="row ">
+		
+		<div class="col-xs-12 col-sm-6">
+			
+			<h3> 
+				<i class="fa fa-plane"></i> Flight #123 
+			</h3>
+			
+			<div class="panel panel-default">
+			
+		   		<div class="panel-heading">
+		   			
+		   			<h3 class="panel-title"> 
+		       			Outbound 
+		       		</h3>
+		       		
+		    	</div>
+		    	
+				<div class="panel-body">
+					
+					<p>
+						<span class="label label-success">On Time</span>
+					</p>
+								
+					<p><strong>Departs at 3:45PM</strong> on June 5
+						<br/>O'Hare International Airport (ORD)
+						<br/>Terminal 7A, Flight Provider
+					</p>
+					
+				</div>
+			
+			</div>
+	
+		</div>
+		
+		<div class="col-xs-12 col-sm-6">
+			
+			<h3> 
+				<i class="fa fa-plane"></i> Flight #098 
+			</h3>
+			
+			<div class="panel panel-default">
+			
+		   		<div class="panel-heading">
+		   			
+		   			<h3 class="panel-title"> 
+		       			Return
+		       		</h3>
+		       		
+		    	</div>
+		    	
+				<div class="panel-body">
+					
+					<p>
+						<span class="label label-warning">Delayed (30 mins)</span> 
+						
+					</p>
+					
+					<p><strong>Departs at 5:37PM</strong> on June 5
+						<br/>John F Kennedy International Airport, NY (JFK)
+						<br/>Terminal 32, Flight Provider
+					</p>
+					
+				</div>
+			
+			</div>
+	
+		</div>
+		
+	</div>
+	
+	<div class="row">
+			
+		<div class="col-xs-12 col-sm-6">
+			
+			<h3> 
+				<i class="fa fa-tag"></i>
+				My Pre-Orders
+			</h3>
+		
+			<ul class="list-group">
+				
+				<li class="list-group-item">
+					<a href="/OrderCompleted"> Order #123456</a>
+				</li>
+				
+				<li class="list-group-item">
+					<a href="/OrderCompleted"> Order #123456</a>
+				</li>
+				
+				<li class="list-group-item">
+					<a href="/OrderCompleted"> Order #123456</a>
+				</li>
+				
+			</ul>
+				
+		</div>
+		
+		<div class="col-xs-12 col-sm-6">
+			
+			<h3> 
+				<i class="fa fa-cutlery"></i>
+				My Meals
+			</h3>
+		
+			<ul class="list-group">
+				
+				<li class="list-group-item">
+					<a href="/MealSelect"> Lunch on Flight 123 </a>
+				</li>
+				
+				<li class="list-group-item">
+					<a href="/MealSelect"> Dinner on Flight 098 </a>
+				</li>
+				
+		
+				
+			</ul>
+				
+		</div>
+		
+	 
+	</div>
+	
+	
+	
+	<p> <a class="btn btn-primary" href="/categories"> Return to Shopping</a> </p> 
+		
+ 
+	</div>
+	<!-- View Container End -->
+	
+		
+	<!-- Footer Start-->
+	<div id="footer" class="container-fluid">
+		
+		<div class="row">
+			
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<p>&copy; 2014 FLIGHT PROVIDER</p>
+				
+			</div>
+				
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<span>
+					<img src="/img/bigroom/egate.jpg" />
+				</span>
+				
+			</div>
+						
+		</div>
+		
+		
+	</div> 
+	<!-- Footer End -->	
+	
+</body>

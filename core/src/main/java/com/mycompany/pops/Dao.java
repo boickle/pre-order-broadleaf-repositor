@@ -19,4 +19,6 @@ public interface Dao {
 	public List<Category> getBreadCrumbForProduct(long productID, String locale);
 
 	public String getCategoryName(long categoryID, String locale);
+	
+	public List<Product> getMealsForFlight(String flightNumber, String mealType, String locale);
 }

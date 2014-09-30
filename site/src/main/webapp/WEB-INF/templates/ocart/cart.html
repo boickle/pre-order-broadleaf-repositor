@@ -1,8 +1,8 @@
-<div id="cart" style="width:500px">
+<div id="cart" class="cart_modal">
+    <div th:fragment="title" th:inline="text" style="display: none;">Cart - Broadleaf Demo - Heat Clinic</div>
 
     <table th:substituteby="cart/partials/cartProductsTable"></table>
-<!--
-	<br/> 
+
     <div id="cart_total" class="group">
         <h3><span th:text="#{cart.currentSubtotal}">Your Current Subtotal</span></h3>
         <div id="subtotal" th:unless="${cart.subTotal?.zero}" blc:price="${cart.subTotal?.subtract(cart.orderAdjustmentsValue)}"></div>
@@ -25,12 +25,9 @@
             <div class="clearfix"></div>
             <a th:href="@{/}" target="_top">&laquo; <span th:text="#{cart.continueShopping}">Continue Shopping</span></a>
         </p>
-        
     </div>
--->    
     <p class="error" th:if="${param.errorMessage}" th:text="${param.errorMessage[0]}"></p>
     <p class="error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-    <!--
     <blc:form id="cart_promo" method="POST" th:action="@{/cart/promo}">
         <label for="promoCode"><span th:text="#{cart.promoCode}">Promo Code</span>:</label>
         <input id="promoCode" name="promoCode" type="text" th:value="*{promoCode}" value="" autocomplete="off"/>
@@ -40,14 +37,7 @@
         </div>
         <div id="cart_promo_error" style="display: none;"></div>
     </blc:form>
-    -->
+    
     <div id="blc-extra-data" class="hidden" th:utext="${blcextradata}" th:if="${!#strings.isEmpty(blcextradata)}"></div>
-         
-         
-         <span th:unless="${cart.subTotal?.zero}" th:text="#{cart.currentSubtotal}">Your Current Subtotal</span>
-         <div th:if="${cart.orderItems!=null}">
-         <span th:if="${#lists.size(cart.orderItems) == 0}">Your cart is empty</span>
-         </div>
-        <div id="subtotal" th:unless="${cart.subTotal?.zero}" blc:price="${cart.subTotal?.subtract(cart.orderAdjustmentsValue)}"></div>
- 
+
 </div>

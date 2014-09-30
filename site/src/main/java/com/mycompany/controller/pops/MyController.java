@@ -94,6 +94,31 @@ public class MyController {
 		return "pops/newlogin";
 	}	
 
+	@RequestMapping(value = "/home")
+	public String dohome() {
+		LOG.info("Inside doSomething7!");
+
+		return "layout/home";
+	}
+	
+	@RequestMapping(value = "/loginAuto")
+	public ModelAndView doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
+		LOG.info("Inside autologin");
+
+		String email = request.getParameter("email");
+		String flight = request.getParameter("flight");
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("pops/newlogin");
+
+		
+		modelAndView.addObject("email",email);
+		modelAndView.addObject("flight",flight);
+
+		
+		return modelAndView;
+	}	
+
 	/**
 	 * This method reads the locale variable set by broadleaf flag icon
 	 * @param request
@@ -182,25 +207,31 @@ public class MyController {
 		return "pops/static";
 	}
 
-	/* (not used because we are using directly reusing broadleaf's product url
-	@RequestMapping(value = "/productdetail/{productID}")
-	public ModelAndView doProductDetail(@PathVariable int productID, HttpServletRequest request, HttpServletResponse response) {
-		LOG.info("Inside doProductDetail, productID:"+productID);
 
+	@RequestMapping(value = "/mealSelect")
+	public ModelAndView doProductDetail(HttpServletRequest request, HttpServletResponse response) {
+		LOG.info("Inside meal select");
+
+		
 		Dao u = new DaoImpl();
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("pops/productdetail");
+		modelAndView.setViewName("pops/mealselect");
 
 		String locale = getLocale(request);
 		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,locale);
 
+		String flightNumber = "A123"; // TODO: get it from the current user
 		modelAndView.addObject("categories", l);
-		modelAndView.addObject("breadcrumb",u.getBreadCrumbForProduct(productID,locale));
-//		modelAndView.addObject("product",p);
+		modelAndView.addObject("lunch",u.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
+		modelAndView.addObject("dinner",u.getMealsForFlight(flightNumber,Constants.DINNER,locale));
 
 		return modelAndView;
 	}
-	*/
+
+	@RequestMapping(value = "/dashboard")
+	public String doDashBoard() {
+		return "pops/dashboard";
+	}
 	
 }

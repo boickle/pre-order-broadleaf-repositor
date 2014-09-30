@@ -24,6 +24,8 @@ $(function(){
 
         $('.headerCartItemsCount').html(newCount);
         $('.headerCartItemsCountWord').html((newCount == 1) ? singularItem: plurarlItem);
+        
+        
     }
     
     function updateWithPromo(promo) {
@@ -134,11 +136,15 @@ $(function(){
                             showInCartButton(data.productId, 'cart');
                         }
                         
-                        if (wishlistAdd) {
+/*                        if (wishlistAdd) {
                             HC.showNotification(data.productName + "  has been added to your wishlist!");
                         } else {
                             HC.showNotification(data.productName + "  has been added to the cart!", 2000);
                         }
+*/
+                        
+                        // update the modal dialog from bigroom
+                        $('#mycart').load("/cart")
                     }
                 }
             );
@@ -163,6 +169,9 @@ $(function(){
                 }
 
                 $('.simplemodal-wrap').html(data);
+
+				// update the modal dialog from bigroom
+                $('#mycart').load("/cart")
             }
         );
         return false;
@@ -176,10 +185,14 @@ $(function(){
         BLC.ajax({url: $(link).attr('href'),
                 type: "GET"
             }, function(data, extraData) {
+            
                 updateHeaderCartItemsCount(extraData.cartItemCount);
                 showAddToCartButton(extraData.productId, 'cart');
                 
                 $('.simplemodal-wrap').html(data);
+                
+                // update the modal dialog from bigroom 
+                $('#mycart').load("/cart")
             }
         );
         return false;
@@ -194,6 +207,8 @@ $(function(){
                 type: "GET"
             }, function(data) {
                 $('.simplemodal-wrap').html(data);
+                // update the modal dialog from bigroom 
+                $('#mycart').load("/cart")
             }
         );
         return false;

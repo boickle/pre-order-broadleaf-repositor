@@ -13,4 +13,7 @@ public class Constants {
 //	public static String JDBC_LOGIN = "TS5PGAdmin";
 //	public static String JDBC_PASSWORD = "Winter2014!";
 
+	public static String LUNCH = "L";
+	public static String DINNER = "D";
+
 }
