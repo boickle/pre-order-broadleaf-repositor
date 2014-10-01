@@ -9,6 +9,7 @@
        <non-jta-data-source>jdbc/web</non-jta-data-source>
         <class>com.mycompany.pops.domain.FlightInfoImpl</class>
         <class>com.mycompany.pops.domain.FlightMealsImpl</class>
+        <class>com.mycompany.pops.domain.MealSelectionImpl</class>
         <exclude-unlisted-classes/>
          <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

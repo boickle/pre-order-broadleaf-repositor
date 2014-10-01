@@ -2,6 +2,7 @@ package com.mycompany.controller.pops;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -10,6 +11,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.currency.domain.BroadleafCurrency;
 import org.broadleafcommerce.common.locale.domain.Locale;
+import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.service.OrderService;
+import org.broadleafcommerce.core.order.service.type.OrderStatus;
+import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +27,15 @@ import com.mycompany.pops.DaoImpl;
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.domain.FlightInfoImpl;
 import com.mycompany.pops.pojo.Category;
+import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.MyData;
 import com.mycompany.pops.pojo.Product;
 
 @Controller
 public class MyController {
+
+    @Resource(name="blOrderService")
+    protected OrderService orderService;
 
 	protected static final Log LOG = LogFactory.getLog(MyController.class);
 
@@ -207,31 +217,57 @@ public class MyController {
 		return "pops/static";
 	}
 
-
 	@RequestMapping(value = "/mealSelect")
 	public ModelAndView doProductDetail(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside meal select");
 
-		
-		Dao u = new DaoImpl();
-		
+	    Customer customer = (Customer) CustomerState.getCustomer();
+		String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly 
+
+	    if (customer!=null) {
+			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
+		    LOG.info("Yo, you are: "+customer.getUsername());
+			String userName = customer.getUsername();
+	
+			if (userName!=null) {
+				int pipe = userName.indexOf("|");
+				if (pipe>0) flightNumber = userName.substring(0,pipe);
+			}
+	    }
+
+		Dao dao = new DaoImpl();
+	    String locale = getLocale(request);
+		List<Category> l = dao.getCategories(Constants.PRIMARY_NAV,locale);
+
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/mealselect");
-
-		String locale = getLocale(request);
-		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,locale);
-
-		String flightNumber = "A123"; // TODO: get it from the current user
 		modelAndView.addObject("categories", l);
-		modelAndView.addObject("lunch",u.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
-		modelAndView.addObject("dinner",u.getMealsForFlight(flightNumber,Constants.DINNER,locale));
+		modelAndView.addObject("lunch",dao.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
+		modelAndView.addObject("dinner",dao.getMealsForFlight(flightNumber,Constants.DINNER,locale));
 
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/dashboard")
-	public String doDashBoard() {
-		return "pops/dashboard";
+	public ModelAndView doDashBoard() {
+
+		Customer customer = (Customer) CustomerState.getCustomer();
+		long customerID = 0;
+		if (customer!=null) {
+			customerID = customer.getId();
+		}
+		Dao dao = new DaoImpl();
+		List<Meal> meals = dao.getMealsForCustomer(customerID);
+
+		List<Order> orders = orderService.findOrdersForCustomer(customer, OrderStatus.SUBMITTED);
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("pops/dashboard");
+		modelAndView.addObject("meals",meals);
+		modelAndView.addObject("orders", orders);
+		
+		return modelAndView;
 	}
+	
 	
 }

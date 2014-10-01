@@ -17,6 +17,15 @@
 package com.mycompany.controller.cart;
 
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
 import org.broadleafcommerce.core.order.service.exception.AddToCartException;
@@ -28,6 +37,8 @@ import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.controller.cart.BroadleafCartController;
 import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.core.web.order.model.AddToCartItem;
+import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,15 +47,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.mycompany.pops.Dao;
+import com.mycompany.pops.DaoImpl;
 
 @Controller
 @RequestMapping("/cart")
@@ -56,6 +60,30 @@ public class CartController extends BroadleafCartController {
     @RequestMapping("")
     public String cart(HttpServletRequest request, HttpServletResponse response, Model model) throws PricingException {
         return super.cart(request, response, model);
+    }
+    
+    private void saveMeal(long mealID) {
+        // If it is a meal, I am going to store it.
+	    Customer customer = (Customer) CustomerState.getCustomer();
+	    if (customer!=null) {
+			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
+		    LOG.info("in cart, you are: "+customer.getUsername());
+			String userName = customer.getUsername();
+			long customerID = customer.getId();
+			String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly 
+	
+			if (userName!=null) {
+				int pipe = userName.indexOf("|");
+				if (pipe>0) flightNumber = userName.substring(0,pipe);
+			}
+			
+			LOG.info("saveMeal in cart: flight:"+flightNumber+" id:"+customerID+" mealID:"+mealID);
+			Dao dao = new DaoImpl();
+			dao.saveMealSelection(customerID, flightNumber, mealID);
+	    }
+	    else {
+	    	LOG.info("I am not bother saving since you're not logged in");
+	    }
     }
     
     /*
@@ -76,6 +104,8 @@ public class CartController extends BroadleafCartController {
             	
             	long productID = addToCartItem.getProductId();
                 LOG.info("I am adding "+addToCartItem.getQuantity()+" of product "+productID+" to cart");
+                
+                saveMeal(productID);
             	
                 responseMap.put("productId", addToCartItem.getProductId());
             }

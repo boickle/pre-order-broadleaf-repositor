@@ -16,4 +16,7 @@ public class Constants {
 	public static String LUNCH = "L";
 	public static String DINNER = "D";
 
+	public static String LUNCH_DESC = "Lunch";
+	public static String DINNER_DESC = "Dinner";
+
 }

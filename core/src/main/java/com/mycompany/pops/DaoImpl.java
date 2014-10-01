@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
+import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.Product;
 
 @Repository("blDao")
@@ -57,7 +58,8 @@ public class DaoImpl implements Dao{
 	}
 
 
-	private int newFlightInfoSeq() {
+	// Poor man's way to try to find next sequence 
+	private int newSequenceForTable(String tablename) {
 
 		int maxID = 0;
 
@@ -72,7 +74,7 @@ public class DaoImpl implements Dao{
 
 			stmt = conn.createStatement();
 
-			String sql = "SELECT MAX(id) FROM FLIGHTINFO";
+			String sql = "SELECT MAX(id) FROM "+tablename;
 			LOG.info("sql=" + sql);
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
@@ -142,7 +144,7 @@ public class DaoImpl implements Dao{
 			LOG.info("Inserting record into the table...");
 			stmt = conn.createStatement();
 
-			int num = newFlightInfoSeq();
+			int num = newSequenceForTable("FLIGHTINFO");
 
 			String sql = "INSERT INTO FLIGHTINFO (ID,FLIGHT_NUMBER, departure_location, DESTINATION_LOCATION) VALUES ("
 					+ num + ','
@@ -425,7 +427,7 @@ public class DaoImpl implements Dao{
 
 
 	public List<Product> getMealsForFlight(String flightNumber, String mealType, String locale) {
-		LOG.info("trying to meals for flight: "+flightNumber+" type:"+mealType);
+		LOG.info("trying to find meals for flight: "+flightNumber+" type:"+mealType);
 		List<Product> result = null;
 
 		String sql = "select product_id,manufacture,blc_product.url,retail_price,name,long_description,blc_media.url" 
@@ -461,9 +463,127 @@ public class DaoImpl implements Dao{
 				LOG.error("sql exception",e);
 			}
 		}
-
-		LOG.info("I am returning this many items: "+result.size());
+		if (result!=null) {
+			LOG.info("I am returning this many items: "+result.size());
+		}
 		return result;
+	}
+	
+	public void saveMealSelection(long customerID, String flightNumber, long mealID) {
+		LOG.info("Saving meal for "+customerID+", flight:"+flightNumber+" mealID:"+mealID);
+
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			Class.forName(Constants.JDBC_DRIVER);
+
+			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
+					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
+			
+			LOG.info("Connected database successfully...");
+
+			// First, find out the type of meal that the user already selected (based on the current meal user tries to add)
+			// then delete those selection (to remove previously selected meal for the flight)
+			Statement delstmt = conn.createStatement();
+
+			String delSQL = 
+					"delete from meal_selection where meal_id in "
+					+ "(select meal_id from flight_meal "
+					+ " where flight_number='"+flightNumber+"' "
+					+ " and meal_type = (select meal_type from flight_meal where meal_id="+mealID+"))";
+			LOG.info("delSQL="+delSQL);
+			delstmt.executeUpdate(delSQL);
+
+			// insert the new selection
+			stmt = conn.createStatement();
+			int num = newSequenceForTable("MEAL_SELECTION");
+
+			String sql = "INSERT INTO MEAL_SELECTION (ID,CUSTOMER_ID,FLIGHT_NUMBER, MEAL_ID) VALUES ("
+					+ num + ','
+					+ customerID+','
+					+ "'"
+					+ flightNumber
+					+ "',"
+					+ mealID + ")";
+
+			LOG.info("sql=" + sql);
+			stmt.executeUpdate(sql);
+
+			LOG.info("Inserted record into the table...");
+
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			LOG.error("jdbc problem", e);
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					conn.close();
+			} catch (SQLException se) {
+			}// do nothing
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				LOG.error("jdbc problem", se);
+			}// end finally try
+		}// end try
+
+	}
+	
+	public List<Meal> getMealsForCustomer(long customerID) {
+		LOG.info("trying to find meals for customer: "+customerID);
+		if (customerID==0) return null;
+
+		List<Meal> result = null;
+		// Data is stored in MEAL_SELECTION table, need to gather the name and image
+
+		String sql = "select product_id,flight_meal.flight_number,flight_meal.meal_type,blc_sku.name,blc_media.url" 
+				+" from blc_product, blc_sku, blc_sku_media_map, blc_media, meal_selection,flight_meal"
+				+" where blc_product.product_id=meal_selection.meal_id" 
+				+" and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id and map_key='primary'" 
+				+" and flight_meal.meal_id= product_id and meal_selection.customer_id="+customerID;
+		 
+		ResultSet rs = jdbcSelectWrapper(sql);
+		if (rs!=null) {
+			
+			try {
+				while (rs.next()) {
+					if (result==null) result = new ArrayList<Meal>();
+					
+					String flightNumber = rs.getString(2);
+					String mealType = rs.getString(3);
+					String mealTypeSpelled = mealType;
+					
+					if (Constants.LUNCH.equals(mealType)) {
+						mealTypeSpelled = Constants.LUNCH_DESC;
+					}
+					if (Constants.DINNER.equals(mealType)) {
+						mealTypeSpelled = Constants.DINNER_DESC;
+					}
+
+					
+					Meal m = new Meal();
+					m.setFlightNumber(flightNumber);
+					m.setMealType(mealType);
+					
+					m.setName(rs.getString(4));
+					m.setImageUrl(rs.getString(5));
+					m.setDescription(mealTypeSpelled+" on Flight "+flightNumber);
+					result.add(m);
+					
+				}
+			} catch (SQLException e) {
+				LOG.error("sql exception",e);
+			}
+		}
+		if (result!=null) {
+			LOG.info("I am returning this many items: "+result.size());
+		}
+		return result;
+		
+
+		
 	}
 
 }

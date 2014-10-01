@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
+import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.Product;
 
 public interface Dao {
@@ -21,4 +22,8 @@ public interface Dao {
 	public String getCategoryName(long categoryID, String locale);
 	
 	public List<Product> getMealsForFlight(String flightNumber, String mealType, String locale);
+	
+	public void saveMealSelection(long customerID, String flightNumber, long mealID); 
+	
+	public List<Meal> getMealsForCustomer(long customerID);
 }

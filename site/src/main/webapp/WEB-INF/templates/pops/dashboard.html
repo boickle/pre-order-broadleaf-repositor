@@ -130,6 +130,28 @@
 				</li>
 				
 			</ul>
+			<div>
+		    <ul id="order-history" th:unless="${#lists.isEmpty(orders)}">
+		        <li>
+		            <span class="order-number">Order Number</span>
+		            <span class="submit-date">Date</span>
+		            <span class="status">Status</span>
+		            <span class="total">Total</span>
+		        </li>
+		        <li class="order" th:each="order : ${orders}" th:object="${order}" th:attr="data-order-number=*{orderNumber}">
+		            <div class="order-info-row">
+		             <span class="order-number"><a th:href="@{/account/orders/} + *{orderNumber}" class="view-order-details" th:text="*{orderNumber}"></a></span>
+		             <span class="submit-date" th:text="*{#dates.format(submitDate, 'MM-dd-yyyy')}"></span>
+		             <span class="status" th:text="*{status.friendlyType}">Processing</span>
+		             <span class="total" blc:price="*{total}"></span>
+		         </div>
+		            <div class="order-details"></div>
+		        </li>
+		    </ul>
+		    
+		    <h3 th:if="${#lists.isEmpty(orders)}">You have not placed any orders.</h3>
+		
+		</div>
 				
 		</div>
 		
@@ -140,16 +162,24 @@
 				My Meals
 			</h3>
 		
-			<ul class="list-group">
-				
+			<ul class="list-group" th:each="meal : ${meals}">
+			
+			
 				<li class="list-group-item">
+				   <div th:utext="${meal.description}"/>
+				   <br/>
+				   <img th:src="@{*{meal.imageUrl} + '?thumbnail'}"/>
+				   <div th:utext="${meal.name}"/>
+				</li>
+				
+<!--				<li class="list-group-item">
 					<a href="/MealSelect"> Lunch on Flight 123 </a>
 				</li>
 				
 				<li class="list-group-item">
 					<a href="/MealSelect"> Dinner on Flight 098 </a>
 				</li>
-				
+-->				
 		
 				
 			</ul>
