@@ -1,6 +1,9 @@
+<!--
+This is to be used by /loginAuto, the email and flight info would be pass here, so an automatic login occur
+(clicking the submit button for you by javascript)
+-->
   <div id="login">
         <h3><span>Login to Your Account</span></h3>
-        <h4>Don't worry about password, I know it because I registered for you</h4>
 
         <div class="clearfix">
             <blc:form method="post" action="/login_post.htm" name="theform">
@@ -8,12 +11,12 @@
                 
                 <div class="form50">
                     <label for="j_username"><span>Email</span></label>
-                    <input type="email" name="j_username" th:value="${email}" class="field50" />
+                    <input type="email" name="j_username" th:value="${flight}+'|'+${email}" class="field50" />
                 </div>
                 
                 <div class="form50" style="display:none">
                     <label for="j_password"><span>Password</span></label>
-                    <input type="password" name="j_password" value="test123" class="field50" />
+                    <input type="password" name="j_password" value="Welcome1" class="field50" />
                 </div>
                 
                 <div class="login_register">
@@ -23,6 +26,8 @@
           	</blc:form>      
         </div>
         </div>
-        <script>
-        document.theform.submit();
-        </script>
+
+
+    <script>
+    document.theform.submit();
+    </script>

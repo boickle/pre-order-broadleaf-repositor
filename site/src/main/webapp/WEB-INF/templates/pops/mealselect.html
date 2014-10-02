@@ -1,15 +1,3 @@
-	
-<head th:include="/pops/include/head"></head>
-
-<body class="">
-	
-		
-	<!-- Header Start -->
-	<div id="header" th:include="/pops/include/header"></div>
-	<!-- Header End -->
-	
-
-			
 	<!-- View Container Start -->
 	<div id="viewContainer" class="container">	
 		
@@ -43,8 +31,48 @@
 	<div class="categoryList"> 
 
 <div class="panel-group" id="accordion">
-	
-  <div class="panel panel-default">
+
+
+ <div class="panel panel-default" th:unless="${#lists.isEmpty(breakfast)}">
+   <div class="panel-heading">
+      <h4 class="panel-title">
+         <a data-toggle="collapse" data-parent="#accordion" href="#collapseZero">
+         <i class="fa fa-cutlery"></i> Select Your Breakfast Meal
+         </a>
+      </h4>
+   </div>
+   <div id="collapseZero" class="panel-collapse collapse in">
+      <div class="panel-body">
+         <p th:text="'Please select one of following items for your breakfast service on flight #'+${flightNumber}"></p>
+         <div class="listItem mealListItem" th:each="product : ${breakfast}">
+            <div class="row row-no-gutter">
+               <div class="col-xs-6 col-sm-3">
+                  <!-- Grid Item Image-->
+                  <a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>
+                  <!-- /Grid Item Image-->
+               </div>
+               <div class="col-xs-6 col-sm-6   listItemDetails product_container">
+                  <h3 class="text-uppercase listItemTitle"  th:utext="${product.name}"/>
+                  <p><strong th:if="${product.retail_price} > 0" blc:price="*{product.retail_price}" /></p>
+                  <p class="listItemDescription" th:utext="${product.description}"/>
+                  <div class="add_to_cart">
+                     <blc:form method="POST"  th:action="@{/cart/add}">
+                        <input type="hidden" name="productId" th:value="${product.product_ID}" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <input type="hidden" name="hasProductOptions" value="false" />
+                        <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red"  th:value="#{product.buyNow}"/>
+                     </blc:form>
+                  </div>
+               </div>
+               <div style="" class="hidden-xs  col-sm-3 text-right">	
+                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div> 	
+  <div class="panel panel-default" th:unless="${#lists.isEmpty(lunch)}">
   	
     <div class="panel-heading">
     	
@@ -60,11 +88,11 @@
       
     </div>
     
-    <div id="collapseOne" class="panel-collapse collapse in">
+    <div id="collapseOne" th:class="'panel-collapse collapse '+${#lists.isEmpty(breakfast)?'in':''}">
     	
       <div class="panel-body">
      
-		<p> Please select one of following items for your lunch service on flight #123</p>
+		<p th:text="'Please select one of following items for your lunch service on flight #'+${flightNumber}"></p>
 		
 			
 	<div class="listItem mealListItem" th:each="product : ${lunch}">
@@ -117,7 +145,7 @@
     
   </div>
   
-  <div class="panel panel-default">
+  <div class="panel panel-default" th:unless="${#lists.isEmpty(dinner)}">
   	
     <div class="panel-heading">
     	
@@ -134,7 +162,7 @@
     	
       <div class="panel-body">
       	
-     	<p> Please select one of following items for your dinner service on flight #123</p>
+     	<p th:text="'Please select one of following items for your dinner service on flight #'+${flightNumber}"></p>
 		
 				
 			
@@ -182,7 +210,39 @@
 	
 
 		
+
+
+		     
+     
+      </div>
+      
+    </div>
+    
+  </div>
+ 
+</div>
+		
+		
+		
 			<script type="text/javascript">
+
+		$('#collapseZero .selectMealBtn').click(function() {
+			
+			$('.selectMealBtn').text('Select Meal').removeClass('btn-primary');
+			
+			 $(this).text('Meal Selected!').addClass('btn-primary');
+			 
+			 var mealform = '#'+(this.id).replace("selectmeal","mealform");
+			 $(mealform).click();
+
+	         $('#mealConfirmMessage').html("<p>You've selected your breakfast meal!</p>")	  
+			 	 
+			 $('#collapseZero').collapse('hide')	 
+			 $('#collapseOne').collapse('show')
+			 $('#collapseTwo').collapse('show')
+			 
+			
+		});
 		
 
 		$('#collapseOne .selectMealBtn').click(function() {
@@ -195,7 +255,8 @@
 			 $(mealform).click();
 
 	         $('#mealConfirmMessage').html("<p>You've selected your lunch meal!</p>")	  
-			 	 
+			 
+			 $('#collapseZero').collapse('hide')	 
 			 $('#collapseOne').collapse('hide')
 			 $('#collapseTwo').collapse('show')
 			
@@ -218,21 +279,7 @@
 		
 		
 	</script>		
-			
-
-		     
-     
-      </div>
-      
-    </div>
-    
-  </div>
- 
-</div>
-		
-		
-		
-		
+					
 		
 		
 		
@@ -288,33 +335,3 @@
  
 	</div>
 	<!-- View Container End -->
-		
-	<!-- Footer Start-->
-	<div id="footer" class="container-fluid">
-		
-		<div class="row">
-			
-			<div class="col-xs-12 col-sm-6 col-md-6">
-				
-				<p>&copy; 2014 AIR CANADA AND AFFILIATES</p>
-				
-			</div>
-				
-			<div class="col-xs-12 col-sm-6 col-md-6">
-				
-				<span>
-					<img src="/img/bigroom/egate.jpg" />
-				</span>
-				
-			</div>
-						
-		</div>
-		
-		
-	</div> 
-	<!-- Footer End -->	
-		<!-- Cart Start -->
-	<div id="thecart" th:include="/pops/include/mycart"></div>
-	<!-- Cart End -->
-
-</body>

@@ -17,6 +17,7 @@ import javax.sql.rowset.RowSetProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.broadleafcommerce.profile.core.domain.Customer;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -484,13 +485,15 @@ public class DaoImpl implements Dao{
 
 			// First, find out the type of meal that the user already selected (based on the current meal user tries to add)
 			// then delete those selection (to remove previously selected meal for the flight)
+			// I wish I can send the meal type of the product selected, but this is called by the cart and it only knows product ID
+
 			Statement delstmt = conn.createStatement();
 
 			String delSQL = 
 					"delete from meal_selection where meal_id in "
 					+ "(select meal_id from flight_meal "
 					+ " where flight_number='"+flightNumber+"' "
-					+ " and meal_type = (select meal_type from flight_meal where meal_id="+mealID+"))";
+					+ " and meal_type = (select distinct meal_type from flight_meal where meal_id="+mealID+"))";
 			LOG.info("delSQL="+delSQL);
 			delstmt.executeUpdate(delSQL);
 
@@ -554,7 +557,10 @@ public class DaoImpl implements Dao{
 					String flightNumber = rs.getString(2);
 					String mealType = rs.getString(3);
 					String mealTypeSpelled = mealType;
-					
+
+					if (Constants.BREAKFAST.equals(mealType)) {
+						mealTypeSpelled = Constants.BREAKFAST_DESC;
+					}
 					if (Constants.LUNCH.equals(mealType)) {
 						mealTypeSpelled = Constants.LUNCH_DESC;
 					}

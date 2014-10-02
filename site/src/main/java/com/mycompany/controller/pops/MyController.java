@@ -106,7 +106,7 @@ public class MyController {
 
 	@RequestMapping(value = "/home")
 	public String dohome() {
-		LOG.info("Inside doSomething7!");
+		LOG.info("Inside dohome!");
 
 		return "layout/home";
 	}
@@ -232,6 +232,7 @@ public class MyController {
 			if (userName!=null) {
 				int pipe = userName.indexOf("|");
 				if (pipe>0) flightNumber = userName.substring(0,pipe);
+				LOG.info("Your flight is:"+flightNumber);
 			}
 	    }
 
@@ -242,6 +243,8 @@ public class MyController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/mealselect");
 		modelAndView.addObject("categories", l);
+		modelAndView.addObject("flightNumber",flightNumber);
+		modelAndView.addObject("breakfast",dao.getMealsForFlight(flightNumber,Constants.BREAKFAST,locale));
 		modelAndView.addObject("lunch",dao.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
 		modelAndView.addObject("dinner",dao.getMealsForFlight(flightNumber,Constants.DINNER,locale));
 
@@ -251,16 +254,31 @@ public class MyController {
 	@RequestMapping(value = "/dashboard")
 	public ModelAndView doDashBoard() {
 
+		List<Order> orders = null;
 		Customer customer = (Customer) CustomerState.getCustomer();
+		String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly 
+
+	    if (customer!=null) {
+			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
+		    LOG.info("Yo, you are: "+customer.getUsername());
+			String userName = customer.getUsername();
+	
+			if (userName!=null) {
+				int pipe = userName.indexOf("|");
+				if (pipe>0) flightNumber = userName.substring(0,pipe);
+				LOG.info("Your flight is:"+flightNumber);
+			}
+	    }
+
+
 		long customerID = 0;
 		if (customer!=null) {
 			customerID = customer.getId();
+			orders = orderService.findOrdersForCustomer(customer, OrderStatus.SUBMITTED);
 		}
+
 		Dao dao = new DaoImpl();
 		List<Meal> meals = dao.getMealsForCustomer(customerID);
-
-		List<Order> orders = orderService.findOrdersForCustomer(customer, OrderStatus.SUBMITTED);
-
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/dashboard");
 		modelAndView.addObject("meals",meals);

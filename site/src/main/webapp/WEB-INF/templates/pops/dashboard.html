@@ -1,13 +1,4 @@
-<head th:include="/pops/include/head"></head>
-
-<body class="">
-	
-		
-	<!-- Header Start -->
-	<div id="header" th:include="/pops/include/header"></div>
-	<!-- Header End -->
-
-				
+			
 	<!-- View Container Start -->
 	<div id="viewContainer" class="container">	
 		
@@ -115,6 +106,7 @@
 				My Pre-Orders
 			</h3>
 		
+			<!--
 			<ul class="list-group">
 				
 				<li class="list-group-item">
@@ -130,28 +122,17 @@
 				</li>
 				
 			</ul>
-			<div>
-		    <ul id="order-history" th:unless="${#lists.isEmpty(orders)}">
-		        <li>
-		            <span class="order-number">Order Number</span>
-		            <span class="submit-date">Date</span>
-		            <span class="status">Status</span>
-		            <span class="total">Total</span>
-		        </li>
-		        <li class="order" th:each="order : ${orders}" th:object="${order}" th:attr="data-order-number=*{orderNumber}">
-		            <div class="order-info-row">
-		             <span class="order-number"><a th:href="@{/account/orders/} + *{orderNumber}" class="view-order-details" th:text="*{orderNumber}"></a></span>
-		             <span class="submit-date" th:text="*{#dates.format(submitDate, 'MM-dd-yyyy')}"></span>
-		             <span class="status" th:text="*{status.friendlyType}">Processing</span>
-		             <span class="total" blc:price="*{total}"></span>
-		         </div>
-		            <div class="order-details"></div>
+			-->
+		    <ul class="list-group" th:unless="${#lists.isEmpty(orders)}">
+
+		        <li class="list-group-item" th:each="order : ${orders}" th:object="${order}" th:attr="data-order-number=*{orderNumber}">
+		             <a th:href="@{/account/orders/} + *{orderNumber}" th:text="'Order #'+*{orderNumber}"></a>
 		        </li>
 		    </ul>
 		    
-		    <h3 th:if="${#lists.isEmpty(orders)}">You have not placed any orders.</h3>
+		    <div th:if="${#lists.isEmpty(orders)}">You have not placed any orders.</div>
 		
-		</div>
+		
 				
 		</div>
 		
@@ -196,31 +177,3 @@
  
 	</div>
 	<!-- View Container End -->
-	
-		
-	<!-- Footer Start-->
-	<div id="footer" class="container-fluid">
-		
-		<div class="row">
-			
-			<div class="col-xs-12 col-sm-6 col-md-6">
-				
-				<p>&copy; 2014 FLIGHT PROVIDER</p>
-				
-			</div>
-				
-			<div class="col-xs-12 col-sm-6 col-md-6">
-				
-				<span>
-					<img src="/img/bigroom/egate.jpg" />
-				</span>
-				
-			</div>
-						
-		</div>
-		
-		
-	</div> 
-	<!-- Footer End -->	
-	
-</body>
