@@ -1,22 +1,50 @@
-<!DOCTYPE HTML>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-<head th:include="/layout/partials/head (pageTitle='TEMPLATE')"></head>
+<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="no-js lt_ie9"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt_ie10 ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+	
+<head th:include="/pops/include/head"></head>
 
-<body>
-    <div id="notification_bar"></div>
-    <header th:substituteby="layout/partials/header" />
-    
-    <div id="content" class="width_setter group" role="main">
+<body class="">
+	
+		
+	<!-- Header Start -->
+	<div id="header" th:include="/pops/include/headernocart"></div>
+	<!-- Header End -->
+	
+	
+    <div class="container">
     
         <div th:substituteby="${templateName}" />
-            
+    
     </div>
-    
-    <footer th:substituteby="layout/partials/footer" />
-    
+
+  
+
+	<!-- Footer Start-->
+	<div id="footer" class="container-fluid">
+		
+		<div class="row">
+			
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<p>&copy; 2014 AIR CANDADA AND AFFILIATES</p>
+				
+			</div>
+				
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				
+				<span>
+					<img src="/img/bigroom/egate.jpg" />
+				</span>
+				
+			</div>
+						
+		</div>
+		
+		
+	</div> 
+	<!-- Footer End -->
 </body>
 </html>

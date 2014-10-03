@@ -1,0 +1,166 @@
+		<nav class="navbar navbar-default" role="navigation">
+	
+			<div class="container">
+				
+				<div class="row">
+					
+						
+					<div class="col-xs-2 col-sm-2 col-md-4">
+										
+						<a class="navbar-brand" href="/categories">
+							
+							<img class="logo hidden-xs hidden-sm" src="/img/bigroom/logo.jpg"/>
+							<img class="logo hidden-md hidden-lg" src="/img/bigroom/logoSmall.jpg"/>
+						</a>
+							
+							
+						<div id="languages" style="padding:15px">
+				            <span id="selectedLocale" th:text="${session.blLocale.localeCode}" style="display: none" />
+				
+				            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'en_US')">
+				                <img id="en_US" src="img/flags/United-States.png" th:src="@{/img/flags/United-States.png}" alt="United States" title="English" />
+				            </a>
+				
+				            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'en_GB')">
+				                <img id="en_GB" src="img/flags/United-Kingdom.png" th:src="@{/img/flags/United-Kingdom.png}" alt="United Kingdom" title="English (UK)"/>
+				            </a>
+				
+				            <a  href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'es_MX')">
+				                <img id="es_MX" src="img/flags/Mexico.png" th:src="@{/img/flags/Mexico.png}" alt="Mexico" title="Spanish (Mexico)"/>
+				            </a>
+				
+				            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'es_ES')">
+				                <img id="es_ES" src="img/flags/Mexico.png" th:src="@{/img/flags/Spain.png}" alt="Spain" title="Spanish (Spain)"/>
+				            </a>
+				            <a href="javascript:;" onclick="BLC.addUrlParam(document.location.search, 'blLocaleCode', 'fr_FR')">
+				                <img id="fr_FR" src="img/flags/Mexico.png" th:src="@{/img/flags/France.png}" alt="France" title="French (France)" />
+				            </a>
+				
+				        </div>
+											
+					</div>
+					
+					<div class="col-xs-2">
+					
+						<a id="mealSelectButton" href="/mealSelect">			
+							<i class="fa fa-cutlery"></i>
+							<span class="hidden-xs hidden-sm hidden-md">Meal Select</span>
+						</a>
+					
+					</div>
+										
+					<div class="col-xs-4 col-sm-2 col-md-2">
+					
+						<a id="timerButton">			
+							<i class="fa fa-clock-o"></i>
+							<span id="timeLeft"></span>
+							<span class="hidden-xs hidden-sm hidden-md">Remaining</span>
+						</a>
+					
+					</div>
+					
+					<div class="col-xs-2 col-sm-3 col-md-2">
+					
+						<a id="userButton" href="/dashboard">			
+							<i class="fa fa-user"></i> 
+							<span th:unless="${customer.anonymous}" th:remove="tag">
+				                <span><a class="my-account" th:href="@{/account}" th:text="${customer.firstName+' '+customer.lastName}"></a></span>
+				            </span>
+							<!--<span class="userName hidden-xs hidden-md">Donald McMains</span>-->
+						</a>
+					
+					</div>
+	
+					<div class="col-xs-2 col-sm-3 col-md-2">
+					
+						
+	<!-- Cart HTML Start 
+	<a id="cartCounter" data-toggle="modal" data-target="#cartView" >			
+		<span class="headerCartItemsCount" id="cartCounter"  style="position:absolute;top:5px;left:40px;" th:text="${cart.itemCount}"></span>  
+		<i class="fa fa-shopping-cart"></i> 
+		<span class="hidden-xs">Cart</span>
+	</a>
+	-->
+	<!--
+	 <a id="cartLink" class="modalcart" th:href="@{/cart}">
+
+		<span class="headerCartItemsCount" id="cartCounter"  style="position:absolute;top:5px;left:40px;" th:text="${cart.itemCount}"></span>  
+		<i class="fa fa-shopping-cart"></i> 
+		<span class="hidden-xs">Cart</span>
+    </a>
+    -->
+	<div id="cartContainer" class="view" style="display:none;">
+		
+		<div class="container">
+
+		<p>You have <strong> <span id="cartCounter">1</span> item</strong> in your cart.</p>
+		
+		<div id="cartItemList">
+			
+			
+		</div>
+
+		<div id="cartFooter">
+
+			<h3 class="text-uppercase">Total <span id="cartTotal">$30.00</span> </h3> 
+				
+			<a href="Payment.html" class="btn btn-primary text-uppercase">Checkout</a>	
+
+		</div>
+		
+		</div>
+			
+	</div>
+	
+	<audio id="cartAddSound">
+	  <source src="/js/bigroom/sound/pop.mp3" type="audio/mpeg" />
+
+	</audio>
+	<!-- Cart HTML End -->
+	
+	
+
+	
+						
+					</div>
+					
+  				</div>
+
+			</div> 
+			  
+		</nav>
+		
+		
+	<!-- Flight Bar Start -->
+	<div class="flightBar">
+		
+		<nav class="navbar navbar-default" role="navigation">
+			
+			<div class="container">
+				
+				<p class="navbar-text">
+					
+					<button><i class="fa fa-reply"></i> <span class="hidden-xs hidden-sm">Return to Booking</span></button>
+					<span class="divider">|</span>
+						
+					<i class="fa fa-plane"></i> <b>Flight Info</b> 
+					<span class="divider">|</span> <b>Passenger:</b> Donald McMains
+					<span class="divider"></span> <b>Flight:</b> AC-1824
+					
+					<span class="divider"></span> <b>To:</b> Vancouver
+					
+					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> 10:35AM
+					
+					<span class="divider"></span> <b>Arrival:</b> 4:35PM
+			
+				</p>
+								
+			</div>
+			
+		</nav>
+		
+	</div>
+	<!-- /Flight Bar  -->		
+	
+	<script type="text/javascript" src="/js/bigroom/js/Countdown.js"></script>
+

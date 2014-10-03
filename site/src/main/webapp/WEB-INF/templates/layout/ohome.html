@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+
+<head th:include="/layout/partials/head (pageTitle='Broadleaf Demo - Heat Clinic')"></head>
+
+<body>
+    <div id="notification_bar"></div>
+    <header th:substituteby="layout/partials/header" />
+    
+    <div id="content" class="width_setter group" role="main">
+    
+        <nav th:substituteby="layout/partials/nav" />
+            
+        <blc:content contentType="Homepage Banner Ad" />       
+        <div id="banners" th:if="${contentItem !=null and contentItem['targetUrl'] != null and contentItem['imageUrl'] != null}">
+            <a th:href="@{${contentItem['targetUrl']}}"><img th:src="@{${contentItem['imageUrl']}}" /></a>       
+        </div>
+        
+        <blc:content contentType="Homepage Middle Promo Snippet" /> 
+        
+        <a th:href="@{/register}" th:if="${contentItem !=null and contentItem['htmlContent'] !=null}" style="text-decoration:none">
+            <div id="home_feature" th:utext="${contentItem['htmlContent']}">
+            </div>
+        </a>
+
+        
+        <blc:content contentType="Homepage Featured Products Title" />    
+        <div th:if="${contentItem !=null and contentItem['messageText'] !=null}" class="title_bar" > Trending Technology </div>
+        <p>Our patent-pending systems are built upon the latest technologies, combining Software-as-a-Service (SaaS) and 
+        Service Oriented Architecture (SOA), and engineered for high-availability in the most demanding transaction volume situations. 
+        SaaS simply means R-1 and AM-1 systems run from our secure data centers and partners access them via the Internet. 
+        With open technologies, partners connect R-1 or AM-1 to their web site, mobile app, and internal systems quickly 
+        and with minimal capital outlay</p>
+        <p>Reliable Order Fulfillment (ROF) is essential. Our systems are engineered for a clear path to increased revenue 
+            and mitigated operational issues. To meet elevated customer expectations with high fulfillment rates all providers 
+            are digitally linked in real time. Our pre-ordering platforms enable efficient, errorless coordination with caterers 
+            by automated order routing. Real-time inventory availability ensures reliable fulfillment. Finally, our systems can 
+            limit order-taking on possible broken itineraries and irregular operations (IROP), as well as apply other avoidance 
+            rules that enable caterers to circumvent situations that may place fulfillment at risk.
+        </p>
+        
+        <!-- 
+          <ul id="products" class="group">
+            <li th:each="product : ${products}" th:object="${product}" th:include="catalog/partials/productListItem" class="product_container"></li>
+          </ul>
+        -->
+    </div>
+    
+    <footer th:substituteby="layout/partials/footer" />
+
+</body>
+</html>

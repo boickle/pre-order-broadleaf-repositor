@@ -34,10 +34,12 @@ import com.mycompany.pops.pojo.Product;
 @Controller
 public class MyController {
 
+	protected static final Log LOG = LogFactory.getLog(MyController.class);
+
+	// so I can find orders for the customer for the dashboard
     @Resource(name="blOrderService")
     protected OrderService orderService;
 
-	protected static final Log LOG = LogFactory.getLog(MyController.class);
 
 	@RequestMapping(value = "/some/path")
 	public String doSomething() {
@@ -218,7 +220,7 @@ public class MyController {
 	}
 
 	@RequestMapping(value = "/mealSelect")
-	public ModelAndView doProductDetail(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView doMealSelect(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside meal select");
 
 	    Customer customer = (Customer) CustomerState.getCustomer();
@@ -287,5 +289,40 @@ public class MyController {
 		return modelAndView;
 	}
 	
+
+	@RequestMapping(value = "/welcome")
+	public ModelAndView doRedirect(HttpServletRequest request, HttpServletResponse response) {
+
+		Customer customer = (Customer) CustomerState.getCustomer();
+		String flightNumber = "";  
+
+		// if you are logged in, and you have meal selected, go to dashboard. if not, go to mealSelect
+		// if you are not logged in, go home.
+	    if (customer!=null) {
+			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
+		    LOG.info("Yo, you are: "+customer.getUsername());
+			String userName = customer.getUsername();
+			long customerID = customer.getId();
+	
+			if (userName!=null) {
+				int pipe = userName.indexOf("|");
+				if (pipe>0) flightNumber = userName.substring(0,pipe);
+				LOG.info("Your flight is:"+flightNumber);
+
+				Dao dao = new DaoImpl();
+				List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
+				if (meals!=null && !meals.isEmpty()) {
+					return doDashBoard();
+				}
+				return doMealSelect(request,response);
+			}
+	    }
+
+	    
+		ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName("layout/ohome");
+		return modelAndView;
+
+	}
 	
 }
