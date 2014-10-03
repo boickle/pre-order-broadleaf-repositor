@@ -13,30 +13,24 @@ import org.hibernate.annotations.Parameter;
 @Table(name = "FLIGHT_MEAL")
 public class FlightMealsImpl implements FlightMeals {
 
-    @Id
-    @GeneratedValue(generator= "FlightMealId")
-    @GenericGenerator(
-        name="FlightMealId",
-        strategy="org.broadleafcommerce.common.persistence.IdOverrideTableGenerator",
-        parameters = {
-            @Parameter(name="segment_value", value="FlightMealImpl"),
-            @Parameter(name="entity_name", value="com.mycompany.pops.domain.FlightMealImpl")
-        }
-    )
-    @Column(name = "ID")
-    protected Long id;
-    
+	@Id
+	@GeneratedValue(generator = "FlightMealId")
+	@GenericGenerator(name = "FlightMealId", strategy = "org.broadleafcommerce.common.persistence.IdOverrideTableGenerator", parameters = {
+			@Parameter(name = "segment_value", value = "FlightMealImpl"),
+			@Parameter(name = "entity_name", value = "com.mycompany.pops.domain.FlightMealImpl") })
+	@Column(name = "ID")
+	protected Long id;
+
 	@Column(name = "FLIGHT_NUMBER")
 	protected String flightNumber;
-	
+
 	@Column(name = "MEAL_TYPE")
 	protected String mealType;
-	
+
 	@Column(name = "MEAL_ID")
 	protected Long meal_id;
 
-	
-    @Override
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -76,5 +70,4 @@ public class FlightMealsImpl implements FlightMeals {
 		this.meal_id = meal_id;
 	}
 
-	
 }
