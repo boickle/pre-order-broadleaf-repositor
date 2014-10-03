@@ -25,5 +25,5 @@ public interface Dao {
 	
 	public void saveMealSelection(long customerID, String flightNumber, long mealID); 
 	
-	public List<Meal> getMealsForCustomer(long customerID);
+	public List<Meal> getMealsForCustomer(long customerID,String flightNumber);
 }

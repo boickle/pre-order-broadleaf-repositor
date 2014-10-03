@@ -278,7 +278,7 @@ public class MyController {
 		}
 
 		Dao dao = new DaoImpl();
-		List<Meal> meals = dao.getMealsForCustomer(customerID);
+		List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/dashboard");
 		modelAndView.addObject("meals",meals);
