@@ -3,6 +3,8 @@ package com.mycompany.pops;
 public class Constants {
 	public static int PRIMARY_NAV = 2; // the category ID for main nav
 	
+	public static String JNDI_DATASOURCE = "jdbc/web";
+	
 	// Theoretically we should not need to do jdbc at all... if we can use hibernate...
 	public static String JDBC_DRIVER = "org.postgresql.Driver";
 	public static String JDBC_CONNECTION = "jdbc:postgresql://localhost:5432/POPS";

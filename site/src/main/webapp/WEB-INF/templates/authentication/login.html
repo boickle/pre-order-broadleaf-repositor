@@ -10,7 +10,7 @@
         </span>
 
         <div class="clearfix">
-            <blc:form th:action="@{/login_post.htm}" method="post">
+            <blc:form th:action="@{/login_post.htm}" name="theform" method="post">
                 <input type="hidden" name="successUrl" th:if="${successUrl}" th:value="${successUrl}"/>
                 
                 <div class="form50">
@@ -36,3 +36,24 @@
         </div>
     </div>
 </div>
+
+<form name="info" style="display:none">
+Email: <input name="email" type="text" th:value="${session.email}"/><br/>
+Flight: <input name="flight" type="text" th:value="${session.flight}"/> <br/>
+Error: <input name="theerror" type="text" th:value="${param.error}"/>
+</form>
+
+<script>
+// If there is error, stay where you are
+if (document.info.theerror.value=="") {
+
+// if there is auto login info, try to click that button for the user
+if (document.info.email.value!=null) {
+  if (document.info.email.value!="null") {
+	  document.theform.j_username.value=document.info.flight.value+"|"+document.info.email.value
+	  document.theform.j_password.value="Welcome1"
+	  document.theform.submit();
+  }
+}
+}
+</script>

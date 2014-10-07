@@ -114,22 +114,27 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/loginAuto")
-	public ModelAndView doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
+	public String doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside autologin");
 
 		String email = request.getParameter("email");
 		String flight = request.getParameter("flight");
 		
-		ModelAndView modelAndView = new ModelAndView();
+		HttpSession session = request.getSession();
+		session.setAttribute("email", email);
+		session.setAttribute("flight", flight);
+		
+/*		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/newlogin");
 
 		
 		modelAndView.addObject("email",email);
 		modelAndView.addObject("flight",flight);
-
+*/
 		
-		return modelAndView;
+		return "redirect:/login";
 	}	
+
 
 	/**
 	 * This method reads the locale variable set by broadleaf flag icon
@@ -300,7 +305,7 @@ public class MyController {
 		// if you are not logged in, go home.
 	    if (customer!=null) {
 			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
-		    LOG.info("Yo, you are: "+customer.getUsername());
+		    LOG.info("doRedirect, you are: "+customer.getUsername());
 			String userName = customer.getUsername();
 			long customerID = customer.getId();
 	
@@ -316,6 +321,8 @@ public class MyController {
 				}
 				return doMealSelect(request,response);
 			}
+	    } else {
+	    	LOG.info("doRedirect: customer is null");
 	    }
 
 	    

@@ -61,40 +61,16 @@ public class DaoImpl implements Dao {
 
 		int maxID = 0;
 
-		Connection conn = null;
-		Statement stmt = null;
+		String sql = "SELECT MAX(id) FROM " + tablename;
+		ResultSet rs = jdbcSelectWrapper(sql);
 		try {
-			Class.forName(Constants.JDBC_DRIVER);
-
-			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
-					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
-
-			stmt = conn.createStatement();
-
-			String sql = "SELECT MAX(id) FROM " + tablename;
-			LOG.info("sql=" + sql);
-			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
-				maxID = rs.getInt(1);
+				maxID = rs.getInt(1);			
 			}
-
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("jdbc problem", e);
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					conn.close();
-			} catch (SQLException se) {
-			}// do nothing
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}// end finally try
-		}// end try
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
 
 		return maxID + 1;
 	}
@@ -107,9 +83,10 @@ public class DaoImpl implements Dao {
 			JdbcRowSet rowSet = rowSetFactory.createJdbcRowSet();
 
 			// Set connection properties
-			rowSet.setUrl(Constants.JDBC_CONNECTION);
-			rowSet.setUsername(Constants.JDBC_LOGIN);
-			rowSet.setPassword(Constants.JDBC_PASSWORD);
+			//rowSet.setUrl(Constants.JDBC_CONNECTION);
+			//rowSet.setUsername(Constants.JDBC_LOGIN);
+			//rowSet.setPassword(Constants.JDBC_PASSWORD);
+			rowSet.setDataSourceName(Constants.JNDI_DATASOURCE);
 			// Set SQL Query to execute
 			rowSet.setCommand(sql);
 			rowSet.execute();
@@ -162,7 +139,7 @@ public class DaoImpl implements Dao {
 			// finally block used to close resources
 			try {
 				if (stmt != null)
-					conn.close();
+					stmt.close();
 			} catch (SQLException se) {
 			}// do nothing
 			try {
@@ -175,6 +152,7 @@ public class DaoImpl implements Dao {
 
 	}
 
+	// Temporary... cause there are no pictures tied to categories 
 	private String categoryNameToImage(String name) {
 		return name.toLowerCase().replaceAll(" ", "-").replaceAll("\\?", "");
 	}
@@ -220,9 +198,8 @@ public class DaoImpl implements Dao {
 			rs.close();
 		} catch (SQLException e) {
 			LOG.error("sql exception", e);
-		} finally {
 		}
-
+		
 		return result;
 	}
 
@@ -628,6 +605,32 @@ public class DaoImpl implements Dao {
 		}
 		if (result != null) {
 			LOG.info("I am returning this many items: " + result.size());
+		}
+		return result;
+
+	}
+	
+	public List<Long> getAllMealIDForFlight(String flightNumber) {
+		LOG.info("Trying to find all meals available for customer for this flight"); 
+		// to be used by cart controller so that we don't allow editing
+
+		List<Long> result = null;
+		String sql = "select meal_id from flight_meal where flight_number='"+flightNumber+"'";
+		ResultSet rs = jdbcSelectWrapper(sql);
+		if (rs != null) {
+
+			try {
+				while (rs.next()) {
+					if (result == null)
+						result = new ArrayList<Long>();
+
+					Long i = new Long(rs.getInt(1));
+					result.add(i);
+				}
+				rs.close();
+			} catch (SQLException e) {
+				LOG.error("sql exception", e);
+			}
 		}
 		return result;
 
