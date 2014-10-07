@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafLoginController;
 import org.broadleafcommerce.core.web.controller.account.ResetPasswordForm;
+import org.mortbay.log.Log;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,6 +39,11 @@ public class LoginController extends BroadleafLoginController {
     
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
+    	
+    	Log.info("Inside login controller");
+    	Log.info("email is: "+request.getSession().getAttribute("email"));
+    	Log.info("flight is: "+request.getSession().getAttribute("flight"));
+
         return super.login(request, response, model);
     }
     
