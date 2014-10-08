@@ -478,10 +478,22 @@ public class DaoImpl implements Dao {
 					p.setManufacture(rs.getString(2));
 					p.setUrl(rs.getString(3));
 					p.setRetail_price(rs.getDouble(4));
-					p.setName(getTranslation(rs.getInt(1), locale, "Sku",
-							"name", rs.getString(5)));
-					p.setDescription(getTranslation(rs.getInt(1), locale,
-							"Sku", "longDescription", rs.getString(6)));
+
+					String name = getTranslation(rs.getInt(1), locale, "Sku",
+							"name", rs.getString(5));
+					// Get rid of (lunch) or (dinner) in the name
+					// which is not needed to be displayed on the meal select
+					// because it will be on the "Select Your Lunch/Dinner Meal" box
+					name = name.replace("(lunch)","");
+					name = name.replace("(dinner)","");
+					
+					p.setName(name);
+					
+					String description = getTranslation(rs.getInt(1), locale,
+							"Sku", "longDescription", rs.getString(6));
+					
+					
+					p.setDescription(description);
 					p.setImageUrl(rs.getString(7));
 
 					LOG.info("I am adding this to " + mealType + ":"
@@ -641,6 +653,7 @@ public class DaoImpl implements Dao {
 
 	}
 	
+	// this method is probably not needed...
 	public List<Long> getAllMealIDForFlight(String flightNumber) {
 		LOG.info("Trying to find all meals available for customer for this flight"); 
 		// to be used by cart controller so that we don't allow editing
