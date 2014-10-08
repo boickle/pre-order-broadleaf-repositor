@@ -634,9 +634,16 @@ public class DaoImpl implements Dao {
 					m.setFlightNumber(the_flightNumber);
 					m.setMealType(mealType);
 
-					m.setName(rs.getString(4));
+					String name=rs.getString(4);
+					// Get rid of (lunch) or (dinner) in the name
+					// which is not needed to be displayed on the meal select
+					// because it will be on the "Select Your Lunch/Dinner Meal" box
+					name = name.replace("(lunch)","");
+					name = name.replace("(dinner)","");
+
+					m.setName(name);
 					m.setImageUrl(rs.getString(5));
-					m.setDescription(mealTypeSpelled + " on Flight "
+					m.setDescription(mealTypeSpelled + " on Flight #"
 							+ flightNumber);
 					result.add(m);
 
