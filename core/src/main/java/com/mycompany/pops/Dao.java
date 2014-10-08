@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
+import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.Product;
 
@@ -28,4 +29,6 @@ public interface Dao {
 	public List<Meal> getMealsForCustomer(long customerID,String flightNumber);
 	
 	public List<Long> getAllMealIDForFlight(String flightNumber);
+	
+	public FlightData getFlightDataForFlight(String flightNumber);
 }

@@ -64,7 +64,7 @@
 						<a id="userButton" href="/dashboard">			
 							<i class="fa fa-user"></i> 
 							<span th:unless="${customer.anonymous}" th:remove="tag">
-				                <span><a class="my-account" th:href="@{/account}" th:text="${customer.firstName+' '+customer.lastName}"></a></span>
+				                <span><a class="my-account" href="/dashboard" th:text="${customer.firstName+' '+customer.lastName}"></a></span>
 				            </span>
 							<!--<span class="userName hidden-xs hidden-md">Donald McMains</span>-->
 						</a>

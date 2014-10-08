@@ -40,7 +40,7 @@ public class MyController {
     @Resource(name="blOrderService")
     protected OrderService orderService;
 
-
+//Experimental routines start
 	@RequestMapping(value = "/some/path")
 	public String doSomething() {
 		LOG.info("Inside doSomething!");
@@ -112,7 +112,15 @@ public class MyController {
 
 		return "layout/home";
 	}
+	//Experimental routines ends
 	
+	/**
+	 * This is the controller for auto login, which takes parameters, put in session and redirect to the real login screen,
+	 * in which if those session parameters are present, it will click that button automatically by javascript
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/loginAuto")
 	public String doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside autologin");
@@ -161,7 +169,13 @@ public class MyController {
 		}
 		return locale;
 	}
-	
+
+	/**
+	 * This is for the main shopping page to show all categories
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/categories")
 	public ModelAndView doGetAllCategories(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside doGetAllCategories!");
@@ -193,6 +207,12 @@ public class MyController {
 		return modelAndView;
 	}
 	
+	/**
+	 * This is for the product listing page, for a particular category
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/products/{categoryID}")
 	public ModelAndView doProductListing(@PathVariable int categoryID, HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside doProductListing!");
@@ -224,6 +244,13 @@ public class MyController {
 		return "pops/static";
 	}
 
+	
+	/**
+	 * This is for meal selection
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/mealSelect")
 	public ModelAndView doMealSelect(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside meal select");
@@ -331,5 +358,36 @@ public class MyController {
 		return modelAndView;
 
 	}
+	
+	@RequestMapping(value = "/flightinfo")
+	public ModelAndView doFlightInfo(HttpServletRequest request, HttpServletResponse response) {
+
+		LOG.info("inside flightinfo");
+		String flightNumber = null;
+		String email = null;
+		try {
+			email = request.getSession().getAttribute("email").toString();
+			flightNumber = request.getSession().getAttribute("flight").toString();
+		} catch (Exception e) {
+			LOG.info("cannot find flight number from session");
+		}
+    	LOG.info("email is: "+email);
+    	LOG.info("flight is: "+flightNumber);
+    	
+		Customer customer = (Customer) CustomerState.getCustomer();
+		String firstName = "";
+		if (customer!=null) {
+			firstName = customer.getFirstName();
+		}
+		
+    	Dao dao = new DaoImpl();
+		ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName("pops/confirm");
+    	modelAndView.addObject("firstname",firstName);
+    	modelAndView.addObject("flightdata",dao.getFlightDataForFlight(flightNumber));
+    	
+		return modelAndView;
+	}
+
 	
 }

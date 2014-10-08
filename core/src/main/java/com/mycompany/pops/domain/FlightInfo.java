@@ -22,5 +22,13 @@ public interface FlightInfo{
 	public Date getArrivalTime();
 	public void setArrivalTime(Date arrivalTime);
 	
-		
+	public String getAircraftType();
+	public void setAircraftType(String aircraftType);
+
+	public String getCarrier();
+	public void setCarrier(String carrier);
+	
+	public String getOriginLocation();
+	public void setOriginLocation(String originLocation);
+
 }

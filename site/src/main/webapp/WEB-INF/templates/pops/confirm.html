@@ -1,0 +1,15 @@
+
+<h2 th:text="'Hi '+${firstname}" />
+(I probably need to be on another layout because I don't need that grey bar and all other stuff above me.
+See site\src\main\webapp\WEB-INF\applicationContext-servlet.xml 
+) 
+<p/>
+<table>
+<tr><td>Flight number:</td><td th:text="${flightdata.flightNumber}"/></tr>
+<tr><td>Origin:</td><td th:text="${flightdata.originStation}"/></tr>
+<tr><td>Destination:</td><td th:text="${flightdata.destinationStation}"/></tr>
+<tr><td>Departure Time:</td><td th:text="${flightdata.departureDate}"/></tr>
+<tr><td>Arrival Time:</td><td th:text="${flightdata.arrivalDate}"/></tr>
+</table>
+
+<input type="button" value="Ok" onclick="alert('you decide what to do with this')"/>

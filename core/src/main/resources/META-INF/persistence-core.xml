@@ -10,6 +10,7 @@
         <class>com.mycompany.pops.domain.FlightInfoImpl</class>
         <class>com.mycompany.pops.domain.FlightMealsImpl</class>
         <class>com.mycompany.pops.domain.MealSelectionImpl</class>
+        <class>com.mycompany.pops.domain.CustomerFlightImpl</class>
         <exclude-unlisted-classes/>
          <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

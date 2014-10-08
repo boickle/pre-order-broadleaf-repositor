@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
+import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.Product;
 
@@ -685,6 +687,38 @@ public class DaoImpl implements Dao {
 		}
 		return result;
 
+	}
+
+	
+	public FlightData getFlightDataForFlight(String flightNumber) {
+		LOG.info("Getting flight info for "+flightNumber);
+		FlightData result = null;
+		String sql = "select flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo where flight_number='"+flightNumber+"'";
+		ResultSet rs = jdbcSelectWrapper(sql);
+		if (rs != null) {
+
+			try {
+				if (rs.next()) {
+					// TODO: beautify what you are passing so the view can display nicely easily (such as translate that YVR to Vancouver)
+					result = new FlightData();
+					result.setFlightNumber(rs.getString(1));
+					result.setOriginStation(rs.getString(2));
+					result.setDestinationStation(rs.getString(3));
+					
+					Timestamp ts1 = rs.getTimestamp(4);
+					Timestamp ts2 = rs.getTimestamp(5);
+					LOG.info("departure time:"+ts1);
+					LOG.info("arrival time:"+ts2);
+					
+					result.setDepartureDate(rs.getTimestamp(4));
+					result.setArrivalDate(rs.getTimestamp(5));
+				}
+				rs.close();
+			} catch (SQLException e) {
+				LOG.error("sql exception", e);
+			}
+		}
+		return result;
 	}
 
 }

@@ -31,7 +31,10 @@ public class FlightInfoImpl implements FlightInfo {
 	
 	@Column(name = "FLIGHT_NUMBER")
 	protected String flightNumber;
-	
+
+	@Column(name = "ORIGIN_LOCATION")
+	protected String originLocation;
+
 	@Column(name = "DESTINATION_LOCATION")
 	protected String destinationLocation;
 	
@@ -43,6 +46,12 @@ public class FlightInfoImpl implements FlightInfo {
 	
 	@Column(name = "ARRIVAL_TIME")
 	protected Date arrivalTime;
+
+	@Column(name = "CARRIER")
+	protected String carrier;
+
+	@Column(name = "AIRCRAFT_TYPE")
+	protected String aircraftType;
 	
 	@Override
 	public Long getId() {
@@ -104,6 +113,33 @@ public class FlightInfoImpl implements FlightInfo {
 		this.arrivalTime = arrivalTime;
 	}
 	
+	@Override
+	public String getCarrier() {
+		return carrier;
+	}
 
-		 
+	@Override
+	public void setCarrier(String carrier) {
+		this.carrier = carrier;
+	}
+
+	@Override
+	public String getAircraftType() {
+		return aircraftType;
+	}
+
+	@Override
+	public void setAircraftType(String aircraftType) {
+		this.aircraftType = aircraftType;
+	}
+
+	@Override
+	public String getOriginLocation() {
+		return originLocation;
+	}
+
+	@Override
+	public void setOriginLocation(String originLocation) {
+		this.originLocation = originLocation;
+	}		 
 }
