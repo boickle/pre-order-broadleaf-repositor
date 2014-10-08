@@ -49,7 +49,8 @@
             <div class="row row-no-gutter">
                <div class="col-xs-6 col-sm-3">
                   <!-- Grid Item Image-->
-                  <a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>
+                  <!--<a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>-->
+                  <img th:src="${product.imageUrl}" width="250" height="250"/>
                   <!-- /Grid Item Image-->
                </div>
                <div class="col-xs-6 col-sm-6   listItemDetails product_container">
@@ -90,7 +91,8 @@
             <div class="row row-no-gutter">
                <div class="col-xs-6 col-sm-3">
                   <!-- Grid Item Image-->
-                  <a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>
+                  <!--<a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>-->
+                  <img th:src="${product.imageUrl}" width="250" height="250"/>
                   <!-- /Grid Item Image-->
                </div>
                <div class="col-xs-6 col-sm-6   listItemDetails product_container">
@@ -144,7 +146,8 @@
 			<div class="col-xs-6 col-sm-3">
 				
 				<!-- Grid Item Image-->
-				<a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>
+				<!-- <a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a> -->
+				<img th:src="${product.imageUrl}" width="250" height="250"/>
 				<!-- /Grid Item Image-->
 				
 			</div>
