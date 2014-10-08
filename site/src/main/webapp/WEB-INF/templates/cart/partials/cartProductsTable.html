@@ -28,14 +28,15 @@
 			</div>
 			
 			<div class="col-xs-2">
-				
+				<input type="text" class="form-control text-center" style="cursor:default" disabled="disabled" maxlength="3" placeholder="Qty" th:value="*{quantity}" />
+<!--				
 				<blc:form method="POST" th:action="@{/cart/updateQuantity}">
                     <input type="hidden" name="productId" th:value="*{product.id}" />
                     <input type="hidden" name="orderItemId" th:value="*{id}" />
                     <input type="text" name ="quantity" class="form-control text-center" maxlength="3" placeholder="Qty" th:value="*{quantity}" />
                     <input type="submit" class="updateQuantity" th:value="#{cart.update}"/>
                 </blc:form>
-				
+-->				
 			</div>
 			
 			<div class="col-xs-2">
