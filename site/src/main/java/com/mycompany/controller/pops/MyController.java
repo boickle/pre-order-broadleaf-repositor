@@ -27,6 +27,7 @@ import com.mycompany.pops.DaoImpl;
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.domain.FlightInfoImpl;
 import com.mycompany.pops.pojo.Category;
+import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.MyData;
 import com.mycompany.pops.pojo.Product;
@@ -122,25 +123,30 @@ public class MyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/loginAuto")
-	public String doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside autologin");
 
 		String email = request.getParameter("email");
 		String flight = request.getParameter("flight");
+		//LOG.info("Autologin");
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
 		session.setAttribute("flight", flight);
 		
-/*		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("pops/newlogin");
+		
+		/*ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("pops/foo");
 
 		
 		modelAndView.addObject("email",email);
-		modelAndView.addObject("flight",flight);
-*/
-		
-		return "redirect:/login";
+		modelAndView.addObject("flight",flight);*/
+		//ModelAndView modelAndView = new ModelAndView("redirect:/flightinfo", "myfield", "Flight Confirmation");
+		//modelAndView.addObject("flightNumber",flight);
+		//return modelAndView;
+		//return "";
+		return this.doFlightInfo(request, response);
+		//return "redirect:/login";
 	}	
 
 
@@ -376,15 +382,25 @@ public class MyController {
     	
 		Customer customer = (Customer) CustomerState.getCustomer();
 		String firstName = "";
+		String lastName = "";
 		if (customer!=null) {
 			firstName = customer.getFirstName();
+			lastName = customer.getLastName();
 		}
-		
+		LOG.info("Name: " + firstName );
     	Dao dao = new DaoImpl();
 		ModelAndView modelAndView = new ModelAndView();
-    	modelAndView.setViewName("pops/confirm");
+    	modelAndView.setViewName("pops/flightconfirmation");
     	modelAndView.addObject("firstname",firstName);
-    	modelAndView.addObject("flightdata",dao.getFlightDataForFlight(flightNumber));
+    	modelAndView.addObject("lastname",lastName);
+    	modelAndView.addObject("email",email);
+    	FlightData f = dao.getFlightDataForFlight(flightNumber);
+    	if(f!=null)
+    		LOG.info("Flight Info: " + f.getFlightNumber() );
+    	else{
+    		LOG.info("Flight Info is null " );
+    	}
+    	modelAndView.addObject("flightdata",f);
     	
 		return modelAndView;
 	}
