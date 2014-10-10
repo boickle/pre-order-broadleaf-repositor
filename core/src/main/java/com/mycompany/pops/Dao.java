@@ -31,4 +31,8 @@ public interface Dao {
 	public List<Long> getAllMealIDForFlight(String flightNumber);
 	
 	public FlightData getFlightDataForFlight(String flightNumber);
+	
+	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate);
+	
+	public void insertBlankAddressToOrder(long orderID);
 }

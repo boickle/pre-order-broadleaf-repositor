@@ -83,6 +83,26 @@ public class DaoImpl implements Dao {
 		int maxID = 0;
 
 		String sql = "SELECT MAX(id) FROM " + tablename;
+
+		ResultSet rs = jdbcSelectWrapper(sql);
+		try {
+			if (rs.next()) {
+				maxID = rs.getInt(1);			
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
+
+		return maxID + 1;
+	}
+
+	private int newSequenceForTable(String tablename, String id_field) {
+
+		int maxID = 0;
+
+		String sql = "SELECT MAX("+id_field+") FROM " + tablename;
+
 		ResultSet rs = jdbcSelectWrapper(sql);
 		try {
 			if (rs.next()) {
@@ -119,7 +139,59 @@ public class DaoImpl implements Dao {
 
 		return null;
 	}
+	
+	// Temporary... cause there are no pictures tied to categories 
+	private String categoryNameToImage(String name) {
+		return name.toLowerCase().replaceAll(" ", "-").replaceAll("\\?", "");
+	}
 
+	/**
+	 * See the table blc_translation
+	 */
+	private String getTranslation(long id, String locale, String entityType,
+			String fieldName, String defaultValue) {
+		if (locale == null) {
+			return defaultValue;
+		}
+		if (locale.startsWith("en")) {
+			return defaultValue;
+		}
+		// TODO: figure out wassup with fr, fr_FR, es_ES, etc. now just take
+		// first 2 char
+		if (locale.indexOf("_") > 0) {
+			locale = locale.substring(0, 2);
+		}
+		LOG.info("Trying to get " + locale + " localization for "
+				+ defaultValue + ", the id is " + id + " entityType is "
+				+ entityType + " fieldName=" + fieldName);
+
+		String sql = "SELECT translated_value from blc_translation where entity_id = '"
+				+ id
+				+ "'"
+				+ " and entity_type='"
+				+ entityType
+				+ "'"
+				+ " and field_name='"
+				+ fieldName
+				+ "'"
+				+ " and locale_code='"
+				+ locale + "'";
+
+		String result = defaultValue;
+		ResultSet rs = jdbcSelectWrapper(sql);
+		try {
+			if (rs.next()) {
+				result = rs.getString(1);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
+		
+		return result;
+	}
+
+	
 	private void insertFlightUsingGoodOldJDBC(FlightInfo info) {
 		LOG.info("good old JDBC");
 		Connection conn = null;
@@ -181,58 +253,7 @@ public class DaoImpl implements Dao {
 		}// end try
 
 	}
-
-	// Temporary... cause there are no pictures tied to categories 
-	private String categoryNameToImage(String name) {
-		return name.toLowerCase().replaceAll(" ", "-").replaceAll("\\?", "");
-	}
-
-	/**
-	 * See the table blc_translation
-	 */
-	private String getTranslation(long id, String locale, String entityType,
-			String fieldName, String defaultValue) {
-		if (locale == null) {
-			return defaultValue;
-		}
-		if (locale.startsWith("en")) {
-			return defaultValue;
-		}
-		// TODO: figure out wassup with fr, fr_FR, es_ES, etc. now just take
-		// first 2 char
-		if (locale.indexOf("_") > 0) {
-			locale = locale.substring(0, 2);
-		}
-		LOG.info("Trying to get " + locale + " localization for "
-				+ defaultValue + ", the id is " + id + " entityType is "
-				+ entityType + " fieldName=" + fieldName);
-
-		String sql = "SELECT translated_value from blc_translation where entity_id = '"
-				+ id
-				+ "'"
-				+ " and entity_type='"
-				+ entityType
-				+ "'"
-				+ " and field_name='"
-				+ fieldName
-				+ "'"
-				+ " and locale_code='"
-				+ locale + "'";
-
-		String result = defaultValue;
-		ResultSet rs = jdbcSelectWrapper(sql);
-		try {
-			if (rs.next()) {
-				result = rs.getString(1);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			LOG.error("sql exception", e);
-		}
-		
-		return result;
-	}
-
+	//------------------------------------------------------------------------------------
 	public List<Category> getCategories(long parentID, String locale) {
 		LOG.info("trying to get categories with parent = " + parentID);
 		List<Category> result = null;
@@ -719,6 +740,118 @@ public class DaoImpl implements Dao {
 			}
 		}
 		return result;
+	}
+	
+
+	private boolean isCustomerAlreadyDefined(String userName) {
+		String sql = "select customer_id from blc_customer where user_name='"+userName+"'";
+		boolean result = false;
+		ResultSet rs = jdbcSelectWrapper(sql);
+		try {
+			if (rs.next()) {
+				result = true;
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
+		return result;
+	}
+	
+	/**
+	 * This method is to be called by auto login, to create user on the fly
+	 */
+	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate) {
+
+		if (isCustomerAlreadyDefined(email)) {
+			return;
+		}
+		
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+
+			Class.forName(Constants.JDBC_DRIVER);
+			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
+					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
+
+			LOG.info("Connected database successfully...");
+
+			LOG.info("Inserting record into the table...");
+			stmt = conn.createStatement();
+
+			int num = newSequenceForTable("blc_customer","customer_id");
+
+			String sql = "insert into blc_customer (customer_id,deactivated,email_address,first_name,last_name,password,password_change_required,is_registered,user_name) values ("
+					+ num
+					+ ','
+					+ "'f','"
+					+ email
+					+ "','"
+					+ firstName
+					+ "','"
+					+ lastName
+					+ "','Welcome1{"+num+"}',"
+					+ "'f','t','"
+					+ email+"')";
+			LOG.info("sql=" + sql);
+			stmt.executeUpdate(sql);
+			LOG.info("Inserted record into the table...");
+
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			LOG.error("jdbc problem", e);
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se) {
+			}// do nothing
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				LOG.error("jdbc problem", se);
+			}// end finally try
+		}// end try
+
+	}
+	
+	public void insertBlankAddressToOrder(long orderID) {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+
+			Class.forName(Constants.JDBC_DRIVER);
+			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
+					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
+
+
+			stmt = conn.createStatement();
+			String sql = "update blc_fulfillment_group set fulfillment_option_id=4, address_id=0 where order_Id="+orderID;
+			LOG.info("sql=" + sql);
+			stmt.executeUpdate(sql);
+			LOG.info("Inserted record into the table...");
+
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			LOG.error("jdbc problem", e);
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se) {
+			}// do nothing
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				LOG.error("jdbc problem", se);
+			}// end finally try
+		}// end try
+		
 	}
 
 }

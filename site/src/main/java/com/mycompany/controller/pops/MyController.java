@@ -24,12 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mycompany.pops.Constants;
 import com.mycompany.pops.Dao;
 import com.mycompany.pops.DaoImpl;
-import com.mycompany.pops.domain.FlightInfo;
-import com.mycompany.pops.domain.FlightInfoImpl;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
-import com.mycompany.pops.pojo.MyData;
 import com.mycompany.pops.pojo.Product;
 
 @Controller
@@ -41,114 +38,44 @@ public class MyController {
     @Resource(name="blOrderService")
     protected OrderService orderService;
 
-//Experimental routines start
-	@RequestMapping(value = "/some/path")
-	public String doSomething() {
-		LOG.info("Inside doSomething!");
-		return "pops/foo";
-
-	}
-
-	@RequestMapping(value = "/some/path2")
-	public ModelAndView doSomething2() {
-		LOG.info("Inside doSomething2!");
-		return new ModelAndView("pops/foo", "myfield", "hello world");
-	}
-
-	@RequestMapping(value = "/some/path3")
-	public ModelAndView doSomething3() {
-		LOG.info("Inside doSomething3!");
-
-		return new ModelAndView("pops/upload");
-	}
-
-
-	
-	@RequestMapping(value="/myform/datapost")
-	public ModelAndView doSomething4(HttpServletRequest request, HttpServletResponse response) {
-		
-		LOG.info("Inside doSomething4 /myform/datapost");
-
-		MyData data = new MyData();
-		try {
-		data.setData1(request.getParameter("data1"));
-		data.setData2(request.getParameter("data2"));
-		data.setData3(new Integer(request.getParameter("data3")).intValue());
-		} catch (Exception e) {
-			LOG.error("error in datapost2",e);
-		}
-		
-		LOG.info("Here is data: "+data.getData1()+","+data.getData2()+", "+data.getData3());
-
-		doTestDB(data);
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("pops/bar");
-
-		modelAndView.addObject("mystuff", data);
-
-		return modelAndView;
-	}
-	
-	private void doTestDB(MyData data) {
-		LOG.info("doTestDB");
-		FlightInfo f = new FlightInfoImpl();
-		f.setFlightNumber("A"+data.getData3());
-		f.setDepartureLocation(data.getData1());
-		f.setDestinationLocation(data.getData2());
-		Dao u = new DaoImpl();
-		u.insertFlight(f);
-	}
-
-	
-	@RequestMapping(value = "/loginNew")
-	public String doSomething7() {
-		LOG.info("Inside doSomething7!");
-
-		return "pops/newlogin";
-	}	
-
-	@RequestMapping(value = "/home")
-	public String dohome() {
-		LOG.info("Inside dohome!");
-
-		return "layout/home";
-	}
-	//Experimental routines ends
 	
 	/**
-	 * This is the controller for auto login, which takes parameters, put in session and redirect to the real login screen,
-	 * in which if those session parameters are present, it will click that button automatically by javascript
+	 * This is the controller for auto login, which is the first step.
+	 * It just takes you to the flight info screen to let
+	 * user see info passing in
+	 */
+	@RequestMapping(value = "/loginAuto")
+	public ModelAndView gotoConfirmScreen(HttpServletRequest request, HttpServletResponse response) {
+		LOG.info("Inside loginAuto");
+		return this.doFlightInfo(request, response);
+	}	
+
+	/**
+	 * This method creates the user by inserting a row to blc_customer, then go to the login page
+	 * and let it click automatically
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/loginAuto")
-	public ModelAndView doAutoLogin(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/loginCreateUser")
+	public String doCreateUserAndLogin(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside autologin");
 
 		String email = request.getParameter("email");
 		String flight = request.getParameter("flight");
-		//LOG.info("Autologin");
-		
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String flightDate = request.getParameter("flightDate");
+
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
 		session.setAttribute("flight", flight);
-		
-		
-		/*ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("pops/foo");
 
+		Dao u = new DaoImpl();
+		u.insertNewCustomer(lastName,firstName,email,flight,flightDate);
 		
-		modelAndView.addObject("email",email);
-		modelAndView.addObject("flight",flight);*/
-		//ModelAndView modelAndView = new ModelAndView("redirect:/flightinfo", "myfield", "Flight Confirmation");
-		//modelAndView.addObject("flightNumber",flight);
-		//return modelAndView;
-		//return "";
-		return this.doFlightInfo(request, response);
-		//return "redirect:/login";
+		return "redirect:/login";
 	}	
-
 
 	/**
 	 * This method reads the locale variable set by broadleaf flag icon
@@ -291,27 +218,29 @@ public class MyController {
 		return modelAndView;
 	}
 
+	private String getFlightNumberFromRequest(HttpServletRequest request) {
+		String result = null;
+		try {
+			result = request.getSession().getAttribute("flight").toString();
+		} catch (Exception e) {
+			// do not have flight number, hmmm
+			LOG.info("cannot find flight number from session");
+		}
+		return result;
+	}
+
 	@RequestMapping(value = "/dashboard")
-	public ModelAndView doDashBoard() {
+	public ModelAndView doDashBoard(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Order> orders = null;
 		Customer customer = (Customer) CustomerState.getCustomer();
-		String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly 
+		String flightNumber = null; 
 
 	    if (customer!=null) {
-			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
-		    LOG.info("Yo, you are: "+customer.getUsername());
-			String userName = customer.getUsername();
-	
-			if (userName!=null) {
-				int pipe = userName.indexOf("|");
-				if (pipe>0) flightNumber = userName.substring(0,pipe);
-				LOG.info("Your flight is:"+flightNumber);
-			}
+	    	flightNumber=getFlightNumberFromRequest(request);
 	    }
 
-
-		long customerID = 0;
+	    long customerID = 0;
 		if (customer!=null) {
 			customerID = customer.getId();
 			orders = orderService.findOrdersForCustomer(customer, OrderStatus.SUBMITTED);
@@ -332,28 +261,29 @@ public class MyController {
 	public ModelAndView doRedirect(HttpServletRequest request, HttpServletResponse response) {
 
 		Customer customer = (Customer) CustomerState.getCustomer();
-		String flightNumber = "";  
+//		String flightNumber = null;  
 
 		// if you are logged in, and you have meal selected, go to dashboard. if not, go to mealSelect
 		// if you are not logged in, go home.
 	    if (customer!=null) {
-			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
-		    LOG.info("doRedirect, you are: "+customer.getUsername());
+
+	    	LOG.info("doRedirect, you are: "+customer.getUsername());
 			String userName = customer.getUsername();
 			long customerID = customer.getId();
 	
 			if (userName!=null) {
-				int pipe = userName.indexOf("|");
-				if (pipe>0) flightNumber = userName.substring(0,pipe);
-				LOG.info("Your flight is:"+flightNumber);
+				String flightNumber=getFlightNumberFromRequest(request);
 
-				Dao dao = new DaoImpl();
-				List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
-				if (meals!=null && !meals.isEmpty()) {
-					return doDashBoard();
+				if (flightNumber!=null) {
+					Dao dao = new DaoImpl();
+					List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
+					if (meals!=null && !meals.isEmpty()) {
+						return doDashBoard(request,response);
+					}
+					return doMealSelect(request,response);
 				}
-				return doMealSelect(request,response);
 			}
+
 	    } else {
 	    	LOG.info("doRedirect: customer is null");
 	    }
@@ -369,31 +299,26 @@ public class MyController {
 	public ModelAndView doFlightInfo(HttpServletRequest request, HttpServletResponse response) {
 
 		LOG.info("inside flightinfo");
-		String flightNumber = null;
-		String email = null;
-		try {
-			email = request.getSession().getAttribute("email").toString();
-			flightNumber = request.getSession().getAttribute("flight").toString();
-		} catch (Exception e) {
-			LOG.info("cannot find flight number from session");
-		}
-    	LOG.info("email is: "+email);
+
+		String email = request.getParameter("email");
+		String flightNumber = request.getParameter("flight");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+//		String flightDate = request.getParameter("flightDate");
+		
+		LOG.info("email is: "+email);
     	LOG.info("flight is: "+flightNumber);
+    	String loginLink = "/loginCreateUser?email="+email+"&flight="+flightNumber+"&firstName="+firstName+"&lastName="+lastName;
     	
-		Customer customer = (Customer) CustomerState.getCustomer();
-		String firstName = "";
-		String lastName = "";
-		if (customer!=null) {
-			firstName = customer.getFirstName();
-			lastName = customer.getLastName();
-		}
-		LOG.info("Name: " + firstName );
     	Dao dao = new DaoImpl();
 		ModelAndView modelAndView = new ModelAndView();
     	modelAndView.setViewName("pops/flightconfirmation");
     	modelAndView.addObject("firstname",firstName);
     	modelAndView.addObject("lastname",lastName);
     	modelAndView.addObject("email",email);
+    	modelAndView.addObject("loginlink",loginLink);
+    	
+    	// we may probably need to toss whatever user passed in instead of looking it up
     	FlightData f = dao.getFlightDataForFlight(flightNumber);
     	if(f!=null)
     		LOG.info("Flight Info: " + f.getFlightNumber() );
