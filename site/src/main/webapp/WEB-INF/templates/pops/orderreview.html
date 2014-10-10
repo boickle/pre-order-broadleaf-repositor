@@ -1,0 +1,197 @@
+			
+	<!-- View Container Start -->
+	<div id="viewContainer" class="container">	
+		
+	<!-- Review View JS Start -->
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("Review"); 
+		
+	
+	});
+		
+	</script>
+	<!-- Review View JS End -->
+	
+	<h1>Review</h1>
+	<p>Please review the information below:</p>
+	
+	
+	<div class="panel panel-default" th:unless="${payment==null}">
+		
+   		<div class="panel-heading" th:unless="${payment==null}">
+   			
+   			<h3 class="panel-title"> 
+       			<i class="fa fa-cc-visa"></i> 
+       			Payment
+       		</h3>
+       		
+    	</div>
+    	
+		<div class="panel-body" th:unless="${payment==null}">
+
+			<div class="row">
+			
+				<div class="col-xs-5">
+					
+					<h4>Credit Card </h4>
+					
+					<p> 
+						VISA ending <strong>4567</strong> <br/>
+						<strong>Exp.</strong> 07/2017
+					</p>
+				
+					<a href="/Payment" class="btn btn-default">Edit</a>
+					
+				</div>
+				
+				
+				<div class="col-xs-7">
+					
+					<h4>Billing Address</h4>
+					
+					<address>
+					  Donald McMains<br/>
+					  30 Danforth St. Suite 304<br/>
+					  Portland, ME 04101<br/>
+					  <abbr title="Phone">P:</abbr> (207) 221-2618
+					</address>
+					
+					
+	
+				</div>
+	
+			</div>
+			
+			
+		</div>
+      
+    </div>	
+		
+			
+	<div class="panel panel-default" th:unless="${shipping==null}">
+		
+   		<div class="panel-heading">
+   			
+   			<h3 class="panel-title"> 
+       			<i class="fa fa-home"></i> 
+       			Shipping
+       		</h3>
+       		
+    	</div>
+    	
+		<div class="panel-body">
+
+			<address>
+			  Donald McMains<br/>
+			  30 Danforth St. Suite 304<br/>
+			  Portland, ME 04101<br/>
+			  <abbr title="Phone">P:</abbr> (207) 221-2618
+			</address>
+			
+			<a href="/Payment" class="btn btn-default">Edit</a>
+	
+		</div>
+      
+    </div>
+    
+    <div class="panel panel-default">
+		
+   		<div class="panel-heading">
+   			
+   			<h3 class="panel-title"> 
+       			<i class="fa fa-shopping-cart"></i> 
+       			My Items
+       		</h3>
+       		
+    	</div>
+    	
+		<div class="panel-body">
+
+	<div th:if="${#lists.isEmpty(cart.orderItems)}" class="checkout_warning">
+            <span th:text="#{cart.empty}">Your cart is empty</span>
+    </div> 
+       
+	<!-- Cart Item -->
+	<div class="cartItem"  th:each="item : ${cart.orderItems}" th:object="${item}">
+										
+		<div class="row row-no-gutter">
+			
+			<div class="col-xs-2 col-sm-1">
+				
+				<div class="cartItemImage">
+					
+					<img th:if="*{product.media['primary']}" th:src="@{*{product.media['primary'].url} + '?thumbnail'}" width="60" th:alt="*{product.name}" />
+					
+				</div>
+				
+			</div>									
+			
+			<div class="col-xs-4 ">
+													
+				<strong class="cartItemTitle" th:text="*{product.name}"></strong>
+				<strong class="cartItemPrice" blc:price="*{price}"></strong>
+				
+			</div>
+			
+			<div class="col-xs-2">
+				<input type="text" style="cursor:default" disabled="disabled" class="form-control text-center" maxlength="3" placeholder="Qty"  th:value="*{quantity}" />
+			</div>
+			
+			<div class="col-xs-2">
+				
+				<span class="cartItemTotalPrice text-center" blc:price="*{totalPrice}"></span>
+				
+			</div>
+			
+
+						
+		</div>
+	
+	</div>
+	
+	<!-- /Cart Item -->				
+		
+	
+		</div>
+      
+    </div>
+ 
+
+            
+	<div class="row">
+		
+		<div class="col-xs-6">
+			
+			<!-- <a href="/Payment" class="btn btn-default"> Back to Payment </a> -->
+			
+		</div>
+		
+		<div class="col-xs-6 text-right">
+	
+			<a href="javascript:doCompleteOrder()" class="btn btn-primary"> Complete Order </a>
+			
+		</div>
+		
+	</div>
+		       
+
+ 
+	</div>
+	<!-- View Container End -->
+
+    <blc:form th:action="@{/checkout/noaddress}"
+              method="POST" name="theform"
+              novalidate="novalidate">
+        <input id="submitButton" style="display:none" type="submit" class="medium red" th:value="#{cart.completOrder}" />
+    </blc:form>
+	
+	<script>
+	function doCompleteOrder() {
+	  document.theform.submit();
+	}
+	</script>

@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mycompany.pops.Dao;
@@ -108,4 +109,17 @@ public class CheckoutController extends BroadleafCheckoutController {
         super.initBinder(request, binder);
     }
     
+	@RequestMapping(value = "/checkout/mealorderreview")
+	public ModelAndView doOrderReview(HttpServletRequest request, HttpServletResponse response) {
+
+        Order cart = CartState.getCart();
+        
+		ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName("pops/orderreview");
+    	modelAndView.addObject("payment",null);
+    	modelAndView.addObject("shipping",null);
+    	modelAndView.addObject("cart",cart);
+    	return modelAndView;
+
+	}
 }

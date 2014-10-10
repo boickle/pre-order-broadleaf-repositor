@@ -24,14 +24,14 @@
 
 	<h2>My Dashboard</h2>
 	
-	<p>Here you can look at your flight, Pre-Orders and Meals</p>
+	<p>Here you can look at your flight and meals</p>
 	
 	<div class="row ">
 		
 		<div class="col-xs-12 col-sm-6">
 			
 			<h3> 
-				<i class="fa fa-plane"></i> Flight #123 
+				<i class="fa fa-plane"></i> <div th:text="'Flight #'+${flightData.flightNumber}" th:remove="tag"/>
 			</h3>
 			
 			<div class="panel panel-default">
@@ -45,22 +45,20 @@
 		    	</div>
 		    	
 				<div class="panel-body">
-					
+					<!--
 					<p>
-						<span class="label label-success">On Time</span>
+						 <span class="label label-success">On Time</span>
 					</p>
-								
-					<p><strong>Departs at 3:45PM</strong> on June 5
-						<br/>O'Hare International Airport (ORD)
-						<br/>Terminal 7A, Flight Provider
-					</p>
-					
+					-->
+					<p th:utext="${flightData.elaborateDepartureText}" />
+					<p/>
+					<p th:utext="${flightData.elaborateArrivalText}" />
 				</div>
 			
 			</div>
 	
 		</div>
-		
+	<!--	
 		<div class="col-xs-12 col-sm-6">
 			
 			<h3> 
@@ -94,11 +92,12 @@
 			</div>
 	
 		</div>
-		
+	  -->	
 	</div>
 	
+
 	<div class="row">
-			
+<!--			
 		<div class="col-xs-12 col-sm-6">
 			
 			<h3> 
@@ -106,23 +105,6 @@
 				My Pre-Orders
 			</h3>
 		
-			<!--
-			<ul class="list-group">
-				
-				<li class="list-group-item">
-					<a href="/OrderCompleted"> Order #123456</a>
-				</li>
-				
-				<li class="list-group-item">
-					<a href="/OrderCompleted"> Order #123456</a>
-				</li>
-				
-				<li class="list-group-item">
-					<a href="/OrderCompleted"> Order #123456</a>
-				</li>
-				
-			</ul>
-			-->
 		    <ul class="list-group" th:unless="${#lists.isEmpty(orders)}">
 
 		        <li class="list-group-item" th:each="order : ${orders}" th:object="${order}" th:attr="data-order-number=*{orderNumber}">
@@ -135,7 +117,7 @@
 		
 				
 		</div>
-		
+-->		
 		<div class="col-xs-12 col-sm-6">
 			
 			<h3> 
@@ -153,16 +135,6 @@
 				   <div th:utext="${meal.name}"/>
 				</li>
 				
-<!--				<li class="list-group-item">
-					<a href="/MealSelect"> Lunch on Flight 123 </a>
-				</li>
-				
-				<li class="list-group-item">
-					<a href="/MealSelect"> Dinner on Flight 098 </a>
-				</li>
--->				
-		
-				
 			</ul>
 				
 		</div>
@@ -172,8 +144,9 @@
 	
 	
 	
+<!--	
 	<p> <a class="btn btn-primary" href="/categories"> Return to Shopping</a> </p> 
-		
+-->		
  
 	</div>
 	<!-- View Container End -->

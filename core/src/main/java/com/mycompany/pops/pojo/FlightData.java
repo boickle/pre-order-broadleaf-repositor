@@ -1,6 +1,9 @@
 package com.mycompany.pops.pojo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.mycompany.pops.Constants;
 
 /**
  * This class to be used by view, additional methods can be added to help provide info for view
@@ -72,4 +75,25 @@ public class FlightData {
 	public void setArrivalDate(Date arrivalDate) {
 		this.arrivalDate = arrivalDate;
 	}
+
+	// TODO: make locale friendly
+	private String getElaborateDepartureArrivalText(String type, Date date, String stationAbbreviation) {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("hh:mm a");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("MMM d");
+		
+		String result = "<strong>"+type+" at "+sdf1.format(date)+" </strong> on "+sdf2.format(date)
+		+ "<br/>"+ Constants.AIRPORTS.get(stationAbbreviation)+" ("+stationAbbreviation+")";
+		
+		return result;
+	}
+
+	public String getElaborateDepartureText() {
+		return getElaborateDepartureArrivalText("Departs",getDepartureDate(),getOriginStation());
+	}
+
+	public String getElaborateArrivalText() {
+		return getElaborateDepartureArrivalText("Arrives",getArrivalDate(),getDestinationStation());
+	}
+	
+
 }

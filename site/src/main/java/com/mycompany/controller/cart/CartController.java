@@ -49,6 +49,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mycompany.pops.Dao;
 import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.DaoUtil;
 
 @Controller
 @RequestMapping("/cart")
@@ -62,27 +63,20 @@ public class CartController extends BroadleafCartController {
         return super.cart(request, response, model);
     }
     
-    private void saveMeal(long mealID) {
+    private void saveMeal(String flightNumber, long mealID) {
         // If it is a meal, I am going to store it.
 	    Customer customer = (Customer) CustomerState.getCustomer();
 	    if (customer!=null) {
 			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
 		    LOG.info("in cart, you are: "+customer.getUsername());
-			String userName = customer.getUsername();
-			long customerID = customer.getId();
-			String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly 
-	
-			if (userName!=null) {
-				int pipe = userName.indexOf("|");
-				if (pipe>0) flightNumber = userName.substring(0,pipe);
-			}
+		    long customerID = customer.getId();
 			
 			LOG.info("saveMeal in cart: flight:"+flightNumber+" id:"+customerID+" mealID:"+mealID);
 			Dao dao = new DaoImpl();
 			dao.saveMealSelection(customerID, flightNumber, mealID);
 	    }
 	    else {
-	    	LOG.info("I am not bother saving since you're not logged in");
+	    	LOG.info("I am not bother saving your meal since you're not logged in");
 	    }
     }
     
@@ -104,8 +98,10 @@ public class CartController extends BroadleafCartController {
             	
             	long productID = addToCartItem.getProductId();
                 LOG.info("I am adding "+addToCartItem.getQuantity()+" of product "+productID+" to cart");
-                
-                saveMeal(productID);
+
+    		    String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
+
+                saveMeal(flightNumber,productID);
             	
                 responseMap.put("productId", addToCartItem.getProductId());
             }

@@ -1,5 +1,8 @@
 package com.mycompany.pops;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Constants {
 	public static int PRIMARY_NAV = 2; // the category ID for main nav
 	
@@ -23,5 +26,17 @@ public class Constants {
 	public static String BREAKFAST_DESC = "Breakfast";
 	public static String LUNCH_DESC = "Lunch";
 	public static String DINNER_DESC = "Dinner";
+	
+	
+	//TODO: make this in a database is better way to do this
+	public static final Map<String , String> AIRPORTS = new HashMap<String , String>() {{
+		    put("ORD", "O'Hare International Airport");
+		    put("MDW", "Chicago Midway");
+		    put("YUL", "Montréal-pierre Elliott Trudeau International Airport");
+		    put("YVR", "Vancouver International Airport");
+		    
+	}};
+		    
+	
 
 }

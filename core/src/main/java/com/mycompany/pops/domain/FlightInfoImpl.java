@@ -38,9 +38,6 @@ public class FlightInfoImpl implements FlightInfo {
 	@Column(name = "DESTINATION_LOCATION")
 	protected String destinationLocation;
 	
-	@Column(name = "DEPARTURE_LOCATION")
-	protected String departureLocation;
-	
 	@Column(name = "DEPARTURE_TIME")
 	protected Date departureTime;
 	
@@ -81,16 +78,6 @@ public class FlightInfoImpl implements FlightInfo {
 	@Override
 	public void setDestinationLocation(String destinationLocation) {
 		this.destinationLocation = destinationLocation;
-	}
-	
-	@Override
-	public String getDepartureLocation() {
-		return departureLocation;
-	}
-	
-	@Override
-	public void setDepartureLocation(String departureLocation) {
-		this.departureLocation = departureLocation;
 	}
 	
 	@Override

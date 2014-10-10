@@ -13,9 +13,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import javax.sql.rowset.JdbcRowSet;
-import javax.sql.rowset.RowSetFactory;
-import javax.sql.rowset.RowSetProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +28,7 @@ import com.mycompany.pops.pojo.Product;
 public class DaoImpl implements Dao {
 	protected static final Log LOG = LogFactory.getLog(Dao.class);
 
-	// testing bean wiring here
+	// experimenting with bean wiring here
 	private DataSource dataSource;
 	
 	public DataSource getDataSource() {
@@ -56,14 +53,14 @@ public class DaoImpl implements Dao {
 	protected EntityManager em;
 
 	// ---------------------------------
-
+	// an experimental method
 	@Transactional(value = "blTransactionManager")
 	@Override
 	public void insertFlight(FlightInfo info) {
 
 		LOG.info("Inside Insert New Flight");
 		LOG.info("Here you go: " + info.getFlightNumber() + " "
-				+ info.getDepartureLocation() + "->"
+				+ info.getOriginLocation() + "->"
 				+ info.getDestinationLocation());
 		try {
 			insertFlightUsingGoodOldJDBC(info);
@@ -77,68 +74,6 @@ public class DaoImpl implements Dao {
 
 	}
 
-	// Poor man's way to try to find next sequence
-	private int newSequenceForTable(String tablename) {
-
-		int maxID = 0;
-
-		String sql = "SELECT MAX(id) FROM " + tablename;
-
-		ResultSet rs = jdbcSelectWrapper(sql);
-		try {
-			if (rs.next()) {
-				maxID = rs.getInt(1);			
-			}
-			rs.close();
-		} catch (SQLException e) {
-			LOG.error("sql exception", e);
-		}
-
-		return maxID + 1;
-	}
-
-	private int newSequenceForTable(String tablename, String id_field) {
-
-		int maxID = 0;
-
-		String sql = "SELECT MAX("+id_field+") FROM " + tablename;
-
-		ResultSet rs = jdbcSelectWrapper(sql);
-		try {
-			if (rs.next()) {
-				maxID = rs.getInt(1);			
-			}
-			rs.close();
-		} catch (SQLException e) {
-			LOG.error("sql exception", e);
-		}
-
-		return maxID + 1;
-	}
-
-	private JdbcRowSet jdbcSelectWrapper(String sql) {
-		try {
-			LOG.info("sql=" + sql);
-
-			RowSetFactory rowSetFactory = RowSetProvider.newFactory();
-			JdbcRowSet rowSet = rowSetFactory.createJdbcRowSet();
-
-			// Set connection properties
-			//rowSet.setUrl(Constants.JDBC_CONNECTION);
-			//rowSet.setUsername(Constants.JDBC_LOGIN);
-			//rowSet.setPassword(Constants.JDBC_PASSWORD);
-			rowSet.setDataSourceName(Constants.JNDI_DATASOURCE);
-			// Set SQL Query to execute
-			rowSet.setCommand(sql);
-			rowSet.execute();
-			return rowSet;
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("rowset problem", e);
-		}
-
-		return null;
-	}
 	
 	// Temporary... cause there are no pictures tied to categories 
 	private String categoryNameToImage(String name) {
@@ -146,7 +81,8 @@ public class DaoImpl implements Dao {
 	}
 
 	/**
-	 * See the table blc_translation
+	 * See the table blc_translation for translations for each entity.
+	 * If not there just return the English defaultValue
 	 */
 	private String getTranslation(long id, String locale, String entityType,
 			String fieldName, String defaultValue) {
@@ -178,7 +114,7 @@ public class DaoImpl implements Dao {
 				+ locale + "'";
 
 		String result = defaultValue;
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		try {
 			if (rs.next()) {
 				result = rs.getString(1);
@@ -194,65 +130,21 @@ public class DaoImpl implements Dao {
 	
 	private void insertFlightUsingGoodOldJDBC(FlightInfo info) {
 		LOG.info("good old JDBC");
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-
-			// unfortunately this does not work.. ideally no need to hard code the connection stuff
-//			InitialContext ic = new InitialContext();
-//			DataSource myDS = (DataSource)ic.lookup("java:comp/env/jdbc/web");
-//			conn = myDS.getConnection();
-
-			// try to get from bean
-			//conn = dataSource.getConnection();
-
-			Class.forName(Constants.JDBC_DRIVER);
-
-			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
-					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
-
-			LOG.info("Connected database successfully...");
-
-			LOG.info("Inserting record into the table...");
-			stmt = conn.createStatement();
-
-			int num = newSequenceForTable("FLIGHTINFO");
-
-			String sql = "INSERT INTO FLIGHTINFO (ID,FLIGHT_NUMBER, departure_location, DESTINATION_LOCATION) VALUES ("
+		int num = DaoUtil.newSequenceForTable("FLIGHTINFO");
+		String sql = "INSERT INTO FLIGHTINFO (ID,FLIGHT_NUMBER, origin_location, DESTINATION_LOCATION) VALUES ("
 					+ num
 					+ ','
 					+ "'"
 					+ info.getFlightNumber()
 					+ "',"
 					+ "'"
-					+ info.getDepartureLocation()
+					+ info.getOriginLocation()
 					+ "',"
 					+ "'"
 					+ info.getDestinationLocation() + "')";
-
-			LOG.info("sql=" + sql);
-			stmt.executeUpdate(sql);
-			LOG.info("Inserted record into the table...");
-
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("jdbc problem", e);
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException se) {
-			}// do nothing
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}// end finally try
-		}// end try
-
+		DaoUtil.jdbcInsertUpdateWrapper(sql);
 	}
+	
 	//------------------------------------------------------------------------------------
 	public List<Category> getCategories(long parentID, String locale) {
 		LOG.info("trying to get categories with parent = " + parentID);
@@ -264,7 +156,7 @@ public class DaoImpl implements Dao {
 				+ " and default_parent_category_id = " + parentID
 				+ " order by category_id";
 
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -309,7 +201,7 @@ public class DaoImpl implements Dao {
 				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id"
 				+ " and map_key='primary'";
 
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -345,7 +237,7 @@ public class DaoImpl implements Dao {
 
 		String sql = "select name from blc_category where category_id = "
 				+ categoryID;
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		try {
 
 			if (rs.next()) {
@@ -365,7 +257,7 @@ public class DaoImpl implements Dao {
 
 		String sql = "select name,url from blc_category where category_id = "
 				+ categoryID;
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		try {
 
 			if (rs.next()) {
@@ -390,7 +282,7 @@ public class DaoImpl implements Dao {
 		String sql = "SELECT default_parent_category_id from blc_category where category_id = "
 				+ categoryID;
 		int result = 0;
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -448,7 +340,7 @@ public class DaoImpl implements Dao {
 		int categoryID = 0;
 		String name = "";
 
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -488,7 +380,7 @@ public class DaoImpl implements Dao {
 				+ " and flight_number='"
 				+ flightNumber + "'" + " and meal_type='" + mealType + "' order by meal_id";
 
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -538,21 +430,11 @@ public class DaoImpl implements Dao {
 
 	public void saveMealSelection(long customerID, String flightNumber,
 			long mealID) {
+
 		LOG.info("Saving meal for " + customerID + ", flight:" + flightNumber
 				+ " mealID:" + mealID);
 
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-
-			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
-					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
-
-			// try to get from bean
-//			conn = dataSource.getConnection();
-			
-			LOG.info("Connected database successfully...");
+	
 
 			// First, find out the type of meal that the user already selected
 			// (based on the current meal user tries to add)
@@ -561,8 +443,6 @@ public class DaoImpl implements Dao {
 			// I wish I can send the meal type of the product selected, but this
 			// is called by the cart and it only knows product ID
 
-			Statement delstmt = conn.createStatement();
-
 			String delSQL = "delete from meal_selection where meal_id in "
 					+ "(select meal_id from flight_meal "
 					+ " where flight_number='"
@@ -570,12 +450,11 @@ public class DaoImpl implements Dao {
 					+ "' "
 					+ " and meal_type = (select distinct meal_type from flight_meal where meal_id="
 					+ mealID + "))";
-			LOG.info("delSQL=" + delSQL);
-			delstmt.executeUpdate(delSQL);
-
+			
+			DaoUtil.jdbcInsertUpdateWrapper(delSQL);
+	
 			// insert the new selection
-			stmt = conn.createStatement();
-			int num = newSequenceForTable("MEAL_SELECTION");
+			int num = DaoUtil.newSequenceForTable("MEAL_SELECTION");
 
 			String sql = "INSERT INTO MEAL_SELECTION (ID,CUSTOMER_ID,FLIGHT_NUMBER, MEAL_ID) VALUES ("
 					+ num
@@ -588,28 +467,8 @@ public class DaoImpl implements Dao {
 					+ mealID + ")";
 
 			LOG.info("sql=" + sql);
-			stmt.executeUpdate(sql);
-
-			LOG.info("Inserted record into the table...");
-
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("jdbc problem", e);
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					conn.close();
-			} catch (SQLException se) {
-			}// do nothing
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}// end finally try
-		}// end try
-
+			DaoUtil.jdbcInsertUpdateWrapper(sql);
+			
 	}
 
 	public List<Meal> getMealsForCustomer(long customerID, String flightNumber) {
@@ -631,7 +490,7 @@ public class DaoImpl implements Dao {
 				+ " and flight_meal.flight_number='"
 				+ flightNumber + "'";
 
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -690,7 +549,7 @@ public class DaoImpl implements Dao {
 
 		List<Long> result = null;
 		String sql = "select meal_id from flight_meal where flight_number='"+flightNumber+"'";
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -715,7 +574,7 @@ public class DaoImpl implements Dao {
 		LOG.info("Getting flight info for "+flightNumber);
 		FlightData result = null;
 		String sql = "select flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo where flight_number='"+flightNumber+"'";
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
 			try {
@@ -746,7 +605,7 @@ public class DaoImpl implements Dao {
 	private boolean isCustomerAlreadyDefined(String userName) {
 		String sql = "select customer_id from blc_customer where user_name='"+userName+"'";
 		boolean result = false;
-		ResultSet rs = jdbcSelectWrapper(sql);
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		try {
 			if (rs.next()) {
 				result = true;
@@ -780,7 +639,7 @@ public class DaoImpl implements Dao {
 			LOG.info("Inserting record into the table...");
 			stmt = conn.createStatement();
 
-			int num = newSequenceForTable("blc_customer","customer_id");
+			int num = DaoUtil.newSequenceForTable("blc_customer","customer_id");
 
 			String sql = "insert into blc_customer (customer_id,deactivated,email_address,first_name,last_name,password,password_change_required,is_registered,user_name) values ("
 					+ num

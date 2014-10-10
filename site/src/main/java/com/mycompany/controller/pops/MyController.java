@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mycompany.pops.Constants;
 import com.mycompany.pops.Dao;
 import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.DaoUtil;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
@@ -66,10 +67,13 @@ public class MyController {
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String flightDate = request.getParameter("flightDate");
+		// more varibles to pass in
 
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
 		session.setAttribute("flight", flight);
+		
+		// should probably save them in a table too
 
 		Dao u = new DaoImpl();
 		u.insertNewCustomer(lastName,firstName,email,flight,flightDate);
@@ -191,7 +195,7 @@ public class MyController {
 	    Customer customer = (Customer) CustomerState.getCustomer();
 	    String flightNumber=null;
 	    if (customer!=null) {
-	    	flightNumber=getFlightNumberFromRequest(request);
+	    	flightNumber=DaoUtil.getFlightNumberFromRequest(request);
 	    }
 
 		Dao dao = new DaoImpl();
@@ -209,16 +213,6 @@ public class MyController {
 		return modelAndView;
 	}
 
-	private String getFlightNumberFromRequest(HttpServletRequest request) {
-		String result = null;
-		try {
-			result = request.getSession().getAttribute("flight").toString();
-		} catch (Exception e) {
-			// do not have flight number, hmmm
-			LOG.info("cannot find flight number from session");
-		}
-		return result;
-	}
 
 	@RequestMapping(value = "/dashboard")
 	public ModelAndView doDashBoard(HttpServletRequest request, HttpServletResponse response) {
@@ -228,7 +222,7 @@ public class MyController {
 		String flightNumber = null; 
 
 	    if (customer!=null) {
-	    	flightNumber=getFlightNumberFromRequest(request);
+	    	flightNumber=DaoUtil.getFlightNumberFromRequest(request);
 	    }
 
 	    long customerID = 0;
@@ -239,10 +233,13 @@ public class MyController {
 
 		Dao dao = new DaoImpl();
 		List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/dashboard");
 		modelAndView.addObject("meals",meals);
 		modelAndView.addObject("orders", orders);
+    	FlightData f = dao.getFlightDataForFlight(flightNumber);
+		modelAndView.addObject("flightData",f);
 		
 		return modelAndView;
 	}
@@ -263,7 +260,7 @@ public class MyController {
 			long customerID = customer.getId();
 	
 			if (userName!=null) {
-				String flightNumber=getFlightNumberFromRequest(request);
+				String flightNumber=DaoUtil.getFlightNumberFromRequest(request);
 
 				if (flightNumber!=null) {
 					Dao dao = new DaoImpl();
@@ -320,6 +317,5 @@ public class MyController {
     	
 		return modelAndView;
 	}
-
 	
 }

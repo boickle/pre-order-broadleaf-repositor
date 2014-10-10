@@ -13,9 +13,6 @@ public interface FlightInfo{
 	public String getDestinationLocation();
 	public void setDestinationLocation(String destinationLocation);
 	
-	public String getDepartureLocation();
-	public void setDepartureLocation(String departureLocation);
-	
 	public Date getDepartureTime();
 	public void setDepartureTime(Date departureTime);
 	

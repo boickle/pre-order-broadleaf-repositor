@@ -84,7 +84,7 @@ public class TestController {
 		LOG.info("doTestDB");
 		FlightInfo f = new FlightInfoImpl();
 		f.setFlightNumber("A" + data.getData3());
-		f.setDepartureLocation(data.getData1());
+		f.setOriginLocation(data.getData1());
 		f.setDestinationLocation(data.getData2());
 		Dao u = new DaoImpl();
 		u.insertFlight(f);

@@ -11,7 +11,7 @@
         <div th:if="${#lists.isEmpty(cart.orderItems)}" class="checkout_warning">
             <span th:text="#{cart.empty}">Your cart is empty</span>
             <br/>
-            <a th:href="@{/}"><span th:text="#{cart.continueShopping}">Continue Shopping</span></a>
+<!--            <a th:href="@{/}"><span th:text="#{cart.continueShopping}">Continue Shopping</span></a> -->
         </div>
 
         <div th:unless="${#lists.isEmpty(cart.orderItems)}">
@@ -51,11 +51,3 @@
 
 </blc:one_page_checkout>
 
-<h1>CLICK ME</h1>
-        <div class="form100">
-            <blc:form th:action="@{/checkout/noaddress}"
-                      method="POST" id="complete_checkout"
-                      novalidate="novalidate">
-                <input type="submit" class="medium red" th:value="#{cart.completOrder}" />
-            </blc:form>
-        </div>
