@@ -189,18 +189,9 @@ public class MyController {
 		LOG.info("Inside meal select");
 
 	    Customer customer = (Customer) CustomerState.getCustomer();
-		String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly 
-
+	    String flightNumber=null;
 	    if (customer!=null) {
-			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
-		    LOG.info("Yo, you are: "+customer.getUsername());
-			String userName = customer.getUsername();
-	
-			if (userName!=null) {
-				int pipe = userName.indexOf("|");
-				if (pipe>0) flightNumber = userName.substring(0,pipe);
-				LOG.info("Your flight is:"+flightNumber);
-			}
+	    	flightNumber=getFlightNumberFromRequest(request);
 	    }
 
 		Dao dao = new DaoImpl();

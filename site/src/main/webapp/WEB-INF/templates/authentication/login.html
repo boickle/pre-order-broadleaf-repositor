@@ -2,7 +2,7 @@
     <div style="display:none;" th:fragment="title" th:inline="text">Login - Broadleaf Demo - Heat Clinic</div>
     
     <div id="login">
-        <h3><span th:text="#{login.loginToAccount}">Login to Your Account</span></h3>
+        <h3><span th:text="#{login.loginToAccount}">Login to Your Account!</span></h3>
         <p><span th:text="#{login.alreadyMember}">Already a member? Sign in using the form below</span>.</p>
         
         <span class="error" th:if="${param.error}">
@@ -37,6 +37,10 @@
     </div>
 </div>
 
+<div id="loggingin" style="display:none">
+<h2>Logging in...</h2>
+</div>
+
 <form name="info" style="display:none">
 Email: <input name="email" type="text" th:value="${session.email}"/><br/>
 Flight: <input name="flight" type="text" th:value="${session.flight}"/> <br/>
@@ -47,13 +51,16 @@ Error: <input name="theerror" type="text" th:value="${param.error}"/>
 // If there is error, stay where you are
 if (document.info.theerror.value=="") {
 
-// if there is auto login info, try to click that button for the user
-if (document.info.email.value!=null) {
-  if (document.info.email.value!="null") {
-	  document.theform.j_username.value=document.info.email.value
-	  document.theform.j_password.value="Welcome1"
-	  document.theform.submit();
-  }
-}
+	// if there is auto login info, try to click that button for the user
+	if (document.info.email.value!=null) {
+	  if (document.info.email.value!="null") {
+		  document.getElementById('login').style.display="none"
+		  document.getElementById('loggingin').style.display="block"
+	
+		  document.theform.j_username.value=document.info.email.value
+		  document.theform.j_password.value="Welcome1"
+		  document.theform.submit();
+	  }
+	}
 }
 </script>
