@@ -33,6 +33,9 @@ public class TestController {
 	@Resource(name = "blEmailService")
 	protected EmailService emailService;
 	
+    @Resource(name = "preselectionEmailInfo")
+    protected EmailInfo preSelectionEmailInfo;
+    
 	@RequestMapping(value = "/some/path")
 	public String doSomething() {
 		LOG.info("Inside doSomething!");
@@ -124,6 +127,32 @@ public class TestController {
 
 		try {
 			emailService.sendBasicEmail(emailInfo, emailTarget, vars);
+		} catch (Exception e) {
+			LOG.info("sorry, error in send email",e);
+
+		}
+		return "pops/done";
+	}
+	
+	@RequestMapping(value = "/sendEmailTest2") 
+	public String doSendEmailTest2(HttpServletRequest request, HttpServletResponse response) {
+		
+		String emailTo="josephmak0865@gmail.com";
+		
+		EmailTargetImpl emailTarget = new EmailTargetImpl();
+		emailTarget.setEmailAddress(emailTo);
+		
+		HashMap<String, Object> vars = new HashMap<String, Object>();
+
+		String absolutePath=request.getServerName();
+		LOG.info("absolutePath:"+absolutePath);
+        vars.put("firstname","Ken");
+        vars.put("absolutepath",absolutePath);
+        vars.put("link","http://www.google.com");
+        
+        
+		try {
+			emailService.sendTemplateEmail(emailTarget, preSelectionEmailInfo, vars);
 		} catch (Exception e) {
 			LOG.info("sorry, error in send email",e);
 

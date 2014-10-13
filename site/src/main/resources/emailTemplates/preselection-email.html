@@ -1,0 +1,53 @@
+
+<body style="padding:0;margin:0;">
+	
+	<div style="background:#EEE; padding:30px;">
+		
+			<div style="max-width:600px; margin:0px auto;font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.42857143;color: #333; padding:0px 20px 20px 20px; background:#FFF;border:1px solid #DDD;">	
+			
+			<h2 style="font-weight:normal; border-bottom:1px solid #EEE; padding-bottom:10px;margin-bottom:10px;">
+				<img style="height:32px; vertical-align:middle;" th:src="${abolutepath}+'/img/logo_air_canada.png'"/>
+				| <span style="margin-top:5px;"> Welcome to Pre-Selection!</span> 
+			</h2> 
+			
+			<h1 th:text="'Hello ' + ${firstname}">Hello</h1>	
+			
+			<p>You've been approved for Pre-Selection! You can select your meals before your flight and get them delivered right to your seat.</p>
+			
+			<p style="padding:20px 0;">
+				<a style="color:#3c763d; background:#dff0d8; border: 1px solid #d6e9c6; padding:10px;text-decoration: none;border-radius: 5px;" th:href="${link}">
+					
+					Get Started with Pre Selection
+					
+				</a>
+			</p>
+				
+			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+
+				<tr>
+					
+					<td style="padding-top:10px;font-size:10px;color:#CCC;" width="60%">
+						
+						<p>EGate Group<br/>
+							123 Street, Suite 304, Portland, ME 04101<br/>
+							<a href="#">Unsubscribe</a> | <a href="#">Privacy Policy</a>
+						</p>
+						
+					</td>
+					
+					<td style="padding-top:10px;text-align: right;" width="25%">
+						
+						<img th:src="${abolutepath}+'/img/egate.jpg'" />
+						
+					</td>
+							
+				</tr>
+				
+			</table>
+			
+
+	  </div>
+	  
+	</div>
+
+</body>
