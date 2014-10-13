@@ -144,14 +144,14 @@
 					<span class="divider">|</span>
 						
 					<i class="fa fa-plane"></i> <b>Flight Info</b> 
-					<span class="divider">|</span> <b>Passenger:</b> Donald McMains
-					<span class="divider"></span> <b>Flight:</b> AC-1824
+					<span class="divider">|</span> <b>Passenger:</b> <b th:text="${customer.firstName+' '+customer.lastName}"/>
+					<span class="divider"></span> <b>Flight:</b> <b th:text="${session.flightdata.flightNumber}"/>
 					
-					<span class="divider"></span> <b>To:</b> Vancouver
+					<span class="divider"></span> <b>To:</b> <b th:text="${session.flightdata.destinationStation}"/>
 					
-					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> 10:35AM
+					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> <b th:text="${session.flightdata.departureDate}"/>
 					
-					<span class="divider"></span> <b>Arrival:</b> 4:35PM
+					<span class="divider"></span> <b>Arrival:</b> <b th:text="${session.flightdata.arrivalDate}"/>
 			
 				</p>
 								
