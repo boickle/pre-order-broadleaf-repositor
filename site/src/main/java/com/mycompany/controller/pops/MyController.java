@@ -1,5 +1,6 @@
 package com.mycompany.controller.pops;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.currency.domain.BroadleafCurrency;
+import org.broadleafcommerce.common.email.domain.EmailTargetImpl;
+import org.broadleafcommerce.common.email.service.EmailService;
+import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.common.locale.domain.Locale;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.OrderService;
@@ -38,7 +42,12 @@ public class MyController {
 	// so I can find orders for the customer for the dashboard
     @Resource(name="blOrderService")
     protected OrderService orderService;
-
+    
+    @Resource(name = "blEmailService")
+	protected EmailService emailService;
+    
+    @Resource(name = "preselectionEmailInfo")
+    protected EmailInfo preSelectionEmailInfo;
 	
 	/**
 	 * This is the controller for auto login, which is the first step.
@@ -48,6 +57,18 @@ public class MyController {
 	@RequestMapping(value = "/loginAuto")
 	public ModelAndView gotoConfirmScreen(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside loginAuto");
+		String email = request.getParameter("email");
+		String flight = request.getParameter("flight");
+		String firstName = request.getParameter("firstname");
+		String lastName = request.getParameter("lastname");
+		String flightDate = request.getParameter("flightDate");
+		// more varibles to pass in
+
+		HttpSession session = request.getSession();
+		session.setAttribute("email", email);
+		session.setAttribute("flight", flight);
+		session.setAttribute("firstname", firstName);
+		session.setAttribute("lastname", lastName);
 		return this.doFlightInfo(request, response);
 	}	
 
@@ -191,17 +212,35 @@ public class MyController {
 	@RequestMapping(value = "/mealSelect")
 	public ModelAndView doMealSelect(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside meal select");
-
+		String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly
+		String email ="";
+		try {
+			email = request.getSession().getAttribute("email").toString();
+			flightNumber = request.getSession().getAttribute("flight").toString();
+		} catch (Exception e) {
+			LOG.info("cannot find flight number from session");
+		}
 	    Customer customer = (Customer) CustomerState.getCustomer();
-	    String flightNumber=null;
+		
+
 	    if (customer!=null) {
-	    	flightNumber=DaoUtil.getFlightNumberFromRequest(request);
+			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
+		    LOG.info("Yo, you are: "+customer.getUsername());
+			String userName = customer.getUsername();
+	
+			if (userName!=null) {
+				int pipe = userName.indexOf("|");
+				if (pipe>0) flightNumber = userName.substring(0,pipe);
+				LOG.info("Your flight is:"+flightNumber);
+			}
 	    }
 
 		Dao dao = new DaoImpl();
 	    String locale = getLocale(request);
 		List<Category> l = dao.getCategories(Constants.PRIMARY_NAV,locale);
 
+		FlightData f = dao.getFlightDataForFlight(flightNumber);
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/mealselect");
 		modelAndView.addObject("categories", l);
@@ -209,9 +248,11 @@ public class MyController {
 		modelAndView.addObject("breakfast",dao.getMealsForFlight(flightNumber,Constants.BREAKFAST,locale));
 		modelAndView.addObject("lunch",dao.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
 		modelAndView.addObject("dinner",dao.getMealsForFlight(flightNumber,Constants.DINNER,locale));
-
+		modelAndView.addObject("flightdata",f);
+		
 		return modelAndView;
 	}
+
 
 
 	@RequestMapping(value = "/dashboard")
@@ -287,35 +328,86 @@ public class MyController {
 	public ModelAndView doFlightInfo(HttpServletRequest request, HttpServletResponse response) {
 
 		LOG.info("inside flightinfo");
-
-		String email = request.getParameter("email");
-		String flightNumber = request.getParameter("flight");
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
-//		String flightDate = request.getParameter("flightDate");
-		
-		LOG.info("email is: "+email);
+		String flightNumber = null;
+		String email = null;
+		String firstName = "";
+		String lastName = "";
+		try {
+			email = request.getSession().getAttribute("email").toString();
+			flightNumber = request.getSession().getAttribute("flight").toString();
+			firstName = request.getSession().getAttribute("firstname").toString();
+			lastName = request.getSession().getAttribute("lastname").toString();
+		} catch (Exception e) {
+			LOG.info("cannot find flight number from session");
+		}
+    	LOG.info("email is: "+email);
     	LOG.info("flight is: "+flightNumber);
-    	String loginLink = "/loginCreateUser?email="+email+"&flight="+flightNumber+"&firstName="+firstName+"&lastName="+lastName;
     	
+		
+		LOG.info("Name: " + firstName );
     	Dao dao = new DaoImpl();
 		ModelAndView modelAndView = new ModelAndView();
     	modelAndView.setViewName("pops/flightconfirmation");
     	modelAndView.addObject("firstname",firstName);
     	modelAndView.addObject("lastname",lastName);
     	modelAndView.addObject("email",email);
-    	modelAndView.addObject("loginlink",loginLink);
-    	
-    	// we may probably need to toss whatever user passed in instead of looking it up
     	FlightData f = dao.getFlightDataForFlight(flightNumber);
     	if(f!=null)
     		LOG.info("Flight Info: " + f.getFlightNumber() );
     	else{
     		LOG.info("Flight Info is null " );
     	}
+    	//String depart = f.getDepartureDate();
+    	HttpSession session = request.getSession();
+		session.setAttribute("flightdata", f);
     	modelAndView.addObject("flightdata",f);
+    	modelAndView.addObject("loginlink","/login");
+    	
     	
 		return modelAndView;
 	}
+	
+	@RequestMapping(value = "/sendWelcomeEmail") 
+	public String doSendEmailTest2(HttpServletRequest request, HttpServletResponse response) {
+		String emailTo = request.getParameter("emailTo");
+        String emailFrom="testing123@egate.com";
+        String firstName=request.getParameter("firstname");
+        String lastName=request.getParameter("lastname");
+        String flight=request.getParameter("flight");
+		
+        //Adding flight info to prevent header from failing when showing done page. Probably a better way to do this.
+        Dao dao = new DaoImpl();
+        FlightData f = dao.getFlightDataForFlight(flight);
+    	HttpSession session = request.getSession();
+		session.setAttribute("flightdata", f);
+		
+		
+		//String emailTo="boickle@bigroomstudios.com";
+		
+		EmailTargetImpl emailTarget = new EmailTargetImpl();
+		emailTarget.setEmailAddress(emailTo);
+		
+		HashMap<String, Object> vars = new HashMap<String, Object>();
+
+		String absolutePath=request.getServerName();
+		LOG.info("absolutePath:"+absolutePath);
+		LOG.info("email ab: " + absolutePath);
+        vars.put("firstname",firstName);
+        vars.put("absolutepath",absolutePath);
+        
+        String url= "http://"+absolutePath+":8080/loginAuto?email="+emailTo+"&flight="+flight+"&firstname="+firstName+"&lastname="+lastName;
+        LOG.info("email url: " + url);
+        vars.put("link",url);
+        
+        
+		try {
+			emailService.sendTemplateEmail(emailTarget, preSelectionEmailInfo, vars);
+		} catch (Exception e) {
+			LOG.info("sorry, error in send email",e);
+
+		}
+		return "pops/done";
+	}	
+
 	
 }
