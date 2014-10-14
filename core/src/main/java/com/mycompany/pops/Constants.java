@@ -30,7 +30,7 @@ public class Constants {
 	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "MM/dd/yyyy";
 
 	//TODO: get this out of constants! (the order confirmation email has no clue what server it is on)
-	public static String SERVERPATH_FOR_EMAIL = "ec2-54-87-4-62.compute-1.amazonaws.com";
+	public static String SERVERPATH_FOR_EMAIL = "pops.egatesoln.com";
 	
 	//TODO: make this in a database is better way to do this
 	public static final Map<String , String> AIRPORTS = new HashMap<String , String>() {{
