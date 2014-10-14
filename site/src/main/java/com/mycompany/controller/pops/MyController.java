@@ -87,20 +87,21 @@ public class MyController {
 		String flight = request.getParameter("flight");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		String flightDate = request.getParameter("flightDate");
-		// more varibles to pass in
-
+		String flightDateParameter = request.getParameter("flightDate");
+		String originStation = request.getParameter("originStation");
+		String destinationStation = request.getParameter("destinationStation");
+		
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
 		session.setAttribute("flight", flight);
 		
-		// should probably save them in a table too
 
 		Dao u = new DaoImpl();
-		u.insertNewCustomer(lastName,firstName,email,flight,flightDate);
+		u.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
 		
 		return "redirect:/login";
 	}	
+	
 
 	/**
 	 * This method reads the locale variable set by broadleaf flag icon

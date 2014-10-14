@@ -16,6 +16,10 @@
 
 package com.mycompany.worklow.checkout;
 
+import java.util.HashMap;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.email.service.EmailService;
@@ -25,9 +29,10 @@ import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.workflow.BaseActivity;
 import org.broadleafcommerce.core.workflow.ProcessContext;
 
-import java.util.HashMap;
-
-import javax.annotation.Resource;
+import com.mycompany.pops.Constants;
+import com.mycompany.pops.Dao;
+import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.pojo.FlightData;
 
 
 /**
@@ -53,6 +58,14 @@ public class SendOrderConfirmationEmailActivity extends BaseActivity<ProcessCont
         vars.put("customer", order.getCustomer());
         vars.put("orderNumber", order.getOrderNumber());
         vars.put("order", order);
+        vars.put("serverpath", Constants.SERVERPATH_FOR_EMAIL);
+
+	    Dao dao = new DaoImpl();
+        FlightData f = dao.getFlightInfoFromMealOrder(order.getOrderNumber());
+
+        vars.put("flightData", f);
+
+
 
         //Email service failing should not trigger rollback
         try {

@@ -32,7 +32,11 @@ public interface Dao {
 	
 	public FlightData getFlightDataForFlight(String flightNumber);
 	
-	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate);
+	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate, String originStation, String destinationStation);
 	
 	public void insertBlankAddressToOrder(long orderID);
+	
+	public FlightData getFlightInfoFromMealOrder(String orderNumber);
+	
+	public void saveFlightInfoForOrder(long customerID, String flightNumber, String orderNumber);
 }

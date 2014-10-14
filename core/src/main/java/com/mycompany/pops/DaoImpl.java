@@ -1,13 +1,12 @@
 package com.mycompany.pops;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -620,97 +619,95 @@ public class DaoImpl implements Dao {
 	/**
 	 * This method is to be called by auto login, to create user on the fly
 	 */
-	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate) {
+	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDateParameter, String originStation, String destinationStation) {
 
 		if (isCustomerAlreadyDefined(email)) {
 			return;
 		}
 		
-		Connection conn = null;
-		Statement stmt = null;
-		try {
+		int num = DaoUtil.newSequenceForTable("blc_customer","customer_id");
 
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
-					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
-
-			LOG.info("Connected database successfully...");
-
-			LOG.info("Inserting record into the table...");
-			stmt = conn.createStatement();
-
-			int num = DaoUtil.newSequenceForTable("blc_customer","customer_id");
-
-			String sql = "insert into blc_customer (customer_id,deactivated,email_address,first_name,last_name,password,password_change_required,is_registered,user_name) values ("
-					+ num
-					+ ','
-					+ "'f','"
-					+ email
-					+ "','"
-					+ firstName
-					+ "','"
-					+ lastName
-					+ "','Welcome1{"+num+"}',"
-					+ "'f','t','"
-					+ email+"')";
-			LOG.info("sql=" + sql);
-			stmt.executeUpdate(sql);
-			LOG.info("Inserted record into the table...");
-
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("jdbc problem", e);
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException se) {
-			}// do nothing
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}// end finally try
-		}// end try
-
-	}
-	
-	public void insertBlankAddressToOrder(long orderID) {
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
-					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
-
-
-			stmt = conn.createStatement();
-			String sql = "update blc_fulfillment_group set fulfillment_option_id=4, address_id=0 where order_Id="+orderID;
-			LOG.info("sql=" + sql);
-			stmt.executeUpdate(sql);
-			LOG.info("Inserted record into the table...");
-
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			LOG.error("jdbc problem", e);
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException se) {
-			}// do nothing
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				LOG.error("jdbc problem", se);
-			}// end finally try
-		}// end try
+		String sql = "insert into blc_customer (customer_id,deactivated,email_address,first_name,last_name,password,password_change_required,is_registered,user_name) values ("
+				+ num
+				+ ','
+				+ "'f','"
+				+ email
+				+ "','"
+				+ firstName
+				+ "','"
+				+ lastName
+				+ "','Welcome1{"+num+"}',"
+				+ "'f','t','"
+				+ email+"')";
+		LOG.info("sql=" + sql);
+		DaoUtil.jdbcInsertUpdateWrapper(sql);
 		
+		//---------------------------------
+		
+		LOG.info("The flight date I am getting from parameter is:"+flightDateParameter);
+		
+		String dateFormatForDB = "MM/dd/yyyy";
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK);
+		
+		SimpleDateFormat sdfForDB = new SimpleDateFormat(dateFormatForDB);
+		Date flightDate = null;
+		String flightDateForDB = flightDateParameter;
+		try {
+			flightDate = sdf.parse(flightDateParameter);
+			LOG.info("flightDate:"+flightDate);
+			flightDateForDB = sdfForDB.format(flightDate);
+			LOG.info("flightDateForDB:"+flightDateForDB);
+		}
+		catch (Exception e) {
+			flightDate = new Date(); // just so life goes on
+			LOG.error("Error parsing flight date",e);
+		}
+
+		int pk = DaoUtil.newSequenceForTable("customer_flight");
+		sql = "insert into customer_flight (id,customer_id, FLIGHT_NUMBER, FLIGHT_DATE, ORIGIN_STATION, DESTINATION_STATION) values ("
+				+pk+","+ num + ",'" + flightNumber+"',to_date('"+flightDateForDB+"','"+dateFormatForDB+"'),'"+originStation+"','"+destinationStation+"')";
+		LOG.info(sql);
+		DaoUtil.jdbcInsertUpdateWrapper(sql);
+
 	}
 
+	/**
+	 * Meal Select has no billing address
+	 * so we update the fulfillment group so a billing address is defined, also the shipping fee (4 means Free shipping) 
+	 */
+	public void insertBlankAddressToOrder(long orderID) {
+		String sql = "update blc_fulfillment_group set fulfillment_option_id=4, address_id=0 where order_Id="+orderID;
+		DaoUtil.jdbcInsertUpdateWrapper(sql);
+	}
+
+	/**
+	 * Store the order number for meal selection (so the confirmation email can find the flight that is associated) 
+	 */
+
+	public void saveFlightInfoForOrder(long customerID, String flightNumber, String orderNumber) {
+		String sql = "update CUSTOMER_FLIGHT set MEAL_ORDER_NUMBER='"+orderNumber+"' WHERE customer_id="+customerID+" and flight_number='"+flightNumber+"'";
+		DaoUtil.jdbcInsertUpdateWrapper(sql);
+	}
+
+	public FlightData getFlightInfoFromMealOrder(String orderNumber) {
+		
+		LOG.info("getFlightInfoFromMealOrder, orderNumber:"+orderNumber);
+		String sql = "select FLIGHT_NUMBER from CUSTOMER_FLIGHT where MEAL_ORDER_NUMBER='"+orderNumber+"'";
+		String flightNumber = null;
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		try {
+			if (rs.next()) {
+				flightNumber = rs.getString(1);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
+		LOG.info("The flight was:"+flightNumber);
+		
+		if (flightNumber!=null) {
+			return getFlightDataForFlight(flightNumber);
+		}
+		return null;
+	}
 }

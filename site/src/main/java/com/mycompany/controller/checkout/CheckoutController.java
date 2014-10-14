@@ -16,9 +16,16 @@
 
 package com.mycompany.controller.checkout;
 
+import java.util.HashMap;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.broadleafcommerce.common.email.service.EmailService;
+import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.common.vendor.service.exception.PaymentException;
@@ -32,6 +39,8 @@ import org.broadleafcommerce.core.web.checkout.model.OrderInfoForm;
 import org.broadleafcommerce.core.web.checkout.model.ShippingInfoForm;
 import org.broadleafcommerce.core.web.controller.checkout.BroadleafCheckoutController;
 import org.broadleafcommerce.core.web.order.CartState;
+import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,12 +52,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mycompany.pops.Constants;
 import com.mycompany.pops.Dao;
 import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.DaoUtil;
+import com.mycompany.pops.pojo.FlightData;
 
 @Controller
 public class CheckoutController extends BroadleafCheckoutController {
 
+	protected static final Log LOG = LogFactory.getLog(CheckoutController.class);
+	
+    @Resource(name = "blOrderConfirmationEmailInfo")
+    protected EmailInfo orderConfirmationEmailInfo;
+    
+	@Resource(name = "blEmailService")
+	protected EmailService emailService;
+	
     @RequestMapping("/checkout")
     public String checkout(HttpServletRequest request, HttpServletResponse response, Model model,
             @ModelAttribute("orderInfoForm") OrderInfoForm orderInfoForm,
@@ -73,9 +93,32 @@ public class CheckoutController extends BroadleafCheckoutController {
     public String processCompleteCheckoutOrderFinalized(RedirectAttributes redirectAttributes) throws PaymentException {
         return super.processCompleteCheckoutOrderFinalized(redirectAttributes);
     }
+    
+    private void sendConfirmationEmail(Order order) {
+    	LOG.info("Inside my own send Confirmation Email");
+        HashMap<String, Object> vars = new HashMap<String, Object>();
+        vars.put("customer", order.getCustomer());
+        vars.put("orderNumber", order.getOrderNumber());
+        vars.put("order", order);
+        vars.put("serverpath", Constants.SERVERPATH_FOR_EMAIL);
+
+	    Dao dao = new DaoImpl();
+        FlightData f = dao.getFlightInfoFromMealOrder(order.getOrderNumber());
+
+        vars.put("flightData", f);
+
+
+        try {
+            emailService.sendTemplateEmail(order.getEmailAddress(), orderConfirmationEmailInfo, vars);
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+
+    }
 
     @RequestMapping(value = "/checkout/noaddress", method = RequestMethod.POST)
-    public String processCompleteCheckoutOrderFinalizedNoBilling(RedirectAttributes redirectAttributes) throws PaymentException {
+    public String processCompleteCheckoutOrderFinalizedNoBilling(HttpServletRequest request, RedirectAttributes redirectAttributes) throws PaymentException {
+    	
     	// find the order number, set blank address and free shipping option
     	//update blc_fulfillment_group set fulfillment_option_id=4, address_id=1 where order_Id=1
 
@@ -84,11 +127,21 @@ public class CheckoutController extends BroadleafCheckoutController {
         if (cart != null && !(cart instanceof NullOrderImpl)) {
             try {
                 String orderNumber = initiateCheckout(cart.getId());
+
                 //Log.info("Hey I am processing this order:"+orderNumber+" cartID is "+cart.getId()+" ordernumber"+cart.getOrderNumber());
+                String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
+
                 Dao u = new DaoImpl();
                 u.insertBlankAddressToOrder(cart.getId());
                 
+                LOG.info("inside checkout, flight is: "+flightNumber);
+                if (flightNumber!=null) {
+                	u.saveFlightInfoForOrder(cart.getCustomer().getId(),flightNumber,cart.getOrderNumber());
+                }
                 
+                // odd that the SendOrderConfirmationEmailActivity went too early! before I can save the flight info for order
+                sendConfirmationEmail(cart);
+
                 return getConfirmationViewRedirect(orderNumber);
             } catch (Exception e) {
                 handleProcessingException(e, redirectAttributes);

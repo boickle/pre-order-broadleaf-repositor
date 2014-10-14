@@ -67,7 +67,7 @@
                   </div>
                </div>
                <div style="" class="hidden-xs  col-sm-3 text-right">	
-                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn0" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
                </div>
             </div>
          </div>
@@ -109,7 +109,7 @@
                   </div>
                </div>
                <div style="" class="hidden-xs  col-sm-3 text-right">	
-                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn1" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
                </div>
             </div>
          </div>
@@ -172,7 +172,7 @@
 						
 			</div>
 			<div style="" class="hidden-xs  col-sm-3 text-right">	
-						<span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+						<span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn2" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
 			</div>		
 			
 			</div>
@@ -192,10 +192,17 @@
 		
 		
 			<script type="text/javascript">
-
-		$('#collapseZero .selectMealBtn').click(function() {
+			var breakfastSelected, lunchSelected,dinnerSelected
 			
-			$('.selectMealBtn').text('Select Meal').removeClass('btn-primary');
+		$('#collapseZero .selectMealBtn0').click(function() {
+
+			
+			if (this.id!=null) {
+			  breakfastSelected = this.id.substring(10); // get pass 'selectmeal'
+			  alert("breakfast selected was: "+breakfastSelected) 
+			}
+			
+			$('.selectMealBtn0').text('Select Meal').removeClass('btn-primary');
 			
 			 $(this).text('Meal Selected!').addClass('btn-primary');
 			 
@@ -212,9 +219,14 @@
 		});
 		
 
-		$('#collapseOne .selectMealBtn').click(function() {
-			
-			$('.selectMealBtn').text('Select Meal').removeClass('btn-primary');
+		$('#collapseOne .selectMealBtn1').click(function() {
+		
+			if (this.id!=null) {
+			  lunchSelected = this.id.substring(10); // get pass 'selectmeal'
+			  alert("lunchSelected was: "+lunchSelected) 
+			}
+
+			$('.selectMealBtn1').text('Select Meal').removeClass('btn-primary');
 			
 			 $(this).text('Meal Selected!').addClass('btn-primary');
 			 
@@ -226,12 +238,17 @@
 			 $('#collapseZero').collapse('hide')	 
 			 $('#collapseOne').collapse('hide')
 			 $('#collapseTwo').collapse('show')
-			
+			 
 		});
 		
-		$('#collapseTwo .selectMealBtn').click(function() {
+		$('#collapseTwo .selectMealBtn2').click(function() {
 			
-			$('.selectMealBtn').text('Select Meal').removeClass('btn-primary');
+			if (this.id!=null) {
+			  dinnerSelected = this.id.substring(10); // get pass 'selectmeal'
+			  alert("dinnerSelected  was: "+dinnerSelected) 
+			}
+			
+			$('.selectMealBtn2').text('Select Meal').removeClass('btn-primary');
 			
 			 $(this).text('Meal Selected!').addClass('btn-primary');
 			 
@@ -241,7 +258,7 @@
 	         $('#mealConfirmMessage').html("<p>You've selected your dinner meal!</p>")	  
 			 
 			 $('#collapseTwo').collapse('hide')
-			
+			 
 		});
 		
 		

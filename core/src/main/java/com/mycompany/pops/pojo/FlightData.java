@@ -76,6 +76,8 @@ public class FlightData {
 		this.arrivalDate = arrivalDate;
 	}
 
+	// For the dashboard
+	
 	// TODO: make locale friendly
 	private String getElaborateDepartureArrivalText(String type, Date date, String stationAbbreviation) {
 		SimpleDateFormat sdf1 = new SimpleDateFormat("hh:mm a");
@@ -95,5 +97,23 @@ public class FlightData {
 		return getElaborateDepartureArrivalText("Arrives",getArrivalDate(),getDestinationStation());
 	}
 	
+	// For the confirmation email
+	public String getDepartureDateOnly() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		return sdf.format(departureDate);
+	}
+
+	public String getDepartureTimeOnly() {
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a, z");
+		return sdf.format(departureDate);
+	}
+	
+	public String getDestinationStationSpelled() {
+		return Constants.AIRPORTS.get(destinationStation);
+	}
+
+	public String getOriginStationSpelled() {
+		return Constants.AIRPORTS.get(originStation);
+	}
 
 }
