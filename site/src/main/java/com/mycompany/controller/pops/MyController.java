@@ -57,18 +57,11 @@ public class MyController {
 	@RequestMapping(value = "/loginAuto")
 	public ModelAndView gotoConfirmScreen(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside loginAuto");
-		String email = request.getParameter("email");
-		String flight = request.getParameter("flight");
-		String firstName = request.getParameter("firstname");
-		String lastName = request.getParameter("lastname");
-		String flightDate = request.getParameter("flightDate");
-		// more varibles to pass in
 
-		HttpSession session = request.getSession();
-		session.setAttribute("email", email);
-		session.setAttribute("flight", flight);
-		session.setAttribute("firstname", firstName);
-		session.setAttribute("lastname", lastName);
+		// all work used to be in here, to login automatically
+		// but now we want to show flight info first. so this is now completely useless
+		// can be eliminated if the welcome email goes to flight info instead
+		// so don't need to read parameters and set session variables then read it back from flight info
 		return this.doFlightInfo(request, response);
 	}	
 
@@ -213,35 +206,17 @@ public class MyController {
 	@RequestMapping(value = "/mealSelect")
 	public ModelAndView doMealSelect(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside meal select");
-		String flightNumber = "A123"; // TODO: get rid of this default value and handle accordingly
-		String email ="";
-		try {
-			email = request.getSession().getAttribute("email").toString();
-			flightNumber = request.getSession().getAttribute("flight").toString();
-		} catch (Exception e) {
-			LOG.info("cannot find flight number from session");
-		}
-	    Customer customer = (Customer) CustomerState.getCustomer();
-		
 
+	    Customer customer = (Customer) CustomerState.getCustomer();
+	    String flightNumber=null;
 	    if (customer!=null) {
-			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
-		    LOG.info("Yo, you are: "+customer.getUsername());
-			String userName = customer.getUsername();
-	
-			if (userName!=null) {
-				int pipe = userName.indexOf("|");
-				if (pipe>0) flightNumber = userName.substring(0,pipe);
-				LOG.info("Your flight is:"+flightNumber);
-			}
+	    	flightNumber=DaoUtil.getFlightNumberFromRequest(request);
 	    }
 
 		Dao dao = new DaoImpl();
 	    String locale = getLocale(request);
 		List<Category> l = dao.getCategories(Constants.PRIMARY_NAV,locale);
 
-		FlightData f = dao.getFlightDataForFlight(flightNumber);
-		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/mealselect");
 		modelAndView.addObject("categories", l);
@@ -249,8 +224,7 @@ public class MyController {
 		modelAndView.addObject("breakfast",dao.getMealsForFlight(flightNumber,Constants.BREAKFAST,locale));
 		modelAndView.addObject("lunch",dao.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
 		modelAndView.addObject("dinner",dao.getMealsForFlight(flightNumber,Constants.DINNER,locale));
-		modelAndView.addObject("flightdata",f);
-		
+
 		return modelAndView;
 	}
 
@@ -329,22 +303,23 @@ public class MyController {
 	public ModelAndView doFlightInfo(HttpServletRequest request, HttpServletResponse response) {
 
 		LOG.info("inside flightinfo");
-		String flightNumber = null;
-		String email = null;
-		String firstName = "";
-		String lastName = "";
-		try {
-			email = request.getSession().getAttribute("email").toString();
-			flightNumber = request.getSession().getAttribute("flight").toString();
-			firstName = request.getSession().getAttribute("firstname").toString();
-			lastName = request.getSession().getAttribute("lastname").toString();
-		} catch (Exception e) {
-			LOG.info("cannot find flight number from session");
-		}
+
+		String email = request.getParameter("email");
+		String flightNumber = request.getParameter("flight");
+		String firstName = request.getParameter("firstname");
+		String lastName = request.getParameter("lastname");
+		String flightDate = request.getParameter("flightDate");
+		String originStation = request.getParameter("originStation");
+		String destinationStation = request.getParameter("destinationStation");
+
     	LOG.info("email is: "+email);
     	LOG.info("flight is: "+flightNumber);
     	
-		
+		String loginLink = "/loginCreateUser?email=" + email + "&flight="
+				+ flightNumber + "&firstName=" + firstName + "&lastName="
+				+ lastName + "&flightDate=" + flightDate + "&originStation="
+				+ originStation + "&destinationStation=" + destinationStation;
+    	
 		LOG.info("Name: " + firstName );
     	Dao dao = new DaoImpl();
 		ModelAndView modelAndView = new ModelAndView();
@@ -352,6 +327,8 @@ public class MyController {
     	modelAndView.addObject("firstname",firstName);
     	modelAndView.addObject("lastname",lastName);
     	modelAndView.addObject("email",email);
+    	
+    	//debating... should this be lookup or displaying whatever passed in?
     	FlightData f = dao.getFlightDataForFlight(flightNumber);
     	if(f!=null)
     		LOG.info("Flight Info: " + f.getFlightNumber() );
@@ -362,7 +339,7 @@ public class MyController {
     	HttpSession session = request.getSession();
 		session.setAttribute("flightdata", f);
     	modelAndView.addObject("flightdata",f);
-    	modelAndView.addObject("loginlink","/login");
+    	modelAndView.addObject("loginlink",loginLink);
     	
     	
 		return modelAndView;
@@ -371,7 +348,7 @@ public class MyController {
 	@RequestMapping(value = "/sendWelcomeEmail") 
 	public String doSendEmailTest2(HttpServletRequest request, HttpServletResponse response) {
 		String emailTo = request.getParameter("emailTo");
-        String emailFrom="testing123@egate.com";
+        //String emailFrom="testing123@egate.com";  //<-- this variable is not used. the real emailFrom is defined in configuration file
         String firstName=request.getParameter("firstname");
         String lastName=request.getParameter("lastname");
         String flight=request.getParameter("flight");
