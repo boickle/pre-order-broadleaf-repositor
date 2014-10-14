@@ -375,6 +375,10 @@ public class MyController {
         String firstName=request.getParameter("firstname");
         String lastName=request.getParameter("lastname");
         String flight=request.getParameter("flight");
+        String flightDate =request.getParameter("flightDate");
+        String originStation = request.getParameter("originStation");
+        String destinationStation = request.getParameter("destinationStation");
+
 		
         //Adding flight info to prevent header from failing when showing done page. Probably a better way to do this.
         Dao dao = new DaoImpl();
@@ -396,7 +400,11 @@ public class MyController {
         vars.put("firstname",firstName);
         vars.put("absolutepath",absolutePath);
         
-        String url= "http://"+absolutePath+":8080/loginAuto?email="+emailTo+"&flight="+flight+"&firstname="+firstName+"&lastname="+lastName;
+		String url = "http://" + absolutePath + "/loginAuto?email=" + emailTo
+				+ "&flight=" + flight + "&firstname=" + firstName
+				+ "&lastname=" + lastName + "&flightDate=" + flightDate
+				+ "&originStation=" + originStation + "&destinationStation="
+				+ destinationStation;
         LOG.info("email url: " + url);
         vars.put("link",url);
         
