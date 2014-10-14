@@ -27,10 +27,9 @@ public class Constants {
 	public static String LUNCH_DESC = "Lunch";
 	public static String DINNER_DESC = "Dinner";
 	
-	//flightDate format is like this: (see POPS-52)
-	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "dd/MM/yyyy, HH:mm";
+	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "MM/dd/yyyy";
 
-	//TODO: get this out of constants!
+	//TODO: get this out of constants! (the order confirmation email has no clue what server it is on)
 	public static String SERVERPATH_FOR_EMAIL = "ec2-54-87-4-62.compute-1.amazonaws.com";
 	
 	//TODO: make this in a database is better way to do this
@@ -41,7 +40,7 @@ public class Constants {
 		    put("YVR", "Vancouver International Airport");
 		    
 	}};
-		    
 	
+	public static final String[] BCC_LIST = new String[] {"jElyea@gategourmet.com","EVanHorne@egate-solutions.com","SDivi@egate-solutions.com","kkiran@egate-solutions.com"};
 
 }

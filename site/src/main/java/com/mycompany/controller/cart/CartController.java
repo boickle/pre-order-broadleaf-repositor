@@ -19,6 +19,7 @@ package com.mycompany.controller.cart;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
+import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.broadleafcommerce.core.order.service.exception.AddToCartException;
 import org.broadleafcommerce.core.order.service.exception.ProductOptionValidationException;
 import org.broadleafcommerce.core.order.service.exception.RemoveFromCartException;
@@ -67,13 +70,13 @@ public class CartController extends BroadleafCartController {
         // If it is a meal, I am going to store it.
 	    Customer customer = (Customer) CustomerState.getCustomer();
 	    if (customer!=null) {
-			// Convention: flight is embedded in username, so for example: A123|foo@bar.com
 		    LOG.info("in cart, you are: "+customer.getUsername());
 		    long customerID = customer.getId();
 			
 			LOG.info("saveMeal in cart: flight:"+flightNumber+" id:"+customerID+" mealID:"+mealID);
 			Dao dao = new DaoImpl();
 			dao.saveMealSelection(customerID, flightNumber, mealID);
+			
 	    }
 	    else {
 	    	LOG.info("I am not bother saving your meal since you're not logged in");
@@ -92,20 +95,58 @@ public class CartController extends BroadleafCartController {
             @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
         Map<String, Object> responseMap = new HashMap<String, Object>();
         try {
-            super.add(request, response, model, addToCartItem);
+
+        	long productID = addToCartItem.getProductId();
             
+        	boolean isBreakfast=false,isLunch=false,isDinner=false;
+        	String productName = catalogService.findProductById(addToCartItem.getProductId()).getName();
+        	//TODO: there should be a better way to handle this (like organize meal into subcategories and check where it belong)
+        	if (productName.endsWith("(breakfast)")) isBreakfast = true;
+        	if (productName.endsWith("(lunch)")) isLunch = true;
+        	if (productName.endsWith("(dinner)")) isDinner = true;
+
+        	LOG.info("Your item is: "+productName+". is it meal? "+isBreakfast+" "+isLunch+" "+isDinner);
+
+            // This is to save to the MEAL_SELECTION table
+		    String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
+            saveMeal(flightNumber,productID);
+
+            // Cart Items themselves has no idea what product ID was that (so looking at the name for clue)
+            boolean hasBreakfast=false, hasLunch=false, hasDinner=false;
+	        Order cart = CartState.getCart();
+	        List<OrderItem> items = cart.getOrderItems();
+	        if (items!=null) {
+		        for (OrderItem orderitem : items) {
+		        	String existingItemName = orderitem.getName();
+		        	if (existingItemName.endsWith("(breakfast)")) hasBreakfast = true;
+		        	if (existingItemName.endsWith("(lunch)")) hasLunch = true;
+		        	if (existingItemName.endsWith("(dinner)")) hasDinner = true;
+	
+	    	        if ((isBreakfast && hasBreakfast) || (isLunch && hasLunch) || (isDinner && hasDinner)) {
+	    	        	// then don't add, just update the cart item (and bye)
+	    	        	LOG.info("You already had existing meal, trying to save:"+hasBreakfast+" "+hasLunch+" "+hasDinner);
+
+	    	        	// remove it
+	    	        	try {
+	    	        		orderService.removeItem(cart.getId(), orderitem.getId(), false);
+		    	            cart = orderService.save(cart, true);
+		    	            break;
+	    	        	} catch (Exception e) {
+	    	        		LOG.error("I can't remove that existing meal:"+orderitem.getId()+" "+existingItemName);
+	    	        	}
+	    	        }
+		        }
+	        }
+	        
+	        // call the broadleaf routine to add new item.
+        	super.add(request, response, model, addToCartItem);
+        	
             if (addToCartItem.getItemAttributes() == null || addToCartItem.getItemAttributes().size() == 0) {
-            	
-            	long productID = addToCartItem.getProductId();
                 LOG.info("I am adding "+addToCartItem.getQuantity()+" of product "+productID+" to cart");
-
-    		    String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
-
-                saveMeal(flightNumber,productID);
-            	
                 responseMap.put("productId", addToCartItem.getProductId());
             }
-            responseMap.put("productName", catalogService.findProductById(addToCartItem.getProductId()).getName());
+            
+            responseMap.put("productName", productName);
             responseMap.put("quantityAdded", addToCartItem.getQuantity());
             responseMap.put("cartItemCount", String.valueOf(CartState.getCart().getItemCount()));
             if (addToCartItem.getItemAttributes() == null || addToCartItem.getItemAttributes().size() == 0) {
