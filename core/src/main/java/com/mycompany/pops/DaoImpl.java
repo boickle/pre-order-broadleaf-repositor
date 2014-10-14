@@ -398,6 +398,7 @@ public class DaoImpl implements Dao {
 					// Get rid of (lunch) or (dinner) in the name
 					// which is not needed to be displayed on the meal select
 					// because it will be on the "Select Your Lunch/Dinner Meal" box
+					name = name.replace("(breakfast)","");
 					name = name.replace("(lunch)","");
 					name = name.replace("(dinner)","");
 					
