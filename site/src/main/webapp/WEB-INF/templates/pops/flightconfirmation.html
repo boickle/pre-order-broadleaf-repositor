@@ -19,7 +19,7 @@
 										
 						<a class="navbar-brand" href="/Public">
 							
-							<img class="logo hidden-xs hidden-sm" src="/img/logoAirCanada.jpg"/>
+							<img class="logo hidden-xs hidden-sm" src="/img/logo_air_canada.png"/>
 							<img class="logo hidden-md hidden-lg" src="/img/logoAirCanadaSmall.jpg"/>
 						</a>
 											
@@ -189,6 +189,10 @@
 		$(".flightBar").hide();
 	
 	});
+	
+	function formatDate(var date){
+		Date d = new Date(date);
+	}
 		
 	</script>
 	<!-- FlightConfirmation View JS End -->
@@ -277,7 +281,7 @@
 		    	</div>
 		    	
 				<div class="panel-body">
-					<p th:text="${flightdata.departureDate}"/>
+					<p th:text="${flightdata.fDepartureDate}"/>
 				</div>
 				
 			</div>
@@ -561,8 +565,8 @@
 						<tr><td>Flight number:</td><td th:text="${flightdata.flightNumber}"/></tr>
 						<tr><td>Origin:</td><td th:text="${flightdata.originStation}"/></tr>
 						<tr><td>Destination:</td><td th:text="${flightdata.destinationStation}"/></tr>
-						<tr><td>Departure Time:</td><td th:text="${flightdata.departureDate}"/></tr>
-						<tr><td>Arrival Time:</td><td th:text="${flightdata.arrivalDate}"/></tr>
+						<tr><td>Departure Time:</td><td th:text="${flightdata.fDepartureDate}"/></tr>
+						<tr><td>Arrival Time:</td><td th:text="${flightdata.fArrivalDate}"/></tr>
 					</table>
 					</p>	
 				</div>
