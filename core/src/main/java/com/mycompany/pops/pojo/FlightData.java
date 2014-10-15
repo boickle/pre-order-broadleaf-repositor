@@ -1,7 +1,11 @@
 package com.mycompany.pops.pojo;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.joda.time.DateTime;
 
 import com.mycompany.pops.Constants;
 
@@ -14,9 +18,11 @@ public class FlightData {
 
 	private String flightNumber;
 	private Date departureDate;
+	private String fDepartureDate;
 	private String originStation;
 	private String destinationStation;
 	private Date arrivalDate;
+	private String fArrivalDate;
 	private String aircraftType;
 	private String carrier;
 
@@ -47,9 +53,18 @@ public class FlightData {
 	public Date getDepartureDate() {
 		return departureDate;
 	}
+	
+	public String getFDepartureDate() {
+		return fDepartureDate;
+	}
 
 	public void setDepartureDate(Date departureDate) {
-		this.departureDate = departureDate;
+		try {
+			this.departureDate = departureDate;
+			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(departureDate.toString());
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	        this.fDepartureDate = format.format(date);
+		} catch (ParseException e) {}
 	}
 
 	public String getAircraftType() {
@@ -71,9 +86,18 @@ public class FlightData {
 	public Date getArrivalDate() {
 		return arrivalDate;
 	}
+	
+	public String getFArrivalDate() {
+		return fArrivalDate;
+	}
 
 	public void setArrivalDate(Date arrivalDate) {
-		this.arrivalDate = arrivalDate;
+		try {
+			this.arrivalDate = arrivalDate;
+			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(arrivalDate.toString());
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	        this.fArrivalDate = format.format(date);
+		} catch (ParseException e) {}
 	}
 
 	// For the dashboard
