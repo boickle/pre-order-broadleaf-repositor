@@ -48,7 +48,7 @@
 					
 						<a id="userButton" href="/UserDashboard">			
 							<i class="fa fa-user"></i> 
-							<span class="userName hidden-xs hidden-md">Donald McMains</span>
+							<span class="userName hidden-xs hidden-md"><div th:text="${firstname}+' '+ ${lastname}" th:remove="tag" /></span>
 						</a>
 					
 					</div>
@@ -117,14 +117,14 @@
 					<span class="divider">|</span>
 						
 					<i class="fa fa-plane"></i> <b>Flight Info</b> 
-					<span class="divider">|</span> <b>Passenger:</b> Donald McMains
-					<span class="divider"></span> <b>Flight:</b> ABC-1824
+					<span class="divider">|</span> <b>Passenger:</b><div th:text="${firstname}+' '+ ${lastname}" th:remove="tag" />
+					<span class="divider"></span> <b>Flight:</b> <div th:text="${session.flightdata.flightNumber}" th:remove="tag"/>
 					
-					<span class="divider"></span> <b>To:</b> Vancouver
+					<span class="divider"></span> <b>To:</b> <div th:text="${session.flightdata.destinationStation}"  th:remove="tag"/>
 					
-					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> 10:35AM
+					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> <div th:text="${session.flightdata.fDepartureDate}" th:remove="tag"/>
 					
-					<span class="divider"></span> <b>Arrival:</b> 4:35PM
+					<span class="divider"></span> <b>Arrival:</b> <div th:text="${session.flightdata.fArrivalDate}" th:remove="tag"/>
 			
 				</p>
 								
