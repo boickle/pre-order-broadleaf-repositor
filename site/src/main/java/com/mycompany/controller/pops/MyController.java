@@ -340,6 +340,8 @@ public class MyController {
 		session.setAttribute("flightdata", f);
     	modelAndView.addObject("flightdata",f);
     	modelAndView.addObject("loginlink",loginLink);
+    	String absolutePath=request.getServerName();
+    	modelAndView.addObject("absolutepath",absolutePath);
     	
     	
 		return modelAndView;
