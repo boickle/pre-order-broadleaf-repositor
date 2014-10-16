@@ -6,6 +6,7 @@ import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
+import com.mycompany.pops.pojo.MealSelectionData;
 import com.mycompany.pops.pojo.Product;
 
 public interface Dao {
@@ -39,4 +40,6 @@ public interface Dao {
 	public FlightData getFlightInfoFromMealOrder(String orderNumber);
 	
 	public void saveFlightInfoForOrder(long customerID, String flightNumber, String orderNumber);
+	
+	public List<MealSelectionData> getAllMealSelections();
 }
