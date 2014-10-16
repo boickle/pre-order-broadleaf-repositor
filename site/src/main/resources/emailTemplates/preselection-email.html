@@ -6,7 +6,7 @@
 			<div style="max-width:800px; margin:0px auto;font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.42857143;color: #333; padding:0px 20px 20px 20px; background:#FFF;border:1px solid #DDD;">	
 			
 			<h2 style="font-weight:normal; border-bottom:1px solid #EEE; padding-bottom:10px;margin-bottom:10px;">
-				<img style="height:32px; vertical-align:middle;" th:src="${absolutepath}+'/img/bigroom/logo.jpg'"/>
+				<img style="height:32px; vertical-align:middle;" th:src="'http://'+${absolutepath}+'/img/bigroom/logo.jpg'"/>
 				| <span style="margin-top:5px;"> Welcome to Pre-Selection!</span> 
 			</h2> 
 			
@@ -41,7 +41,7 @@
 					
 					<td style="padding-top:10px;text-align: right;" width="25%">
 						
-						<img th:src="${absolutepath}+'/img/egate.jpg'" />
+						<img th:src="'http://'+${absolutepath}+'/img/egate.jpg'" />
 						
 					</td>
 							

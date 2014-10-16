@@ -22,6 +22,7 @@ import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
+import com.mycompany.pops.pojo.MealSelectionData;
 import com.mycompany.pops.pojo.Product;
 
 public class DaoImpl implements Dao {
@@ -741,5 +742,31 @@ public class DaoImpl implements Dao {
 			return getFlightDataForFlight(flightNumber);
 		}
 		return null;
+	}
+	
+	public List<MealSelectionData> getAllMealSelections() {
+		String sql = "select blc_customer.last_name, blc_customer.first_name,meal_selection.flight_number,meal_selection.meal_type, blc_sku.name"
+				 + " from  meal_selection, blc_customer, blc_sku"
+				 + " where  meal_selection.meal_id = blc_sku.default_product_id and meal_selection.customer_id = blc_customer.customer_id";
+		
+		List<MealSelectionData> result = new ArrayList<MealSelectionData>();
+
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		try {
+			while (rs.next()) {
+				MealSelectionData data = new MealSelectionData();
+				data.setLastName(rs.getString(1));
+				data.setFirstName(rs.getString(2));
+				data.setFlightNumber(rs.getString(3));
+				data.setMealType(rs.getString(4));
+				data.setMealName(rs.getString(5));
+				result.add(data);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
+		return result;
+		
 	}
 }

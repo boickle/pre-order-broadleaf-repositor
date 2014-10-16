@@ -1,6 +1,7 @@
 package com.mycompany.controller.pops;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import com.mycompany.pops.Dao;
 import com.mycompany.pops.DaoImpl;
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.domain.FlightInfoImpl;
+import com.mycompany.pops.pojo.MealSelectionData;
 import com.mycompany.pops.pojo.MyData;
 
 /**
@@ -150,7 +152,7 @@ public class TestController {
         vars.put("absolutepath",absolutePath);
         vars.put("link","http://www.google.com");
         
-        
+//        emailTarget.setBCC
 		try {
 			emailService.sendTemplateEmail(emailTarget, preSelectionEmailInfo, vars);
 		} catch (Exception e) {
@@ -158,5 +160,19 @@ public class TestController {
 
 		}
 		return "pops/done";
+	}
+	
+	@RequestMapping(value = "/showMealSelections") 
+	public ModelAndView doShowMealSelections(HttpServletRequest request, HttpServletResponse response) {
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("pops/mealresults");
+		
+		Dao u = new DaoImpl();
+		List<MealSelectionData> data = u.getAllMealSelections();
+		modelAndView.addObject("data", data);
+
+		return modelAndView;
+
 	}
 }
