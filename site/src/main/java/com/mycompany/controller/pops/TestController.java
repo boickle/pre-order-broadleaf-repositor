@@ -104,7 +104,7 @@ public class TestController {
 	public String dohome() {
 		LOG.info("Inside dohome!");
 
-		return "layout/home";
+		return "layout/ohome";
 	}
 
 	

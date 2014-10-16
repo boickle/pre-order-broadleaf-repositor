@@ -48,7 +48,7 @@
 					
 					</div>
 										
-					<div class="col-xs-4 col-sm-2 col-md-2">
+					<div class="col-xs-4 col-sm-2 col-md-2" id="timerSection">
 					
 						<a id="timerButton">			
 							<i class="fa fa-clock-o"></i>
@@ -58,7 +58,7 @@
 					
 					</div>
 					
-					<div class="col-xs-2 col-sm-3 col-md-2">
+					<div class="col-xs-2 col-sm-3 col-md-2" id="dashboardSection">
 					
 						<a id="userButton" href="/dashboard">			
 							<i class="fa fa-user"></i> 
@@ -70,7 +70,7 @@
 					
 					</div>
 	
-					<div class="col-xs-2 col-sm-3 col-md-2">
+					<div class="col-xs-2 col-sm-3 col-md-2" id="cartSection">
 					
 						
 	<!-- Cart HTML Start --> 
@@ -131,7 +131,7 @@
 		
 		
 	<!-- Flight Bar Start -->
-	<div class="flightBar">
+	<div class="flightBar" id="flightBarSection">
 		
 		<nav class="navbar navbar-default" role="navigation">
 			
@@ -144,13 +144,13 @@
 						
 					<i class="fa fa-plane"></i> <b>Flight Info</b> 
 					<span class="divider">|</span> <b>Passenger:</b><div th:text="${customer.firstName+' '+customer.lastName}" th:remove="tag" />
-					<span class="divider"></span> <b>Flight:</b> <div th:text="${session.flightdata.flightNumber}" th:remove="tag"/>
+					<span class="divider"></span> <b>Flight:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.flightNumber}" th:remove="tag"/>
 					
-					<span class="divider"></span> <b>To:</b> <div th:text="${session.flightdata.destinationStation}"  th:remove="tag"/>
+					<span class="divider"></span> <b>To:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.destinationStation}"  th:remove="tag"/>
 					
-					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> <div th:text="${session.flightdata.fDepartureDate}" th:remove="tag"/>
+					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.fDepartureDate}" th:remove="tag"/>
 					
-					<span class="divider"></span> <b>Arrival:</b> <div th:text="${session.flightdata.fArrivalDate}" th:remove="tag"/>
+					<span class="divider"></span> <b>Arrival:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.fArrivalDate}" th:remove="tag"/>
 			
 				</p>
 								
@@ -167,3 +167,12 @@
 	
 	<script type="text/javascript" src="/js/bigroom/js/Countdown.js"></script>
 
+	<script>
+    function hideSectionsFromNav() {
+      // hide things from fullPageLayout sections to prevent confusion
+	  document.getElementById("timerSection").style.display="none";
+	  document.getElementById("dashboardSection").style.display="none";
+	  document.getElementById("flightBarSection").style.display="none";
+	  document.getElementById("cartSection").style.display="none";
+	}
+	</script>
