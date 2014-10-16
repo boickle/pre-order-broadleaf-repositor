@@ -468,7 +468,7 @@ public class DaoImpl implements Dao {
 					+ " where flight_number='"
 					+ flightNumber
 					+ "' "
-					+ " and meal_type = '"+mealType+"')";
+					+ " and meal_type = '"+mealType+"') and customer_id="+customerID;
 			
 			DaoUtil.jdbcInsertUpdateWrapper(delSQL);
 	
@@ -501,15 +501,25 @@ public class DaoImpl implements Dao {
 		// image
 		// TODO: should not need to specify flight and avoid wrong rows
 
-		String sql = "select product_id,flight_meal.flight_number,flight_meal.meal_type,blc_sku.name,blc_media.url"
-				+ " from blc_product, blc_sku, blc_sku_media_map, blc_media, meal_selection,flight_meal"
-				+ " where blc_product.product_id=meal_selection.meal_id"
-				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id and map_key='primary'"
-				+ " and flight_meal.meal_id= product_id and meal_selection.customer_id="
-				+ customerID
-				+ " and flight_meal.flight_number='"
-				+ flightNumber + "'";
+//		String sql = "select product_id,flight_meal.flight_number,flight_meal.meal_type,blc_sku.name,blc_media.url"
+//				+ " from blc_product, blc_sku, blc_sku_media_map, blc_media, meal_selection,flight_meal"
+//				+ " where blc_product.product_id=meal_selection.meal_id"
+//				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id and map_key='primary'"
+//				+ " and flight_meal.meal_id= product_id and meal_selection.customer_id="
+//				+ customerID
+//				+ " and flight_meal.flight_number='"
+//				+ flightNumber + "'";
 
+		String sql = "select default_product_id,meal_selection.flight_number,meal_selection.meal_type,blc_sku.name, blc_media.url"
+				+ " from  meal_selection, blc_customer, blc_sku, blc_product , blc_sku_media_map, blc_media"
+				+ " where"
+				+ " blc_product.product_id = default_product_id"
+				+ " and meal_selection.meal_id = blc_sku.default_product_id"
+				+ "	and meal_selection.customer_id = blc_customer.customer_id"
+				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id and map_key='primary' "
+				+ " and meal_selection.customer_id="+customerID 
+				+ " and flight_number='"+flightNumber+"'";
+		
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 

@@ -53,9 +53,14 @@ public class LoginController extends BroadleafLoginController {
     	FlightData f = (FlightData) request.getSession().getAttribute("flightdata");
     	if (f==null) {
     		Log.info("Cannot find flight data in session! Trying to read it again");
-    		Dao dao = new DaoImpl();
-    		f = dao.getFlightDataForFlight(flightNumber);
-        	HttpSession session = request.getSession();
+    		
+    		if (flightNumber!=null) {
+	    		Dao dao = new DaoImpl();
+	    		f = dao.getFlightDataForFlight(flightNumber);
+    		} else {
+    			f = new FlightData();
+    		}
+	        HttpSession session = request.getSession();
     		session.setAttribute("flightdata", f);
     	}
         return super.login(request, response, model);

@@ -298,7 +298,7 @@ public class MyController {
 
 	    
 		ModelAndView modelAndView = new ModelAndView();
-    	modelAndView.setViewName("layout/ohome");
+    	modelAndView.setViewName("authentication/login");
 		return modelAndView;
 
 	}
