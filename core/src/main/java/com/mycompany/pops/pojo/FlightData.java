@@ -23,7 +23,9 @@ public class FlightData {
 	private Date departureDate;
 	private String fDepartureDate;
 	private String originStation;
+	private String originStationLong;
 	private String destinationStation;
+	private String destinationStationLong;
 	private Date arrivalDate;
 	private String fArrivalDate;
 	private String aircraftType;
@@ -65,7 +67,7 @@ public class FlightData {
 		try {
 			this.departureDate = departureDate;
 			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(departureDate.toString());
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm");
 	        this.fDepartureDate = format.format(date);
 		} catch (ParseException e) {
 				LOG.error("Parse error at setting departure date, which is "+departureDate,e);
@@ -100,7 +102,7 @@ public class FlightData {
 		try {
 			this.arrivalDate = arrivalDate;
 			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(arrivalDate.toString());
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm");
 	        this.fArrivalDate = format.format(date);
 		} catch (ParseException e) {
 			LOG.error("Parse error at setting arrival date, which is "+arrivalDate,e);
