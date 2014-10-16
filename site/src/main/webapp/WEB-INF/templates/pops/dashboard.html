@@ -11,11 +11,7 @@
 		// Initialize the UI manager
 		UI.init("UserDashboard"); 
 		
-		// show the cart button
-		Cart.showButton();
-		
-		// JS Animation for category blocks		
-		$(".row > *").animo( { animation: 'flipInX' });
+		$("#cartSection").hide();
 	
 	});
 		
@@ -29,17 +25,15 @@
 	<div class="row ">
 		
 		<div class="col-xs-12 col-sm-6">
-			
-			<h3> 
-				<i class="fa fa-plane"></i> <div th:text="'Flight #'+${flightData.flightNumber}" th:remove="tag"/>
-			</h3>
-			
+				
 			<div class="panel panel-default">
 			
 		   		<div class="panel-heading">
 		   			
 		   			<h3 class="panel-title"> 
-		       			Outbound 
+		       			
+						<i class="fa fa-plane"></i> <div th:text="'Flight #'+${flightData.flightNumber}" th:remove="tag"/>
+			
 		       		</h3>
 		       		
 		    	</div>
@@ -58,25 +52,52 @@
 			</div>
 	
 		</div>
+		
 		<div class="col-xs-12 col-sm-6">
 			
-			<h3> 
-				<i class="fa fa-cutlery"></i>
-				My Meals
-			</h3>
-		
-			<ul class="list-group" th:each="meal : ${meals}">
+			<div class="panel panel-default">
 			
+		   		<div class="panel-heading">
+		   			
+		   			<h3 class="panel-title"> 
+		       			<i class="fa fa-cutlery"></i>
+						My Meals 
+		       		</h3>
+		       		
+		    	</div>
+		    	
+				<div class="panel-body">
+				
+					<!-- Cart Item -->
+				    <div class="cartItem" th:each="meal : ${meals}">
+				
+														
+						<div class="row row-no-gutter">
+							
+							<div class="col-xs-2">
+								
+								<div class="cartItemImage" style="width:60px;height:60px;">
+									<img th:src="@{*{meal.imageUrl} + '?thumbnail'}" th:alt="*{meal.name}" />					
+								</div>
+								
+							</div>									
+							
+							<div class="col-xs-10 ">
+																	
+								<strong class="cartItemTitle" style="margin-left:0;" th:text="${meal.description}"></strong>
+								<p class="cartItemDescription" th:text="${meal.name}"></p>
+	
+							</div>
+					
+						</div>
+						
+					</div>
+
+				</div>
 			
-				<li class="list-group-item">
-				   <div th:utext="${meal.description}"/>
-				   <br/>
-				   <img th:src="@{*{meal.imageUrl} + '?thumbnail'}"/>
-				   <div th:utext="${meal.name}"/>
-				</li>
-				
-			</ul>
-				
+			</div>
+			
+
 		</div>
 		
 	<!--	

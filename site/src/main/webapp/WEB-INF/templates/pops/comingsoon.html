@@ -1,16 +1,15 @@
-
-
-	<script type="text/javascript">
 	
-		// ON DOM Load
-		$(function() {
-			$('.comingsoon').show();
-			$('.preSelection').hide();
-			$('.jumbotron .container *').animo( { animation: 'bounceIn' });
+	<style type="text/css">
+	
+		body.MealSelect {
+			padding-top:0;
+		}
 		
-		});
-		
-	</script>
+		body.MealSelect .jumbotron {
+			min-height:650px;
+		}
+	
+	</style>
 	
 	<script type="text/javascript">
 	
@@ -20,28 +19,13 @@
 		// Initialize the UI manager
 		UI.init("MealSelect"); 
 		UI.header.hide();
+		
 		UI.footer.hide();
-		// show the cart button
-		Cart.showButton();
 		
-		$("#shopNow").click(function() {
-			
-			$('body').scrollTo('#viewContainer');
-			
-		});
+		$('.comingsoon').show();
+		$('.preSelection').hide();
 		
-		// JS Animation for category blocks		
-		$(".row > *").animo( { animation: 'fadeInUp' });
-		
-		
-		$('.selectMealBtn').click(function() {
-			
-			$('.selectMealBtn').text('Select Meal').removeClass('btn-success').addClass('btn-primary');
-			$(this).text('Meal Selected!').removeClass('btn-primary').addClass('btn-success');
-			
-		});
-			
-		 
+		$('.jumbotron .container *').animo( { animation: 'bounceIn' });		 
 	
 	});
 	</script>

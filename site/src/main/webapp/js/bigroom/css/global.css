@@ -6,7 +6,7 @@ html {
 body {
 	font-family:Helvetica;
 	background:#FFF;
-	padding-top:110px;
+	padding-top:107px;
 }
 
 /* Header UI Component */
@@ -94,6 +94,11 @@ body {
 	font-size:12px;
 	color:#333;
 }
+
+#header .flightBar .navbar-text {
+	margin-left:0;	
+}
+
 
 #header .flightBar .navbar-default .container {
 	padding:0;
@@ -244,11 +249,23 @@ body.CategoryList #header .flightBar .navbar-default {
 /* Meal List Item */
 
 body.MealSelect .categoryList {
-	margin-top:10px;
+	margin-top:15px;
+}
+
+@media (min-width: 768px) {
+	
+	body.MealSelect .categoryList {
+		margin-top:10px;
+	}
+	
+}
+
+body.MealSelect > .container {
+	padding:0;
 }
 
 body.MealSelect .jumbotron {
-	background:url('/img/bigroom/preSelectionSplash.jpg') no-repeat center 60%;
+	background:url('/img/bigroom/preSelectionSplash.jpg') no-repeat center 15%;
 	background-size:cover;
 	color:#FFF;
 	display:block;
@@ -679,7 +696,7 @@ a#cartButton:hover {
 /* Flight Confirmation */
 
 body.FlightConfirmation {
-
+	padding-top: 50px;
 }
 
 body.FlightConfirmation #header .navbar-default > .container > .row > div {

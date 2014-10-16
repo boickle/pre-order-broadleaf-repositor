@@ -7,7 +7,7 @@
 			
 			<h2 style="font-weight:normal; border-bottom:1px solid #EEE; padding-bottom:10px;margin-bottom:10px;">
 				<img style="height:32px; vertical-align:middle;" th:src="'http://'+${serverpath}+'/img/bigroom/logo.jpg'" />
-				| <span style="margin-top:5px; font-size:14px;" th:text="'Order Confirmation #'+${orderNumber}"/> 
+				<br/><span style="margin-top:5px; font-size:14px;" th:text="'Order Confirmation #'+${orderNumber}"/> 
 			</h2> 
 			
 			<h1 th:text="'Hello '+ ${customer.firstName} + ' ' + ${customer.lastName}" />
