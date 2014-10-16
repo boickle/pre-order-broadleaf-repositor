@@ -58,6 +58,27 @@
 			</div>
 	
 		</div>
+		<div class="col-xs-12 col-sm-6">
+			
+			<h3> 
+				<i class="fa fa-cutlery"></i>
+				My Meals
+			</h3>
+		
+			<ul class="list-group" th:each="meal : ${meals}">
+			
+			
+				<li class="list-group-item">
+				   <div th:utext="${meal.description}"/>
+				   <br/>
+				   <img th:src="@{*{meal.imageUrl} + '?thumbnail'}"/>
+				   <div th:utext="${meal.name}"/>
+				</li>
+				
+			</ul>
+				
+		</div>
+		
 	<!--	
 		<div class="col-xs-12 col-sm-6">
 			
@@ -96,8 +117,8 @@
 	</div>
 	
 
-	<div class="row">
 <!--			
+	<div class="row">
 		<div class="col-xs-12 col-sm-6">
 			
 			<h3> 
@@ -117,30 +138,8 @@
 		
 				
 		</div>
--->		
-		<div class="col-xs-12 col-sm-6">
-			
-			<h3> 
-				<i class="fa fa-cutlery"></i>
-				My Meals
-			</h3>
-		
-			<ul class="list-group" th:each="meal : ${meals}">
-			
-			
-				<li class="list-group-item">
-				   <div th:utext="${meal.description}"/>
-				   <br/>
-				   <img th:src="@{*{meal.imageUrl} + '?thumbnail'}"/>
-				   <div th:utext="${meal.name}"/>
-				</li>
-				
-			</ul>
-				
-		</div>
-		
-	 
 	</div>
+-->		
 	
 	
 	
