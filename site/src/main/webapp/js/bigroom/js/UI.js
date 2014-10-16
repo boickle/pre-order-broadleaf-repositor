@@ -24,6 +24,9 @@ window.UI = {
 		
 		$(document.body).addClass(this.viewName);		
 		
-	}
+	},
 	
+	hideNavigation: function() {
+		$("#timerSection, #dashboardSection, #flightBarSection, #cartSection").hide();
+	}	
 }

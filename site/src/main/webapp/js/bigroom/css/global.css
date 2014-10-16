@@ -679,7 +679,7 @@ a#cartButton:hover {
 /* Flight Confirmation */
 
 body.FlightConfirmation {
-	padding-top:75px;
+
 }
 
 body.FlightConfirmation #header .navbar-default > .container > .row > div {
@@ -688,7 +688,7 @@ body.FlightConfirmation #header .navbar-default > .container > .row > div {
 
 body.FlightConfirmation #viewContainer,
 body.FlightConfirmation #header .navbar-default .container {
-	max-width:600px;
+	max-width:800px;
 }
 
 body.FlightConfirmation h3 {
