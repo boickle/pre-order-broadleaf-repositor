@@ -1,11 +1,11 @@
 package com.mycompany.pops.pojo;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.joda.time.DateTime;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.mycompany.pops.Constants;
 
@@ -15,6 +15,9 @@ import com.mycompany.pops.Constants;
  *
  */
 public class FlightData {
+	
+	protected static final Log LOG = LogFactory.getLog(FlightData.class);
+
 
 	private String flightNumber;
 	private Date departureDate;
@@ -64,7 +67,9 @@ public class FlightData {
 			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(departureDate.toString());
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 	        this.fDepartureDate = format.format(date);
-		} catch (ParseException e) {}
+		} catch (ParseException e) {
+				LOG.error("Parse error at setting departure date, which is "+departureDate,e);
+		}
 	}
 
 	public String getAircraftType() {
@@ -97,7 +102,9 @@ public class FlightData {
 			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(arrivalDate.toString());
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 	        this.fArrivalDate = format.format(date);
-		} catch (ParseException e) {}
+		} catch (ParseException e) {
+			LOG.error("Parse error at setting arrival date, which is "+arrivalDate,e);
+		}
 	}
 
 	// For the dashboard

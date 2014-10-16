@@ -1,0 +1,18 @@
+<div th:inline="text">
+Done sending welcome email to [[*{firstname}]] [[*{lastname}]] at [[*{email}]].
+</div>
+<p/>
+<h3 th:if="${#lists.size(messages)>0}" th:text="Errors"/>
+<ul  th:each="message : ${messages}">
+<li th:text="${message}"/>
+</ul>
+
+<script>
+  // hide things from global header to prevent confusion
+  document.getElementById("mealSelectSection").style.display="none";
+  document.getElementById("timerSection").style.display="none";
+  document.getElementById("dashboardSection").style.display="none";
+  document.getElementById("flightBarSection").style.display="none";
+  document.getElementById("cartSection").style.display="none";
+  
+</script>

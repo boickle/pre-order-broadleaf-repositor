@@ -1,5 +1,9 @@
 package com.mycompany.controller.pops;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -333,7 +337,22 @@ public class MyController {
     	if(f!=null)
     		LOG.info("Flight Info: " + f.getFlightNumber() );
     	else{
-    		LOG.info("Flight Info is null " );
+    		LOG.error("Flight Info is null. Cannot find "+flightNumber+" flight data would be whatever passed in" );
+    		
+    		// Can't find flight... so just taking from the parameters
+    		f = new FlightData();
+    		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK);
+    		Date theFlightDate = new Date();
+    		try {
+    			theFlightDate = sdf.parse(flightDate);
+    		}
+    		catch (ParseException e) {
+    			// that's ok, it would be today's date (just so things don't crash)
+    		}
+    		f.setDepartureDate(theFlightDate);
+    		f.setFlightNumber(flightNumber);
+    		f.setOriginStation(originStation);
+    		f.setDestinationStation(destinationStation);
     	}
     	//String depart = f.getDepartureDate();
     	HttpSession session = request.getSession();
@@ -343,58 +362,92 @@ public class MyController {
     	String absolutePath=request.getServerName();
     	modelAndView.addObject("absolutepath",absolutePath);
     	
-    	
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/sendWelcomeEmail") 
-	public String doSendEmailTest2(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/sendWelcomeEmail")
+	public ModelAndView doSendWelcomeEmail(HttpServletRequest request,
+			HttpServletResponse response) {
 		String emailTo = request.getParameter("emailTo");
-        //String emailFrom="testing123@egate.com";  //<-- this variable is not used. the real emailFrom is defined in configuration file
-        String firstName=request.getParameter("firstname");
-        String lastName=request.getParameter("lastname");
-        String flight=request.getParameter("flight");
-        String flightDate =request.getParameter("flightDate");
-        String originStation = request.getParameter("originStation");
-        String destinationStation = request.getParameter("destinationStation");
+		// String emailFrom="testing123@egate.com"; //<-- this variable is not
+		// used. the real emailFrom is defined in configuration file
+		String firstName = request.getParameter("firstname");
+		String lastName = request.getParameter("lastname");
+		String flight = request.getParameter("flight");
+		String flightDate = request.getParameter("flightDate");
+		String originStation = request.getParameter("originStation");
+		String destinationStation = request.getParameter("destinationStation");
 
-		
-        //Adding flight info to prevent header from failing when showing done page. Probably a better way to do this.
-        Dao dao = new DaoImpl();
-        FlightData f = dao.getFlightDataForFlight(flight);
-    	HttpSession session = request.getSession();
+		List<String> messages = new ArrayList<String>();
+
+		if (firstName == null) {
+			messages.add("Cannot find firstname parameter");
+		}
+		if (lastName == null) {
+			messages.add("Cannot find lastname parameter");
+		}
+		if (flight == null) {
+			messages.add("Cannot find flight parameter");
+		}
+		if (flightDate == null) {
+			messages.add("Cannot find flightDate parameter");
+		}
+
+		// Adding flight info to prevent header from failing when showing done
+		// page. Probably a better way to do this.
+		Dao dao = new DaoImpl();
+		FlightData f = dao.getFlightDataForFlight(flight);
+		HttpSession session = request.getSession();
+		if (f == null) {
+			// This is just to prevent flightdata is null in the session
+			f = new FlightData();
+			messages.add("Cannot find flight " + flight);
+
+		}
 		session.setAttribute("flightdata", f);
-		
-		
-		//String emailTo="boickle@bigroomstudios.com";
-		
+
+		// String emailTo="boickle@bigroomstudios.com";
+
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(emailTo);
-		
+
 		HashMap<String, Object> vars = new HashMap<String, Object>();
 
-		String absolutePath=request.getServerName();
-		LOG.info("absolutePath:"+absolutePath);
+		String absolutePath = request.getServerName();
+
+		// in case you are not running on port 80
+		int port = request.getServerPort();
+		if (port > 80) {
+			absolutePath = absolutePath + ":" + port;
+		}
+
+		LOG.info("absolutePath:" + absolutePath);
 		LOG.info("email ab: " + absolutePath);
-        vars.put("firstname",firstName);
-        vars.put("absolutepath",absolutePath);
-        
+		vars.put("firstname", firstName);
+		vars.put("absolutepath", absolutePath);
+
 		String url = "http://" + absolutePath + "/loginAuto?email=" + emailTo
 				+ "&flight=" + flight + "&firstname=" + firstName
 				+ "&lastname=" + lastName + "&flightDate=" + flightDate
 				+ "&originStation=" + originStation + "&destinationStation="
 				+ destinationStation;
-        LOG.info("email url: " + url);
-        vars.put("link",url);
-        
-        
+		LOG.info("email url: " + url);
+		vars.put("link", url);
+
 		try {
 			emailService.sendTemplateEmail(emailTarget, preSelectionEmailInfo, vars);
 		} catch (Exception e) {
-			LOG.info("sorry, error in send email",e);
+			messages.add("Error in sending mail:" + e.getMessage());
+			LOG.info("sorry, error in send email", e);
 
 		}
-		return "pops/done";
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("pops/doneSendingWelcomeEmail");
+		modelAndView.addObject("firstname", firstName);
+		modelAndView.addObject("lastname", lastName);
+		modelAndView.addObject("email", emailTo);
+		modelAndView.addObject("messages", messages);
+		return modelAndView;
 	}	
 
 	
