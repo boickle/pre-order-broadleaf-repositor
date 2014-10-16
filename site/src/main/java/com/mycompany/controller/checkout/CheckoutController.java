@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.broadleafcommerce.common.email.domain.EmailTargetImpl;
 import org.broadleafcommerce.common.email.service.EmailService;
 import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.common.exception.ServiceException;
@@ -106,10 +107,13 @@ public class CheckoutController extends BroadleafCheckoutController {
         FlightData f = dao.getFlightInfoFromMealOrder(order.getOrderNumber());
 
         vars.put("flightData", f);
-
+        
+        EmailTargetImpl emailTarget = new EmailTargetImpl();
+		emailTarget.setEmailAddress(order.getEmailAddress());
+		emailTarget.setBCCAddresses(Constants.BCC_LIST);
 
         try {
-            emailService.sendTemplateEmail(order.getEmailAddress(), orderConfirmationEmailInfo, vars);
+            emailService.sendTemplateEmail(emailTarget, orderConfirmationEmailInfo, vars);
         } catch (Exception e) {
             LOG.error(e);
         }
