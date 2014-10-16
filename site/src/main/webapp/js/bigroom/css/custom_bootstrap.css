@@ -29,41 +29,27 @@
   padding-left:0;
 }
 
-
 /* Buttons */
 
 .btn {
 	border-radius:0px;
-		min-width:150px;
-}
-
-
-.btn-default {
-	background:#e6e6e6;
+	min-width:150px;
 	border:none;
 }
 
+.btn-default {
+	background:#EEE;
+}
 
 /* Primary Button */
 .btn.btn-primary {
-	background:#ff0000;	
-	border:none;
+	background:rgb(0,170,240);
 	min-width:150px;
-}
-
-.btn.btn-primary:hover,
-.btn.btn-primary:focus {
-	background:#ff2b17;
-}
-
-.btn.btn-primary:active {
-	background:#e51300;
 }
 
 /*Bread Crumb */
 
 ol.breadcrumb {
-	background:#E9E6DF;
 	padding:10px;
 	margin:15px 0 5px 0;
 	color:#FFF;
@@ -71,12 +57,7 @@ ol.breadcrumb {
 }
 
 ol.breadcrumb a {
-	color:#8d8c88;
 	text-decoration: none;
-}
-
-ol.breadcrumb .active {
-	color:#FE0000;
 }
 
 /* Pagination */
@@ -90,12 +71,6 @@ ul.pagination {
 ul.pagination a { 
 	border:none;
 	color:#666;
-}
-
-ul.pagination .active a,
-ul.pagination .active a:hover {
-	background:#ff0000;	
-	border-color:#ff0000;
 }
 
 /* Jumbtron */
