@@ -28,6 +28,7 @@ public class Constants {
 	public static String DINNER_DESC = "Dinner";
 	
 	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "MM/dd/yyyy";
+	public static String ORDER_DATE_FORMAT_IN_EMAIL = "EEEE, MMMM dd'th' yyyy 'at' HH:mm";
 
 	//TODO: get this out of constants! (the order confirmation email has no clue what server it is on)
 	public static String SERVERPATH_FOR_EMAIL = "pops.egatesoln.com";

@@ -16,6 +16,8 @@
 
 package com.mycompany.controller.checkout;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -101,6 +103,29 @@ public class CheckoutController extends BroadleafCheckoutController {
         vars.put("customer", order.getCustomer());
         vars.put("orderNumber", order.getOrderNumber());
         vars.put("order", order);
+
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.ORDER_DATE_FORMAT_IN_EMAIL);
+		String df = sdf.format(order.getSubmitDate());
+		Calendar cal = Calendar.getInstance();
+	    cal.setTime(order.getSubmitDate());
+	    int day = cal.get(Calendar.DAY_OF_MONTH);
+	    if (day < 10 || day > 20) {
+	    	switch (day % 10) {
+	    	case 1:
+	    		df = df.replace("th", "st");
+	    		break;
+	    	case 2:
+	    		df = df.replace("th", "nd");
+	    		break;
+	    	case 3:
+	    		df = df.replace("th", "rd");
+	    		break;
+	    	default:
+	    		break;
+	    	}
+	    }
+        vars.put("order_submitDateFormatted", df);
+        
         vars.put("serverpath", Constants.SERVERPATH_FOR_EMAIL);
 
 	    Dao dao = new DaoImpl();

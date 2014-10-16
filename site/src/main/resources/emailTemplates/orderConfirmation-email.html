@@ -19,7 +19,7 @@
 			<h2 style="border-bottom:1px solid #EEE;padding-bottom:10px;margin-bottom:10px;"> Order Details</h2>
 			
 			<p>Order Number: <strong th:text="'#'+${orderNumber}"/></p>
-			<p>Order Date: <strong th:text="${order.submitDate}"/></p>
+			<p>Placed on <strong th:text="${order_submitDateFormatted}"/></p>
 			
 			<p style="color:#3c763d; background:#dff0d8; border: 1px solid #d6e9c6; padding:10px;">
 				
