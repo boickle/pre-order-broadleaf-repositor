@@ -52,24 +52,22 @@ INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,dep
 values
 (1,'183','YUL','YVR',to_timestamp('10-20-2014 13:25', 'mm-dd-yyyy hh24:mi'),to_timestamp('10-20-2014 16:01', 'mm-dd-yyyy hh24:mi'),'Air Canada','32E1');
 
-INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,arrival_time,departure_time,carrier,aircraft_type)
+INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,departure_time,arrival_time,carrier,aircraft_type)
 values
 (2,'111','YUL','YVR',to_timestamp('10-20-2014 7:55', 'mm-dd-yyyy hh24:mi'),to_timestamp('10-20-2014 10:31', 'mm-dd-yyyy hh24:mi'),'Air Canada','32P1');
 
-
-INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,arrival_time,departure_time,carrier,aircraft_type)
+INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,departure_time,arrival_time,carrier,aircraft_type)
 values
 (3,'1133','YUL','YVR',to_timestamp('10-20-2014 16:00', 'mm-dd-yyyy hh24:mi'),to_timestamp('10-20-2014 18:36', 'mm-dd-yyyy hh24:mi'),'Air Canada','32E1');
 
-
-INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,arrival_time,departure_time,carrier,aircraft_type)
+INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,departure_time,arrival_time,carrier,aircraft_type)
 values
 (4,'195','YUL','YVR',to_timestamp('10-20-2014 18:25', 'mm-dd-yyyy hh24:mi'),to_timestamp('10-20-2014 20:50', 'mm-dd-yyyy hh24:mi'),'Air Canada','32E1');
-
 
 INSERT INTO FLIGHTINFO(id,flight_number,origin_location,destination_location,departure_time,arrival_time,carrier,aircraft_type)
 values
 (5,'A123','YUL','YVR',to_timestamp('10-20-2014 13:25', 'mm-dd-yyyy hh24:mi'),to_timestamp('10-20-2014 16:01', 'mm-dd-yyyy hh24:mi'),'Air Canada','32E1');
+
 
 insert into blc_address (address_id,address_line1,address_line2,city,state_prov_region,country,postal_code,is_active,is_business,is_default)
 values(0,'','','','IL','US','',true,false,true);
