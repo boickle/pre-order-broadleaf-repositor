@@ -121,7 +121,7 @@
 					<span class="divider">|</span> <b>Passenger:</b><div th:text="${firstname}+' '+ ${lastname}" th:remove="tag" />
 					<span class="divider"></span> <b>Flight:</b> <div th:text="${session.flightdata.flightNumber}" th:remove="tag"/>
 					
-					<span class="divider"></span> <b>To:</b> <div th:text="${session.flightdata.destinationStation}"  th:remove="tag"/>
+					<span class="divider"></span> <b>To:</b> <div th:text="${session.flightdata.getDestinationStationSpelled()}"  th:remove="tag"/>
 					
 					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> <div th:text="${session.flightdata.fDepartureDate}" th:remove="tag"/>
 					
@@ -306,7 +306,7 @@
 		    	</div>
 		    	
 				<div class="panel-body">
-					<p th:text="${flightdata.originStation}"/>
+					<p th:text="${flightdata.getOriginStationSpelled()}"/>
 				</div>
 				
 			</div>
@@ -326,7 +326,7 @@
 		    	</div>
 		    	
 				<div class="panel-body">
-					<p th:text="${flightdata.destinationStation}"/>
+					<p th:text="${flightdata.getDestinationStationSpelled()}"/>
 				</div>
 				
 			</div>
@@ -540,8 +540,8 @@
 					<p><strong th:text="'Flight ' + ${flightdata.flightNumber}+' on '+ ${flightdata.departureDate}"/>
 					<table>
 						<tr><td>Flight number:</td><td th:text="${flightdata.flightNumber}"/></tr>
-						<tr><td>Origin:</td><td th:text="${flightdata.originStation}"/></tr>
-						<tr><td>Destination:</td><td th:text="${flightdata.destinationStation}"/></tr>
+						<tr><td>Origin:</td><td th:text="${flightdata.flightdata.getDestinationStationSpelled}"/></tr>
+						<tr><td>Destination:</td><td th:text="${flightdata.getDestinationStationSpelled}"/></tr>
 						<tr><td>Departure Time:</td><td th:text="${flightdata.fDepartureDate}"/></tr>
 						<tr><td>Arrival Time:</td><td th:text="${flightdata.fArrivalDate}"/></tr>
 					</table>
