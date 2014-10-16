@@ -1,18 +1,3 @@
-	<script type="text/javascript">
-	
-		// ON DOM Load
-		$(function() {
-		
-			$('.jumbotron .container *').animo( { animation: 'bounceIn' });
-		
-		});
-		
-	</script>
-	
-	
-	<!-- /Splash -->
-	
-
 			
 	<!-- View Container Start -->
 	<div id="viewContainer" class="container">	
@@ -25,9 +10,7 @@
 		
 		// Initialize the UI manager
 		UI.init("OrderCompleted"); 
-		
-		// show the cart button
-	
+
 	});
 		
 	</script>
@@ -39,12 +22,12 @@
 		
 		Congratulations, your order is complete. You will be receiving a confirmation email which 
 		contains a receipt of this transaction.
+		
 	</div>
 	
 	<p>
-		<a href="/dashboard" class="btn btn-primary"> Return to Dashboard </a>
-	</p>	    
-	
+		<a href="/dashboard" class="btn btn-primary"> Visit Your Dashboard </a>
+	</p>
 	
 	<div class="panel panel-default" style="display:none">
 		
@@ -124,7 +107,7 @@
    			
    			<h3 class="panel-title"> 
        			<i class="fa fa-shopping-cart"></i> 
-       			My Items
+       			My Meals
        		</h3>
        		
     	</div>
@@ -146,14 +129,14 @@
 				
 			</div>									
 			
-			<div class="col-xs-4 ">
+			<div class="col-xs-7 ">
 													
 				<strong class="cartItemTitle" th:text="*{product.name}"></strong>
 				<strong class="cartItemPrice" blc:price="*{price}"></strong>
 				
 			</div>
 			
-			<div class="col-xs-2">
+			<div class="col-xs-1">
 				<input type="text" style="cursor:default" disabled="disabled" class="form-control text-center" maxlength="3" placeholder="Qty"  th:value="*{quantity}" />
 			</div>
 			

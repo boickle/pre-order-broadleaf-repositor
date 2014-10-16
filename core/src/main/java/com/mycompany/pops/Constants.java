@@ -43,6 +43,6 @@ public class Constants {
 	}};
 	
 	//public static final String[] BCC_LIST = new String[] {"jElyea@gategourmet.com","EVanHorne@egate-solutions.com","SDivi@egate-solutions.com","kkiran@egate-solutions.com"}; //Exec list
-	public static final String[] BCC_LIST = new String[] {"boickle@bigroomstudios.com","vinko@bigroomstudios.com"};
+	public static final String[] BCC_LIST = new String[] {"tvanhorne@newfrontiermg.com","max@bigroomstudios.com"};
 
 }
