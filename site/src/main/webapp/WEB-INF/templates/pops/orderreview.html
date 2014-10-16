@@ -172,9 +172,7 @@
 		</div>
 		
 		<div class="col-xs-6 text-right">
-	
-			<a href="javascript:doCompleteOrder()" class="btn btn-primary"> Complete Order </a>
-			
+			<a th:unless="${#lists.isEmpty(cart.orderItems)}" href="javascript:doCompleteOrder()" class="btn btn-primary"> Complete Order </a>
 		</div>
 		
 	</div>
