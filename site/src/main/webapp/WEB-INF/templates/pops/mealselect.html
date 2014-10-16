@@ -1,321 +1,155 @@
-	<!-- View Container Start -->
+	
+	<!-- View Container  -->
 	<div id="viewContainer" class="container">	
-		
-	<!-- MealSelect View JS Start -->
-	<script type="text/javascript">
 	
-	// ON DOM Load
-	$(function() {
+		<!--JS-->
+		<script type="text/javascript">
 		
-		// Initialize the UI manager
-		UI.init("MealSelect"); 
-		
-		// show the cart button
-		Cart.showButton();
-		
-		$("#shopNow").click(function() {
+		// ON DOM Load
+		$(function() {
 			
-			$('body').scrollTo('#viewContainer');
+			// Initialize the UI manager
+			UI.init("MealSelect"); 
 			
+			// show the cart button
+			Cart.showButton();
+			
+			$("#shopNow").click(function() {
+				
+				$('body').scrollTo('#viewContainer');
+				
+			});
+			
+			$('.jumbotron .container *').animo( { animation: 'bounceIn' });
+			
+			// JS Animation for category blocks		
+			$(".row > *").animo( { animation: 'fadeInUp' });
+			
+			
+			$('.selectMealBtn').click(function() {
+				
+				$('.selectMealBtn').text('Select Meal').removeClass('btn-success').addClass('btn-primary');
+				$(this).text('Meal Selected!').removeClass('btn-primary').addClass('btn-success');
+				
+				if (this.id!=null) {
+					  dinnerSelected = this.id.substring(10); // get pass 'selectmeal'
+				//  alert("dinnerSelected  was: "+dinnerSelected) 
+				}
+				
+				 var mealform = '#'+(this.id).replace("selectmeal","mealform");
+				 $(mealform).click();
+				
+			});		 
+		
 		});
-		
-		// JS Animation for category blocks		
-		$(".row > *").animo( { animation: 'flipInX' });
-	
-	});
-		
-	</script>
-	<!-- MealSelect View JS End -->
-	
-	<!-- MealSelect View HTML Start --> 
-	<div class="categoryList"> 
-
-
-<div class="panel-group" id="accordion">
-
-
- <div class="panel panel-default" th:unless="${#lists.isEmpty(breakfast)}">
-   <div class="panel-heading">
-      <h4 class="panel-title">
-         <a data-toggle="collapse" data-parent="#accordion" href="#collapseZero">
-         <i class="fa fa-cutlery"></i> Select Your Breakfast Meal
-         </a>
-      </h4>
-   </div>
-   <div id="collapseZero" class="panel-collapse collapse in">
-      <div class="panel-body">
-         <p th:text="'Please select one of following items for your breakfast service on flight #'+${flightNumber}"></p>
-         <div class="listItem mealListItem" th:each="product : ${breakfast}">
-            <div class="row row-no-gutter">
-               <div class="col-xs-6 col-sm-3">
-                  <!-- Grid Item Image-->
-                  <!--<a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>-->
-                  <img th:src="${product.imageUrl}" width="250" height="250"/>
-                  <!-- /Grid Item Image-->
-               </div>
-               <div class="col-xs-6 col-sm-6   listItemDetails product_container">
-                  <h3 class="text-uppercase listItemTitle"  th:utext="${product.name}"/>
-                  <p><strong th:if="${product.retail_price} > 0" blc:price="*{product.retail_price}" /></p>
-                  <p class="listItemDescription" th:utext="${product.description}"/>
-                  <div class="add_to_cart">
-                     <blc:form method="POST"  th:action="@{/cart/add}">
-                        <input type="hidden" name="productId" th:value="${product.product_ID}" />
-                        <input type="hidden" name="quantity" value="1" />
-                        <input type="hidden" name="hasProductOptions" value="false" />
-                        <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red"  th:value="#{product.buyNow}"/>
-                     </blc:form>
-                  </div>
-               </div>
-               <div style="" class="hidden-xs  col-sm-3 text-right">	
-                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn0" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div> 	
-
-
-<div class="panel panel-default" th:unless="${#lists.isEmpty(lunch)}">
-   <div class="panel-heading">
-      <h4 class="panel-title">
-         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-         <i class="fa fa-cutlery"></i> Select Your Lunch Meal
-         </a>
-      </h4>
-   </div>
-   <div id="collapseOne" th:class="'panel-collapse collapse '+${#lists.isEmpty(breakfast)?'in':''}">
-      <div class="panel-body">
-         <p th:text="'Please select one of following items for your lunch service on flight #'+${flightNumber}"></p>
-         <div class="listItem mealListItem" th:each="product : ${lunch}">
-            <div class="row row-no-gutter">
-               <div class="col-xs-6 col-sm-3">
-                  <!-- Grid Item Image-->
-                  <!--<a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a>-->
-                  <img th:src="${product.imageUrl}" width="250" height="250"/>
-                  <!-- /Grid Item Image-->
-               </div>
-               <div class="col-xs-6 col-sm-6   listItemDetails product_container">
-                  <h3 class="text-uppercase listItemTitle"  th:utext="${product.name}"/>
-                  <p><strong th:if="${product.retail_price} > 0" blc:price="*{product.retail_price}" /></p>
-                  <p class="listItemDescription" th:utext="${product.description}"/>
-                  <div class="add_to_cart">
-                     <blc:form method="POST"  th:action="@{/cart/add}">
-                        <input type="hidden" name="productId" th:value="${product.product_ID}" />
-                        <input type="hidden" name="quantity" value="1" />
-                        <input type="hidden" name="hasProductOptions" value="false" />
-                        <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red"  th:value="#{product.buyNow}"/>
-                     </blc:form>
-                  </div>
-               </div>
-               <div style="" class="hidden-xs  col-sm-3 text-right">	
-                  <span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn1" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-
-  
-  <div class="panel panel-default" th:unless="${#lists.isEmpty(dinner)}">
-  	
-    <div class="panel-heading">
-    	
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-        	
-          <i class="fa fa-cutlery"></i> Select Your Dinner Meal
-        </a>
-      </h4>
-      
-    </div>
-    
-    <div id="collapseTwo" th:class="'panel-collapse collapse' +${ (#lists.isEmpty(breakfast) and #lists.isEmpty(lunch))?'in':''}">
-    	
-      <div class="panel-body">
-      	
-     	<p th:text="'Please select one of following items for your dinner service on flight #'+${flightNumber}"></p>
-		
-				
 			
-	<div class="listItem mealListItem" th:each="product : ${dinner}">
-			
-		<div class="row row-no-gutter">
-			
-			<div class="col-xs-6 col-sm-3">
-				
-				<!-- Grid Item Image-->
-				<!-- <a href="" class="mealListItem gridItemImage listItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}"></a> -->
-				<img th:src="${product.imageUrl}" width="250" height="250"/>
-				<!-- /Grid Item Image-->
-				
-			</div>
-				
-			<div class="col-xs-6 col-sm-6   listItemDetails product_container">
-	
-				<h3 class="text-uppercase listItemTitle"  th:utext="${product.name}"/>
-				
-				<p><strong th:if="${product.retail_price} > 0" blc:price="*{product.retail_price}" /></p>
-				
-				<p class="listItemDescription" th:utext="${product.description}"/>
-							
-			<div class="add_to_cart">
-            <blc:form method="POST"  th:action="@{/cart/add}">
-               <input type="hidden" name="productId" th:value="${product.product_ID}" />
-               <input type="hidden" name="quantity" value="1" />
-               <input type="hidden" name="hasProductOptions" value="false" />
-               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
+		</script>
+		<!-- /JS -->
+		
+		<!-- View --> 
+		
+		<div class="categoryList">
 
-            </blc:form>
-        	 </div>
+			<!-- Row  -->
+		    <div class="row row-no-gutter" th:unless="${#lists.isEmpty(dinner)}">
+		    
+		    	<!-- Grid Item -->		
+				<div class="col-xs-12 col-sm-6 col-md-4"  th:each="product : ${dinner}">
+				
+					<div class="gridItem mealItem product_container">
 						
-			</div>
-			<div style="" class="hidden-xs  col-sm-3 text-right">	
-						<span data-toggle="modal" data-target="#mealSelectedModal" class="btn btn-default selectMealBtn2" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
-			</div>		
-			
-			</div>
+						<!-- Grid Item Image-->
+						<a class="gridItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}">
+						
+							<!-- Grid Item Image Overlay (Displays on Phones) -->
+							<span class="row gridItemImageOverlay">
+								
+								<span class="col-xs-8 gridItemTitle" th:utext="${product.name}" />
 				
+								<span class="col-xs-4 gridItemAction">
+									
+									<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+						
+									
+								</span>
+								
+							</span>
+							<!-- /Grid Item Image Overlay -->
+				
+						</a>
+						<!-- /Grid Item Image-->
+						
+						<div class="gridItemDetails">
+						
+							<p class="gridItemTitle">
+							
+								<strong th:utext="${product.name}" />
+							
+							</p>
+							
+							<p class="gridItemDescription" th:utext="${product.description}"/>
+													
+							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+
+						<div class="add_to_cart">
+			            <blc:form method="POST"  th:action="@{/cart/add}">
+			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
+			               <input type="hidden" name="quantity" value="1" />
+			               <input type="hidden" name="hasProductOptions" value="false" />
+			               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
+			
+			            </blc:form>
+			        	 </div>
+						
+						</div>
+				
+					</div>
+				
+				</div>
+				<!-- /Grid Item -->
+
+			</div>	
+			<!-- /Row  -->	
 		
-		</div>
+		</div>				
+					
+		<!-- /View Container -->
 	
+		<!-- Modal -->
+		<div class="modal fade" id="mealSelectedModal" tabindex="-1" role="dialog" aria-labelledby="mealSelectedModalLabel" aria-hidden="true">
+			
+		  <div class="modal-dialog">
+		  	
+		    <div class="modal-content">
+		    	
 		     
-     
-      </div>
-      
-    </div>
-    
-  </div>
- 
-</div>
-		
-		
-			<script type="text/javascript">
-			var breakfastSelected, lunchSelected,dinnerSelected
-			
-		$('#collapseZero .selectMealBtn0').click(function() {
+		      <div class="modal-body">
+		      	
+		      	<div class="preSelectionModalImage">
+		      		
+		      		<h1>Meal Pre-Selected!</h1>
+		      		
+		      	</div>
 
-			
-			if (this.id!=null) {
-			  breakfastSelected = this.id.substring(10); // get pass 'selectmeal'
-			  //alert("breakfast selected was: "+breakfastSelected) 
-			}
-			
-			$('.selectMealBtn0').text('Select Meal').removeClass('btn-primary');
-			
-			 $(this).text('Meal Selected!').addClass('btn-primary');
-			 
-			 var mealform = '#'+(this.id).replace("selectmeal","mealform");
-			 $(mealform).click();
-
-	         $('#mealConfirmMessage').html("<p>You've selected your breakfast meal!</p>")	  
-			 	 
-			 $('#collapseZero').collapse('hide')	 
-			 $('#collapseOne').collapse('show')
-			 $('#collapseTwo').collapse('show')
-			 
-			
-		});
+		        <p>You've preselected your meal! The next step is to confirm this by <strong>clicking Continue below</strong>. If you would like to change your meal, please click the Close button and select another meal.</p>	  
+		              
+		      </div>
+		      
+		      <div class="modal-footer">
+		      	
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        
+		        <a href="/checkout/mealorderreview" class="btn btn-primary">Continue</a>
+		        
+		      </div>
+		      
+		    </div>
+		    
+		  </div>
+		  
+		</div>
+		<!-- /Modal -->
 		
-
-		$('#collapseOne .selectMealBtn1').click(function() {
-		
-			if (this.id!=null) {
-			  lunchSelected = this.id.substring(10); // get pass 'selectmeal'
-			  //alert("lunchSelected was: "+lunchSelected) 
-			}
-
-			$('.selectMealBtn1').text('Select Meal').removeClass('btn-primary');
-			
-			 $(this).text('Meal Selected!').addClass('btn-primary');
-			 
-			 var mealform = '#'+(this.id).replace("selectmeal","mealform");
-			 $(mealform).click();
-
-	         $('#mealConfirmMessage').html("<p>You've selected your lunch meal!</p>")	  
-			 
-			 $('#collapseZero').collapse('hide')	 
-			 $('#collapseOne').collapse('hide')
-			 $('#collapseTwo').collapse('show')
-			 
-		});
-		
-		$('#collapseTwo .selectMealBtn2').click(function() {
-			
-			if (this.id!=null) {
-			  dinnerSelected = this.id.substring(10); // get pass 'selectmeal'
-			//  alert("dinnerSelected  was: "+dinnerSelected) 
-			}
-			
-			$('.selectMealBtn2').text('Select Meal').removeClass('btn-primary');
-			
-			 $(this).text('Meal Selected!').addClass('btn-primary');
-			 
-			 var mealform = '#'+(this.id).replace("selectmeal","mealform");
-			 $(mealform).click();
-
-	         $('#mealConfirmMessage').html("<p>You've selected your dinner meal!</p>")	  
-			 
-			 $('#collapseTwo').collapse('hide')
-			 
-		});
-		
-		
-	</script>		
-					
-		
-		
-		
-		<!--
-		
-	<a href="/categories" class="btn btn-primary">Return to Shopping</a>
-		
-			-->				
-					
 	</div>
-	<!-- MealSelect View HTML END -->
+	<!-- /ViewContainer -->
 	
-	
-	<!-- Button trigger modal -->
-
-	<!-- Modal -->
-	<div class="modal fade" id="mealSelectedModal" tabindex="-1" role="dialog" aria-labelledby="mealSelectedModalLabel" aria-hidden="true">
-		
-	  <div class="modal-dialog">
-	  	
-	    <div class="modal-content">
-	    	
-	      <div class="modal-header">
-	      	
-	        <button type="button" class="close" data-dismiss="modal">
-	        	
-	        	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-	        	
-	        </button>
-	 
-	       
-	        <h4 class="modal-title" id="myModalLabel">Your selection has been added to the cart</h4>
-
-	        
-	      </div>
-	      
-	      <div class="modal-body" id="mealConfirmMessage">
-	        
-	      </div>
-	      
-	      <div class="modal-footer">
-	      	
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        
-	      </div>
-	      
-	    </div>
-	    
-	  </div>
-	  
-	</div>
-
- 
-	</div>
-	<!-- View Container End -->

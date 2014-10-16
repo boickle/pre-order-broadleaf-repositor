@@ -15,9 +15,8 @@ body {
 	top:0;
 	left:0;
 	right:0;
-	border-top:5px solid #FF1600;
+	border-top:5px solid rgb(0,170,240);
 	z-index:999;
-	
 }
 
 #header .navbar-default {
@@ -34,7 +33,7 @@ body {
 }
 
 #header a i {
-	color:#FF1600;
+	color:rgb(0,170,240);
 	font-size:150%;
 	cursor:pointer;
 	margin:15px 10px;
@@ -213,6 +212,8 @@ body.CategoryList #header .flightBar .navbar-default {
 }
 
 
+
+
 /* List Item */
 
 .listItem {
@@ -231,7 +232,7 @@ body.CategoryList #header .flightBar .navbar-default {
 }
 
 .listItemDetails strong {
-	color:#FF1600;
+	color:rgb(0,170,240);
 }
 
 .listItem .btn {
@@ -242,19 +243,128 @@ body.CategoryList #header .flightBar .navbar-default {
 
 /* Meal List Item */
 
+body.MealSelect .categoryList {
+	margin-top:10px;
+}
+
+body.MealSelect .jumbotron {
+	background:url('/img/bigroom/preSelectionSplash.jpg') no-repeat center 60%;
+	background-size:cover;
+	color:#FFF;
+	display:block;
+	margin:0;
+	min-height:500px;
+	padding-top:150px;
+	color:#FFF;
+	background-attachment: fixed;
+}
+
+body.MealSelect .jumbotron .preOrder {
+	display:none;
+}
+
+body.MealSelect .jumbotron .btn {
+	display:none;
+}
+
+body.MealSelect .jumbotron h1,
+body.MealSelect .jumbotron p {
+	color:#FFF;
+}
+			
+
+body.MealSelect .view-content {
+	background:#FFF;
+}
+
+body.MealSelect .view-content .meal-item {
+	padding:2rem;
+}
+
+body.MealSelect .view-content .grid-item {
+		margin-bottom:2rem;
+}
+
 .listItemImage {
 	height:250px;
 	max-width:250px;
 }
 
-.mealListItem .listItemDetails {
-	padding:25px;
+.mealItem {
+	border:none;	
+	height:auto;
+	position:relative;
+	
 }
+
+.mealItem .gridItemDetails {
+	display:block;
+	padding:10px 10px 0px 10px;
+}
+
+.mealItem .gridItemDetails .gridItemTitle,
+.mealItem .gridItemDetails .btn {
+	display:none;
+}
+
+/* Media Query for gridItem on tablet and desktop */
+@media (min-width: 768px) {
+	
+	.mealItem {
+		height:325px;
+	}
+	
+	.mealItem .btn {
+		position:absolute;
+		top:193px;
+		right:0;
+	}
+
+	.mealItem .gridItemDetails {
+		display:block;
+	}
+
+	.mealItem .gridItemImage span {
+		display:none;
+	}
+	
+	.mealItem .gridItemDetails .gridItemTitle,
+	.mealItem .gridItemDetails .btn {
+		display:block;
+	}
+	
+}
+
+
+
+.mealItem .gridItemDescription {
+
+	font-size:12px;
+	margin-bottom:10px;	
+}
+
+#mealSelectedModal .preSelectionModalImage  {
+	background:url('/img/bigroom/preSelectionSplash.jpg') no-repeat center top;
+	background-size:cover;
+	color:#FFF;
+	display:block;
+	margin:0;
+	min-height:100px;
+	padding-top:15px;
+}
+
+#mealSelectedModal .preSelectionModalImage h1 { 
+	color:#FFF;
+	text-align: center;
+	text-transform: uppercase;
+}
+
 
 /* Common Grid View Styles */
 body.CategoryList #viewContainer,
 body.SubCategoryList #viewContainer,
-body.ProductList #viewContainer {
+body.ProductList #viewContainer,
+body.MealSelect #viewContainer {
 	padding:0;
 }
 
@@ -270,7 +380,7 @@ body.ProductList #viewContainer {
 	margin:15px 10px 0 0px;
 	border-radius:5px;
 	color:#FFF;
-	background:#FF1600;
+	background:rgb(0,170,240);
 	cursor:pointer;
 }
 
@@ -332,7 +442,7 @@ body.CategoryList .flightBar .navbar-default {
 }
 
 body.CategoryList .jumbotron  {
-	background:url('/img/bigroom/preOrderBG.jpg') no-repeat center top;
+	background:url('/img/bigroom/splash.jpg') no-repeat center top;
 	background-size:cover;
 	color:#FFF;
 	display:block;
@@ -402,7 +512,7 @@ body.ProductDetail {
 }
 
 .productPriceSale {
-	color:#FF1600;
+	color:rgb(0,170,240);
 	text-transform:uppercase;
 }
 
@@ -452,7 +562,7 @@ body.Shipping #viewContainer,
 body.Payment #viewContainer, 
 body.Review #viewContainer,
 body.OrderCompleted #viewContainer,
-body.OrderDetail  #viewContainer     {
+body.OrderDetail  #viewContainer    {
 	max-width:600px;
 	background:#FFF;
 }
@@ -468,17 +578,7 @@ body.OrderDetail .cartItem .button  {
 }
 
 
-body.MealSelect .view-content {
-	background:#FFF;
-}
 
-body.MealSelect .view-content .meal-item {
-	padding:2rem;
-}
-
-body.MealSelect .view-content .grid-item {
-		margin-bottom:2rem;
-}
 
 body.UIStyleGuide {
 	background:#FFF;
@@ -487,10 +587,114 @@ body.UIStyleGuide {
 body.UIStyleGuide .container {
 	min-width:1600px;
 	height:4500px;
-	background:url('../img/UIStyleGuide.jpg') no-repeat center top;
+	background:url('/img/bigroom/UIStyleGuide.jpg') no-repeat center top;
 
 }
 
 body.PreSelectionHome  {
-	background:url('../img/preselection.jpg') no-repeat left top;
+	background:url('/img/bigroom/preselection.jpg') no-repeat left top;
+}
+
+
+/* Cart CSS */
+
+#cartContainer {
+	text-align:left;
+	background:#FFF;
+	top:58px;
+	padding-top:15px;
+}
+
+#cartContainer .container {
+	max-width:600px;
+}
+
+a#cartButton {
+	
+
+}
+
+a#cartButton:hover {
+	color:#ff2b17;
+}
+
+#cartItemList {
+	border-top:1px solid #EEE;
+}
+
+/* Cart Item */
+.cartItem {
+	padding:1rem 0;
+}
+
+.cartItem .btn.btn-default {
+	min-width:32px;
+	height:32px;
+	margin:5px;
+}
+
+
+.cartItem .form-control {
+	max-width:55px;	
+	margin:5px 0px 0px 5px;
+	display:inline;
+}
+	
+.cartItemImage {
+
+}
+
+.cartItemImage img {
+	width:42px;
+	height:42px;
+
+}
+
+.cartItemTitle,
+.cartItemPrice  {
+	margin-left:15px;
+	display:block;
+}
+
+.cartItemPrice {
+	color:rgb(0,170,240);
+}
+
+.cartItemTotalPrice {
+	font-weight:bold;
+	display:block;
+	padding-top:13px;
+}
+
+#cartFooter {
+	text-align:right;
+}
+
+#cartFooter .btn {
+	color:#FFF;
+	margin-top:10px;
+}
+
+
+/* Flight Confirmation */
+
+body.FlightConfirmation {
+	padding-top:75px;
+}
+
+body.FlightConfirmation #header .navbar-default > .container > .row > div {
+	border:none;
+}
+
+body.FlightConfirmation #viewContainer,
+body.FlightConfirmation #header .navbar-default .container {
+	max-width:600px;
+}
+
+body.FlightConfirmation h3 {
+	margin:0;
+}
+
+body.FlightConfirmation h3 + p {
+	margin-bottom:20px;
 }

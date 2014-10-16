@@ -1,0 +1,74 @@
+/* Buttons */
+
+.btn-default {
+	background:#e6e6e6;
+}
+
+/* Primary Button */
+.btn.btn-primary {
+	background:#ff0000;	
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus {
+	background:#ff2b17;
+}
+
+.btn.btn-primary:active {
+	background:#e51300;
+}
+
+/*Bread Crumb */
+
+ol.breadcrumb {
+	background:#E9E6DF;
+	color:#FFF;	
+}
+
+ol.breadcrumb a {
+	color:#8d8c88;
+}
+
+ol.breadcrumb .active {
+	color:#FE0000;
+}
+
+/* Pagination */
+
+ul.pagination .active a,
+ul.pagination .active a:hover {
+	background:#ff0000;	
+	border-color:#ff0000;
+}
+
+/* Global CSS */
+
+/* Header UI Component */
+#header {
+	border-top:5px solid #FF1600;
+}
+
+#header a i {
+	color:#FF1600;
+}
+
+.listItemDetails strong {
+	color:#FF1600;
+}
+
+#navigationButton {
+	color:#FFF;
+	background:#FF1600;
+}
+
+body.CategoryList .jumbotron  {
+	background:url('/img/airCanadaSplash.jpg') no-repeat center top;
+}
+
+.productPriceSale {
+	color:#FF1600;
+}
+
+.cartItemPrice {
+	color:#FF1600;
+}
