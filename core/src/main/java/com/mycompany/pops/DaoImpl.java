@@ -497,6 +497,24 @@ public class DaoImpl implements Dao {
 		if (customerID == 0)
 			return null;
 
+		// check if order already took place, if not, bye
+		String sqlOrderMadeAlready = "select meal_order_number from customer_flight where customer_id="+customerID+" and flight_number='"+flightNumber+"'";
+		ResultSet rs1 = DaoUtil.jdbcSelectWrapper(sqlOrderMadeAlready);
+		String orderNumber=null;
+		try {
+			if (rs1.next()) {
+				orderNumber = rs1.getString(1);
+			}
+			rs1.close();
+			
+		} catch (Exception e) {
+			LOG.error("Error trying to determine if you ordered meal already",e);
+		}
+		LOG.info("getMealsForCustomer: The order number was: "+orderNumber);
+		if (!(orderNumber!=null && orderNumber.length()>0)) {
+			return null;
+		}
+		
 		List<Meal> result = null;
 		// Data is stored in MEAL_SELECTION table, need to gather the name and
 		// image
