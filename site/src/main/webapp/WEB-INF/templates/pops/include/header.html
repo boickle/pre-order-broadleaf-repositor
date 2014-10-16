@@ -146,7 +146,7 @@
 					<span class="divider">|</span> <b>Passenger:</b><div th:text="${customer.firstName+' '+customer.lastName}" th:remove="tag" />
 					<span class="divider"></span> <b>Flight:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.flightNumber}" th:remove="tag"/>
 					
-					<span class="divider"></span> <b>To:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.destinationStation}"  th:remove="tag"/>
+					<span class="divider"></span> <b>To:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.getDestinationStationSpelled()}"  th:remove="tag"/>
 					
 					<span class="divider"></span> <i class="fa fa-clock-o"></i> <b>Departure:</b> <div th:unless="${session.flightdata==null}" th:text="${session.flightdata.fDepartureDate}" th:remove="tag"/>
 					
