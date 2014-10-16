@@ -298,7 +298,8 @@ public class MyController {
 
 	    
 		ModelAndView modelAndView = new ModelAndView();
-    	modelAndView.setViewName("authentication/login");
+    	//modelAndView.setViewName("authentication/login"); adding a coming soon page.
+    	modelAndView.setViewName("pops/comingsoon");
 		return modelAndView;
 
 	}
@@ -410,6 +411,7 @@ public class MyController {
 
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(emailTo);
+		emailTarget.setBCCAddresses(Constants.BCC_LIST);
 
 		HashMap<String, Object> vars = new HashMap<String, Object>();
 
