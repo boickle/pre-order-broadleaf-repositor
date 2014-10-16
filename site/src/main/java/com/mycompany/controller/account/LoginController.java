@@ -18,6 +18,7 @@ package com.mycompany.controller.account;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafLoginController;
@@ -31,6 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mycompany.pops.Dao;
+import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.pojo.FlightData;
+
 /**
  * The controller responsible for all actions involving logging a customer in
  */
@@ -42,8 +47,17 @@ public class LoginController extends BroadleafLoginController {
     	
     	Log.info("Inside login controller");
     	Log.info("email is: "+request.getSession().getAttribute("email"));
-    	Log.info("flight is: "+request.getSession().getAttribute("flight"));
-
+    	String flightNumber = (String) request.getSession().getAttribute("flight");
+    	Log.info("flight is: "+flightNumber);
+    	
+    	FlightData f = (FlightData) request.getSession().getAttribute("flightdata");
+    	if (f==null) {
+    		Log.info("Cannot find flight data in session! Trying to read it again");
+    		Dao dao = new DaoImpl();
+    		f = dao.getFlightDataForFlight(flightNumber);
+        	HttpSession session = request.getSession();
+    		session.setAttribute("flightdata", f);
+    	}
         return super.login(request, response, model);
     }
     
