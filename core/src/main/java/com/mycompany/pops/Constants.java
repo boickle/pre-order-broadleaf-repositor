@@ -37,12 +37,21 @@ public class Constants {
 	public static final Map<String , String> AIRPORTS = new HashMap<String , String>() {{
 		    put("ORD", "O'Hare International Airport");
 		    put("MDW", "Chicago Midway");
-		    put("YUL", "Montréal-pierre Elliott Trudeau International Airport");
-		    put("YVR", "Vancouver International Airport");
+		    put("YUL", "Montreal, Trudeau, QC");
+		    put("YVR", "Vancouver, Vancouver Int'l, BC");
 		    
 	}};
 	
-	//public static final String[] BCC_LIST = new String[] {"jElyea@gategourmet.com","EVanHorne@egate-solutions.com","SDivi@egate-solutions.com","kkiran@egate-solutions.com"}; //Exec list
-	public static final String[] BCC_LIST = new String[] {"tvanhorne@newfrontiermg.com","max@bigroomstudios.com"};
+	// Exec list (and some more)
+	public static final String[] BCC_LIST = new String[] {
+			"jElyea@gategourmet.com", "EVanHorne@egate-solutions.com",
+			"SDivi@egate-solutions.com", "kkiran@egate-solutions.com",
+			"tvanhorne@newfrontiermg.com","max@bigroomstudios.com",
+			"MMotherway@egate-solutions.com",
+			"DSandadi@egate-solutions.com",
+			"jmak@egate-solutions.com"
+	}; 
+
+	//public static final String[] BCC_LIST = new String[] {"tvanhorne@newfrontiermg.com","max@bigroomstudios.com"};
 
 }

@@ -149,4 +149,12 @@ public class FlightData {
 		return Constants.AIRPORTS.get(originStation);
 	}
 
+	public String getDestinationStationSpelledWithAbbrev() {
+		return Constants.AIRPORTS.get(destinationStation)+" ("+destinationStation+")";
+	}
+
+	public String getOriginStationSpelledWithAbbrev() {
+		return Constants.AIRPORTS.get(originStation)+" ("+originStation+")";
+	}
+
 }
