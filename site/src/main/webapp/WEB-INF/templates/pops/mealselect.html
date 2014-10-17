@@ -49,6 +49,130 @@
 		<!-- View --> 
 		
 		<div class="categoryList">
+		
+					<!-- Row  -->
+		    <div class="row row-no-gutter" th:unless="${#lists.isEmpty(breakfast)}">
+		    
+		    	<!-- Grid Item -->		
+				<div class="col-xs-12 col-sm-6 col-md-4"  th:each="product : ${breakfast}">
+				
+					<div class="gridItem mealItem product_container">
+						
+						<!-- Grid Item Image-->
+						<a class="gridItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}">
+						
+							<!-- Grid Item Image Overlay (Displays on Phones) -->
+							<span class="row gridItemImageOverlay">
+								
+								<span class="col-xs-8 gridItemTitle" th:utext="${product.name}" />
+				
+								<span class="col-xs-4 gridItemAction">
+									
+									<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+						
+									
+								</span>
+								
+							</span>
+							<!-- /Grid Item Image Overlay -->
+				
+						</a>
+						<!-- /Grid Item Image-->
+						
+						<div class="gridItemDetails">
+						
+							<p class="gridItemTitle">
+							
+								<strong th:utext="${product.name}" />
+							
+							</p>
+							
+							<p class="gridItemDescription" th:utext="${product.description}"/>
+													
+							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+
+						<div class="add_to_cart">
+			            <blc:form method="POST"  th:action="@{/cart/add}">
+			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
+			               <input type="hidden" name="quantity" value="1" />
+			               <input type="hidden" name="hasProductOptions" value="false" />
+			               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
+			
+			            </blc:form>
+			        	 </div>
+						
+						</div>
+				
+					</div>
+				
+				</div>
+				<!-- /Grid Item -->
+
+			</div>	
+			<!-- /Row  -->	
+		
+		
+			<!-- Row  -->
+		    <div class="row row-no-gutter" th:unless="${#lists.isEmpty(lunch)}">
+		    
+		    	<!-- Grid Item -->		
+				<div class="col-xs-12 col-sm-6 col-md-4"  th:each="product : ${lunch}">
+				
+					<div class="gridItem mealItem product_container">
+						
+						<!-- Grid Item Image-->
+						<a class="gridItemImage" th:style="${'background-image: url('''+product.imageUrl+''')'}">
+						
+							<!-- Grid Item Image Overlay (Displays on Phones) -->
+							<span class="row gridItemImageOverlay">
+								
+								<span class="col-xs-8 gridItemTitle" th:utext="${product.name}" />
+				
+								<span class="col-xs-4 gridItemAction">
+									
+									<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+						
+									
+								</span>
+								
+							</span>
+							<!-- /Grid Item Image Overlay -->
+				
+						</a>
+						<!-- /Grid Item Image-->
+						
+						<div class="gridItemDetails">
+						
+							<p class="gridItemTitle">
+							
+								<strong th:utext="${product.name}" />
+							
+							</p>
+							
+							<p class="gridItemDescription" th:utext="${product.description}"/>
+													
+							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
+
+						<div class="add_to_cart">
+			            <blc:form method="POST"  th:action="@{/cart/add}">
+			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
+			               <input type="hidden" name="quantity" value="1" />
+			               <input type="hidden" name="hasProductOptions" value="false" />
+			               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
+			
+			            </blc:form>
+			        	 </div>
+						
+						</div>
+				
+					</div>
+				
+				</div>
+				<!-- /Grid Item -->
+
+			</div>	
+			<!-- /Row  -->	
+				
 
 			<!-- Row  -->
 		    <div class="row row-no-gutter" th:unless="${#lists.isEmpty(dinner)}">
