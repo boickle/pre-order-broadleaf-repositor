@@ -369,6 +369,9 @@ public class MyController {
 	@RequestMapping(value = "/sendWelcomeEmail")
 	public ModelAndView doSendWelcomeEmail(HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		LOG.info("----------------------");
+		LOG.info("Sending Welcome Email");
 		String emailTo = request.getParameter("emailTo");
 		// String emailFrom="testing123@egate.com"; //<-- this variable is not
 		// used. the real emailFrom is defined in configuration file

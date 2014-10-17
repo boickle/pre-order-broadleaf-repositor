@@ -1,3 +1,22 @@
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("Login"); 
+		
+		// show the cart button
+		$("#userButton,#mealSelectButton,#timerButton").parent().hide();
+		
+		$(".flightBar").hide();
+		
+		UI.hideNavigation();
+	
+	});
+	
+	</script>
+	
 <div id="account">  
     <div style="display:none;" th:fragment="title" th:inline="text">Login - Broadleaf Demo - Heat Clinic</div>
     
@@ -64,5 +83,5 @@ if (document.info.theerror.value=="") {
 	}
 }
 
-hideSectionsFromNav();
+
 </script>

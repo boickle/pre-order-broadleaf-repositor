@@ -1,4 +1,4 @@
-
+<div id="cart" style="width:635px">
     <div th:substituteby="cart/partials/cartProductsTable"></div>
 <!--
 	<br/> 
@@ -48,4 +48,4 @@
          <span th:if="${#lists.size(cart.orderItems) == 0}">Your cart is empty</span>
          </div>
         <div id="subtotal" th:unless="${cart.subTotal?.zero}" blc:price="${cart.subTotal?.subtract(cart.orderAdjustmentsValue)}"></div>
- 
+ </div>

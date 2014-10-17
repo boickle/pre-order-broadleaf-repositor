@@ -1,3 +1,22 @@
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("DoneWelcome"); 
+		
+		// show the cart button
+		$("#userButton,#mealSelectButton,#timerButton").parent().hide();
+		
+		$(".flightBar").hide();
+		
+		UI.hideNavigation();
+	
+	});
+	
+	</script>
+	
 <div th:inline="text">
 Done sending welcome email to [[*{firstname}]] [[*{lastname}]] at [[*{email}]].
 </div>
@@ -7,6 +26,3 @@ Done sending welcome email to [[*{firstname}]] [[*{lastname}]] at [[*{email}]].
 <li th:text="${message}"/>
 </ul>
 
-<script>
-hideSectionsFromNav();
-</script>
