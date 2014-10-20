@@ -76,10 +76,10 @@ public class DaoUtil {
 			JdbcRowSet rowSet = rowSetFactory.createJdbcRowSet();
 
 			// Set connection properties
-			// rowSet.setUrl(Constants.JDBC_CONNECTION);
-			// rowSet.setUsername(Constants.JDBC_LOGIN);
-			// rowSet.setPassword(Constants.JDBC_PASSWORD);
-			rowSet.setDataSourceName(Constants.JNDI_DATASOURCE);
+			 rowSet.setUrl(Constants.JDBC_CONNECTION);
+			 rowSet.setUsername(Constants.JDBC_LOGIN);
+			 rowSet.setPassword(Constants.JDBC_PASSWORD);
+//			rowSet.setDataSourceName(Constants.JNDI_DATASOURCE);
 			// Set SQL Query to execute
 			rowSet.setCommand(sql);
 			rowSet.execute();
