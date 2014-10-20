@@ -60,6 +60,7 @@
         <arg value="war:exploded"/>
         <arg value="tomcat7:run-war"/>
     </artifact:mvn>
+    <echo message="hey, tomcat done" />
 </target>
 
     <target name="jetty-demo-jrebel" depends="start-db">
@@ -102,40 +103,9 @@
     </target>
 
     <target name="start-db">
-        <!-- Grab the HSQLDB jar and add it to the classpath -->
-        <artifact:dependencies filesetId="warDeps">
-            <dependency groupId="org.hsqldb" artifactId="hsqldb" version="2.3.1" />
-        </artifact:dependencies>
-        <path id="build.runtime.classpath">
-            <fileset refid="warDeps"/>
-        </path>
-
-        <echo message="Starting Data Base..." />
-        <java fork="true"  spawn="true" classname="org.hsqldb.Server" classpathref="build.runtime.classpath">
-            <arg  line="-database.0 file:data/broadleaf -dbname.0 broadleaf"/>
-        </java>
     </target>
 
     <target name="stop-db">
-        <echo message="Execute SQL on new Data Base..." />
-    	<!-- Grab the HSQLDB jar and add it to the classpath -->
-        <artifact:dependencies filesetId="warDeps">
-            <dependency groupId="org.hsqldb" artifactId="hsqldb" version="2.3.1" />
-        </artifact:dependencies>
-        <path id="build.runtime.classpath">
-            <fileset refid="warDeps"/>
-        </path>
-        <sql
-            autocommit="true"
-            print="true"
-            classpathref="build.runtime.classpath"
-            driver="org.hsqldb.jdbcDriver"
-            url="jdbc:hsqldb:hsql://localhost/broadleaf;ifexists=true"
-            userid="sa"
-            password="">
-            <transaction>SHUTDOWN</transaction>
-        </sql>
-        <echo message="SQL Executed on data base..." />
     </target>
 
 </project>

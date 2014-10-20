@@ -11,11 +11,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mycompany.pops.domain.FlightInfo;
@@ -28,24 +26,6 @@ import com.mycompany.pops.pojo.Product;
 public class DaoImpl implements Dao {
 	protected static final Log LOG = LogFactory.getLog(Dao.class);
 
-	// experimenting with bean wiring here
-	private DataSource dataSource;
-	
-	public DataSource getDataSource() {
-		return dataSource;
-	}
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		LOG.info("somebody setting datasource");
-		if (dataSource==null) {
-			LOG.info("oh, but it is null");
-		}
-		else {
-			LOG.info("it is not null");
-		}
-		this.dataSource = dataSource;
-	}
 
 	// TODO get handle to EntityManager so we can use hibernate instead of good
 	// old JDBC

@@ -9,10 +9,10 @@ public class Constants {
 	public static String JNDI_DATASOURCE = "jdbc/web";
 	
 	// Theoretically we should not need to do jdbc at all... if we can use hibernate...
-	public static String JDBC_DRIVER = "org.postgresql.Driver";
-	public static String JDBC_CONNECTION = "jdbc:postgresql://localhost:5432/POPS";
-	public static String JDBC_LOGIN = "postgres";
-	public static String JDBC_PASSWORD = "admin";
+//	public static String JDBC_DRIVER = "org.postgresql.Driver";
+//	public static String JDBC_CONNECTION = "jdbc:postgresql://localhost:5432/POPS";
+//	public static String JDBC_LOGIN = "postgres";
+//	public static String JDBC_PASSWORD = "admin";
 
 //	public static String JDBC_CONNECTION = "jdbc:postgresql://10.0.102.29:5432/TS5_Dev";
 //	public static String JDBC_LOGIN = "TS5PGAdmin";

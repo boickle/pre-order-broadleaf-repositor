@@ -115,18 +115,5 @@
     
     <!-- This validator will additionally require state on shipping addresses -->
     <bean id="blShippingInfoFormValidator" class="org.broadleafcommerce.core.web.checkout.validator.USShippingInfoFormValidator" />
-
-
-	<!--  This is to try avoid putting connection stuff in constants file -->
-	<bean class="com.mycompany.pops.DaoImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="dataSource"
-        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.postgresql.Driver" />
-        <property name="url" value="jdbc:postgresql://localhost:5432/POPS" />
-        <property name="username" value="postgres" />
-        <property name="password" value="admin" />
-    </bean>    
+  
 </beans>

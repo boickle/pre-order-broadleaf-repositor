@@ -6,13 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.rowset.JdbcRowSet;
-import javax.sql.rowset.RowSetFactory;
-import javax.sql.rowset.RowSetProvider;
+import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.sun.rowset.CachedRowSetImpl;
 
 public class DaoUtil {
 
@@ -68,8 +70,8 @@ public class DaoUtil {
 		return maxID + 1;
 	}
 
-	public static JdbcRowSet jdbcSelectWrapper(String sql) {
-		try {
+	public static ResultSet jdbcSelectWrapper(String sql) {
+/*		try {
 			LOG.info("sql=" + sql);
 
 			RowSetFactory rowSetFactory = RowSetProvider.newFactory();
@@ -88,7 +90,49 @@ public class DaoUtil {
 			// Handle errors for Class.forName
 			LOG.error("rowset problem", e);
 		}
+*/
+		
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			LOG.info("Trying tomcat jndi cached rowset...");
+			LOG.info("sql=" + sql);
+			
+//			Class.forName(Constants.JDBC_DRIVER);
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/web");
+			conn = ds.getConnection();
+			
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			CachedRowSetImpl crs = new CachedRowSetImpl();
+			crs.populate(rs);
+			
+			rs.close();
+			return crs;
+			 
+
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			LOG.error("jdbc problem", e);
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se) {
+			}// do nothing
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				LOG.error("jdbc problem", se);
+			}// end finally try
+		}// end try
 		return null;
 	}
 
@@ -101,11 +145,15 @@ public class DaoUtil {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
+			
+			LOG.info("Trying insert/update with JNDI");
 
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.JDBC_CONNECTION,
-					Constants.JDBC_LOGIN, Constants.JDBC_PASSWORD);
+			// Look up our data source
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/web");
+			conn = ds.getConnection();
 
 			LOG.info("Connected database successfully...");
 
