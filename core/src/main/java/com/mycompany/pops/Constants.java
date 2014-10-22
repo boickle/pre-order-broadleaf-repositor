@@ -34,7 +34,7 @@ public class Constants {
 	
 	// Exec list (and some more)
 	public static final String[] BCC_LIST = new String[] {
-			"DSandadi@egate-solutions.com",
+//			"DSandadi@egate-solutions.com",
 			"jmak@egate-solutions.com"
 	}; 
 

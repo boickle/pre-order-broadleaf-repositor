@@ -27,13 +27,13 @@ public interface Dao {
 	
 	public void saveMealSelection(long customerID, String flightNumber, long mealID); 
 	
-	public List<Meal> getMealsForCustomer(long customerID,String flightNumber);
+	public List<Meal> getMealsForCustomer(long customerID,String flightID, String flightNumber);
 	
 	public List<Long> getAllMealIDForFlight(String flightID);
 	
 	public FlightData getFlightDataForFlight(String flightNumber, String flightDate, String originStation, String destinationStation);
 	
-	public FlightData getFlightDataForFlightID(String flightID);
+	public FlightData getFlightDataForFlightID(long flightID);
 	
 	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate, String originStation, String destinationStation);
 	

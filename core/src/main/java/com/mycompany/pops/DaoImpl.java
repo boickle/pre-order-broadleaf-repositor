@@ -428,10 +428,10 @@ public class DaoImpl implements Dao {
 		return result;
 	}
 
-	public void saveMealSelection(long customerID, String flightNumber,
+	public void saveMealSelection(long customerID, String flightID,
 			long mealID) {
 
-		LOG.info("Saving meal for " + customerID + ", flight:" + flightNumber
+		LOG.info("Saving meal for " + customerID + ", flightID:" + flightID
 				+ " mealID:" + mealID);
 
 		String mealType = findMealTypeForMealID(mealID);
@@ -445,9 +445,7 @@ public class DaoImpl implements Dao {
 
 			String delSQL = "delete from meal_selection where meal_id in "
 					+ "(select meal_id from flight_meal "
-					+ " where flight_number='"
-					+ flightNumber
-					+ "' "
+					+ " where flight_id=" + flightID
 					+ " and meal_type = '"+mealType+"') and customer_id="+customerID;
 			
 			DaoUtil.jdbcInsertUpdateWrapper(delSQL);
@@ -455,13 +453,13 @@ public class DaoImpl implements Dao {
 			// insert the new selection
 			int num = DaoUtil.newSequenceForTable("MEAL_SELECTION");
 
-			String sql = "INSERT INTO MEAL_SELECTION (ID,CUSTOMER_ID,FLIGHT_NUMBER, MEAL_TYPE,MEAL_ID) VALUES ("
+			String sql = "INSERT INTO MEAL_SELECTION (ID,CUSTOMER_ID,FLIGHT_ID, MEAL_TYPE,MEAL_ID) VALUES ("
 					+ num
 					+ ','
 					+ customerID
 					+ ','
 					+ "'"
-					+ flightNumber
+					+ flightID
 					+ "','"
 					+ mealType+"',"
 					+ mealID + ")";
@@ -471,13 +469,13 @@ public class DaoImpl implements Dao {
 			
 	}
 
-	public List<Meal> getMealsForCustomer(long customerID, String flightNumber) {
-		LOG.info("trying to find meals for customer: " + customerID+ ", flight: "+flightNumber);
+	public List<Meal> getMealsForCustomer(long customerID, String flightID, String flightNumber) {
+		LOG.info("trying to find meals for customer: " + customerID+ ", flight ID: "+flightID);
 		if (customerID == 0)
 			return null;
 
 		// check if order already took place, if not, bye
-		String sqlOrderMadeAlready = "select meal_order_number from customer_flight where customer_id="+customerID+" and flight_number='"+flightNumber+"'";
+		String sqlOrderMadeAlready = "select meal_order_number from customer_flight where customer_id="+customerID+" and flight_id="+flightID;
 		ResultSet rs1 = DaoUtil.jdbcSelectWrapper(sqlOrderMadeAlready);
 		String orderNumber=null;
 		try {
@@ -495,20 +493,10 @@ public class DaoImpl implements Dao {
 		}
 		
 		List<Meal> result = null;
-		// Data is stored in MEAL_SELECTION table, need to gather the name and
-		// image
-		// TODO: should not need to specify flight and avoid wrong rows
+		
+		// Data is stored in MEAL_SELECTION table, need to gather the name and image
 
-//		String sql = "select product_id,flight_meal.flight_number,flight_meal.meal_type,blc_sku.name,blc_media.url"
-//				+ " from blc_product, blc_sku, blc_sku_media_map, blc_media, meal_selection,flight_meal"
-//				+ " where blc_product.product_id=meal_selection.meal_id"
-//				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id and map_key='primary'"
-//				+ " and flight_meal.meal_id= product_id and meal_selection.customer_id="
-//				+ customerID
-//				+ " and flight_meal.flight_number='"
-//				+ flightNumber + "'";
-
-		String sql = "select default_product_id,meal_selection.flight_number,meal_selection.meal_type,blc_sku.name, blc_media.url"
+		String sql = "select default_product_id,meal_selection.flight_id,meal_selection.meal_type,blc_sku.name, blc_media.url"
 				+ " from  meal_selection, blc_customer, blc_sku, blc_product , blc_sku_media_map, blc_media"
 				+ " where"
 				+ " blc_product.product_id = default_product_id"
@@ -516,7 +504,7 @@ public class DaoImpl implements Dao {
 				+ "	and meal_selection.customer_id = blc_customer.customer_id"
 				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id and map_key='primary' "
 				+ " and meal_selection.customer_id="+customerID 
-				+ " and flight_number='"+flightNumber+"'";
+				+ " and flight_id="+flightID;
 		
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
@@ -526,7 +514,7 @@ public class DaoImpl implements Dao {
 					if (result == null)
 						result = new ArrayList<Meal>();
 
-					String the_flightNumber = rs.getString(2);
+					//String the_flightNumber = rs.getString(2);
 					String mealType = rs.getString(3);
 					String mealTypeSpelled = mealType;
 
@@ -541,7 +529,7 @@ public class DaoImpl implements Dao {
 					}
 
 					Meal m = new Meal();
-					m.setFlightNumber(the_flightNumber);
+					m.setFlightNumber(flightNumber);
 					m.setMealType(mealType);
 
 					String name=rs.getString(4);
@@ -616,7 +604,7 @@ public class DaoImpl implements Dao {
 				if (rs.next()) {
 					// TODO: beautify what you are passing so the view can display nicely easily (such as translate that YVR to Vancouver)
 					result = new FlightData();
-					result.setFlightID(rs.getString(1));
+					result.setFlightID(rs.getLong(1));
 					result.setFlightNumber(rs.getString(2));
 					result.setOriginStation(rs.getString(3));
 					result.setDestinationStation(rs.getString(4));
@@ -700,9 +688,18 @@ public class DaoImpl implements Dao {
 			LOG.error("Error parsing flight date",e);
 		}
 
+		FlightData f = getFlightDataForFlight(flightNumber, flightDateParameter, originStation, destinationStation);
+		long flightID = 0;
+		if (f==null) {
+			LOG.error("Cannot find flight data: flightNumber:"+flightNumber+" flightDate:"+flightDateParameter+" origin:"+originStation+" destination:"+destinationStation);
+		}
+		else {
+			flightID=f.getFlightID();
+		}
+		
 		int pk = DaoUtil.newSequenceForTable("customer_flight");
-		String sql = "insert into customer_flight (id,customer_id, FLIGHT_NUMBER, FLIGHT_DATE, ORIGIN_STATION, DESTINATION_STATION) values ("
-				+pk+","+ customerID + ",'" + flightNumber+"',to_date('"+flightDateForDB+"','"+dateFormatForDB+"'),'"+originStation+"','"+destinationStation+"')";
+		String sql = "insert into customer_flight (id,customer_id, FLIGHT_NUMBER, FLIGHT_DATE, ORIGIN_STATION, DESTINATION_STATION, FLIGHT_ID) values ("
+				+pk+","+ customerID + ",'" + flightNumber+"',to_date('"+flightDateForDB+"','"+dateFormatForDB+"'),'"+originStation+"','"+destinationStation+"',"+flightID+")";
 		LOG.info(sql);
 		DaoUtil.jdbcInsertUpdateWrapper(sql);
 
@@ -721,20 +718,20 @@ public class DaoImpl implements Dao {
 	 * Store the order number for meal selection (so the confirmation email can find the flight that is associated) 
 	 */
 
-	public void saveFlightInfoForOrder(long customerID, String flightNumber, String orderNumber) {
-		String sql = "update CUSTOMER_FLIGHT set MEAL_ORDER_NUMBER='"+orderNumber+"' WHERE customer_id="+customerID+" and flight_number='"+flightNumber+"'";
+	public void saveFlightInfoForOrder(long customerID, String flightID, String orderNumber) {
+		String sql = "update CUSTOMER_FLIGHT set MEAL_ORDER_NUMBER='"+orderNumber+"' WHERE customer_id="+customerID+" and flight_id="+flightID;
 		DaoUtil.jdbcInsertUpdateWrapper(sql);
 	}
 
 	public FlightData getFlightInfoFromMealOrder(String orderNumber) {
 		
 		LOG.info("getFlightInfoFromMealOrder, orderNumber:"+orderNumber);
-		String sql = "select FLIGHT_NUMBER from CUSTOMER_FLIGHT where MEAL_ORDER_NUMBER='"+orderNumber+"'";
-		String flightNumber = null;
+		String sql = "select FLIGHT_ID from CUSTOMER_FLIGHT where MEAL_ORDER_NUMBER='"+orderNumber+"'";
+		long flightNumber=0;
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		try {
 			if (rs.next()) {
-				flightNumber = rs.getString(1);
+				flightNumber = rs.getLong(1);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -742,14 +739,11 @@ public class DaoImpl implements Dao {
 		}
 		LOG.info("The flight was:"+flightNumber);
 		
-		if (flightNumber!=null) {
-			return getFlightDataForFlightID(flightNumber);
-		}
-		return null;
+		return getFlightDataForFlightID(flightNumber);
 	}
 	
 	public List<MealSelectionData> getAllMealSelections() {
-		String sql = "select blc_customer.last_name, blc_customer.first_name,meal_selection.flight_number,meal_selection.meal_type, blc_sku.name"
+		String sql = "select blc_customer.last_name, blc_customer.first_name,meal_selection.flight_id,meal_selection.meal_type, blc_sku.name"
 				 + " from  meal_selection, blc_customer, blc_sku"
 				 + " where  meal_selection.meal_id = blc_sku.default_product_id and meal_selection.customer_id = blc_customer.customer_id";
 		
@@ -776,11 +770,11 @@ public class DaoImpl implements Dao {
 
 
 	@Override
-	public FlightData getFlightDataForFlightID(String flightID) {
+	public FlightData getFlightDataForFlightID(long flightID) {
 		LOG.info("Getting flight info for ID:"+flightID);
 		FlightData result = null;
 		String sql = "select id, flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo "
-				    + " where flight_number="+flightID;
+				    + " where id="+flightID;
 		
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
@@ -789,7 +783,7 @@ public class DaoImpl implements Dao {
 				if (rs.next()) {
 					// TODO: beautify what you are passing so the view can display nicely easily (such as translate that YVR to Vancouver)
 					result = new FlightData();
-					result.setFlightID(rs.getString(1));
+					result.setFlightID(rs.getLong(1));
 					result.setFlightNumber(rs.getString(2));
 					result.setOriginStation(rs.getString(3));
 					result.setDestinationStation(rs.getString(4));

@@ -8,8 +8,8 @@ public interface MealSelection {
 	public Long getCustomer_id();
 	public void setCustomer_id(Long customer_id);
 	
-	public String getFlightNumber();
-	public void setFlightNumber(String flightNumber);
+	public Long getFlightID();
+	public void setFlightID(long flightID);
 
 	public Long getMeal_id();
 	public void setMeal_id(Long meal_id);

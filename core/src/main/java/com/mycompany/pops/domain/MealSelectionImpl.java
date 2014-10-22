@@ -29,8 +29,8 @@ public class MealSelectionImpl implements MealSelection {
     @Column(name = "CUSTOMER_ID")
 	protected Long customer_id;
     
-    @Column(name = "FLIGHT_NUMBER")
-	protected String flightNumber;
+    @Column(name = "FLIGHT_ID")
+	protected Long flightID;
     
 	@Column(name = "MEAL_TYPE")
 	protected String mealType;
@@ -59,13 +59,13 @@ public class MealSelectionImpl implements MealSelection {
 	}
 	
 	@Override
-	public String getFlightNumber() {
-		return flightNumber;
+	public Long getFlightID() {
+		return flightID;
 	}
 	
 	@Override
-	public void setFlightNumber(String flightNumber) {
-		this.flightNumber = flightNumber;
+	public void setFlightID(long flightID) {
+		this.flightID = flightID;
 	}
 	
 	@Override

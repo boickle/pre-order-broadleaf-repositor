@@ -31,4 +31,9 @@ public interface CustomerFlight {
 	public String getMealOrderNumber();
 	
 	public void setMealOrderNumber(String mealOrderNumber);
+	
+    public long getFlightID();
+
+    public void setFlightID(long flightID);
+
 }

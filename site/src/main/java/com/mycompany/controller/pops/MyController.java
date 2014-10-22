@@ -237,10 +237,10 @@ public class MyController {
 
 		List<Order> orders = null;
 		Customer customer = (Customer) CustomerState.getCustomer();
-		String flightNumber = null; 
+		String flightID = null; 
 
 	    if (customer!=null) {
-	    	flightNumber=DaoUtil.getFlightNumberFromRequest(request);
+	    	flightID=DaoUtil.getFlightNumberFromRequest(request);
 	    }
 
 	    long customerID = 0;
@@ -250,13 +250,14 @@ public class MyController {
 		}
 
 		Dao dao = new DaoImpl();
-		List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
+    	FlightData f = dao.getFlightDataForFlightID(new Long(flightID).longValue());
+
+		List<Meal> meals = dao.getMealsForCustomer(customerID,flightID,f.getFlightNumber());
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/dashboard");
 		modelAndView.addObject("meals",meals);
 		modelAndView.addObject("orders", orders);
-    	FlightData f = dao.getFlightDataForFlightID(flightNumber);
 		modelAndView.addObject("flightData",f);
 		
 		return modelAndView;
@@ -278,11 +279,11 @@ public class MyController {
 			long customerID = customer.getId();
 	
 			if (userName!=null) {
-				String flightNumber=DaoUtil.getFlightNumberFromRequest(request);
+				String flightID=DaoUtil.getFlightNumberFromRequest(request);
 
-				if (flightNumber!=null) {
+				if (flightID!=null) {
 					Dao dao = new DaoImpl();
-					List<Meal> meals = dao.getMealsForCustomer(customerID,flightNumber);
+					List<Meal> meals = dao.getMealsForCustomer(customerID,flightID, ""); // flight number doesn't matter here
 					if (meals!=null && !meals.isEmpty()) {
 						return doDashBoard(request,response);
 					}

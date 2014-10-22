@@ -47,7 +47,7 @@ public class LoginController extends BroadleafLoginController {
     	
     	Log.info("Inside login controller");
     	Log.info("email is: "+request.getSession().getAttribute("email"));
-    	String flightNumber = (String) request.getSession().getAttribute("flightID");
+    	Long flightNumber = (Long) request.getSession().getAttribute("flightID");
     	Log.info("flight ID is: "+flightNumber);
     	
     	FlightData f = (FlightData) request.getSession().getAttribute("flightdata");

@@ -19,7 +19,7 @@ public class FlightData {
 	protected static final Log LOG = LogFactory.getLog(FlightData.class);
 
 
-	private String flightID;
+	private long flightID;
 	private String flightNumber;
 	private Date departureDate;
 	private String fDepartureDate;
@@ -30,11 +30,11 @@ public class FlightData {
 	private String aircraftType;
 	private String carrier;
 
-	public String getFlightID() {
+	public long getFlightID() {
 		return flightID;
 	}
 
-	public void setFlightID(String flightID) {
+	public void setFlightID(long flightID) {
 		this.flightID = flightID;
 	}
 
