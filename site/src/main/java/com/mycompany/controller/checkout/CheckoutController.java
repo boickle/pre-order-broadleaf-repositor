@@ -194,6 +194,7 @@ public class CheckoutController extends BroadleafCheckoutController {
 	@RequestMapping(value = "/checkout/mealorderreview")
 	public ModelAndView doOrderReview(HttpServletRequest request, HttpServletResponse response) {
 
+		//TODO: get that payment info and pass along to display it
         Order cart = CartState.getCart();
         
 		ModelAndView modelAndView = new ModelAndView();
@@ -204,4 +205,24 @@ public class CheckoutController extends BroadleafCheckoutController {
     	return modelAndView;
 
 	}
+	
+	@RequestMapping(value = "/checkout/savepaymentinfo")
+	public ModelAndView doSavePaymentInfo(HttpServletRequest request, HttpServletResponse response) {
+		//TODO: complete this method to store info in the right place, waita minute you're not supposed to store credit card info?
+
+		LOG.info("Payment Info");
+		LOG.info("=============");
+		LOG.info("Billing first name:"+request.getParameter("billingFirstName"));
+		LOG.info("Billing last name:"+request.getParameter("billingLastName"));
+		LOG.info("Billing email:"+request.getParameter("billingEmail"));
+		LOG.info("Billing Phone:"+request.getParameter("billingPhone"));
+		LOG.info("Billing billingAddress1:"+request.getParameter("billingAddress1"));
+		LOG.info("Billing billingAddress2:"+request.getParameter("billingAddress2"));
+		LOG.info("ccNumber:"+request.getParameter("ccNumber"));
+		LOG.info("ccExpMonth:"+request.getParameter("ccExpMonth"));
+		LOG.info("ccExpYear:"+request.getParameter("ccExpYear"));
+		
+		return doOrderReview(request,response);
+
+	}	
 }

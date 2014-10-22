@@ -1,0 +1,125 @@
+	<!-- View Container Start -->
+	<div id="viewContainer" class="container">	
+		
+	<!-- Payment View JS Start -->
+	<script type="text/javascript">
+	
+	// ON DOM Load
+	$(function() {
+		
+		// Initialize the UI manager
+		UI.init("Payment"); 
+		
+
+	});
+		
+	</script>
+	<!-- Payment View JS End -->
+	
+
+					
+	<h1>Payment</h1>
+	<p>Here's where you enter in your billing information</p>
+	
+	<blc:form class="form-horizontal" name="paymentform" role="form" th:action="@{/checkout/savepaymentinfo}" method="POST">
+		
+		<h3><i class="fa fa-tag"></i>  Billing Address</h3>
+	
+		<div class="form-group">
+			
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="billingFirstName" name="billingFirstName" placeholder="First Name" />
+			</div>
+		
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="billingLastName" name="billingLastName" placeholder="Last Name" />
+			</div>
+		
+	  	</div>
+	
+		<div class="form-group">
+			
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="billingEmail" name="billingEmail" placeholder="Email" />
+			</div>
+		
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="billingPhone" name="billingPhone" placeholder="Phone Number" />
+			</div>
+		
+	  	</div>
+	  	
+	  	<div class="form-group">
+			
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="billingAddress1" name="billingAddress1" placeholder="Address 1" />
+			</div>
+		
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="billingAddress2" name="billingAddress2" placeholder="Address 2" />
+			</div>
+		
+	  	</div>
+	  	
+	  	<h3><i class="fa fa-cc"></i>  Credit Card</h3>
+	  	
+	  	<div class="form-group">
+			
+			<div class="col-xs-12 col-sm-6">
+				<input type="text" class="form-control" id="ccNumber" name="ccNumber" placeholder="1111-2222-3333-4444"  />
+			</div>
+		
+			<div class="col-xs-12 col-sm-6">
+				
+				<select class="form-control" id="ccExpMonth" name="ccExpMonth"> 
+				  <option>01</option>
+				  <option>02</option>
+				  <option>03</option>
+				  <option>04</option>
+				  <option>05</option>
+				  <option>06</option>
+				  <option>07</option>
+				  <option>08</option>
+				  <option>09</option>
+				  <option>10</option>
+				  <option>11</option>
+				  <option>12</option>
+
+				</select>
+				
+				<select class="form-control" id="ccExpYear" name="ccExpYear">
+				  <option>2014</option>
+				  <option>2015</option>
+				  <option>2016</option>
+				  <option>2017</option>
+				  <option>2018</option>
+				</select>
+				
+				
+			</div>
+		
+	  	</div>
+		
+	</blc:form>
+	
+		
+	<div class="row">
+			
+			<div class="col-xs-6">
+				
+				<a href="/categories" class="btn btn-default"> Back to Shopping </a>
+				
+			</div>
+			
+			<div class="col-xs-6 text-right"> 
+
+	      		<!-- <a th:href="@{/checkout/mealorderreview}" class="btn btn-primary"> Continue </a> -->
+	      		<a href="javascript:document.paymentform.submit()" class="btn btn-primary"> Continue </a>
+	      		
+			</div>
+			
+		</div>
+	
+ 
+	</div>
+	<!-- View Container End -->

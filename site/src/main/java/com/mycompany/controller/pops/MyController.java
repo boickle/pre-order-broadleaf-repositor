@@ -1,5 +1,6 @@
 package com.mycompany.controller.pops;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.broadleafcommerce.common.locale.domain.Locale;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.type.OrderStatus;
+import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
@@ -457,5 +459,32 @@ public class MyController {
 		return modelAndView;
 	}	
 
+	@RequestMapping(value = "/payment")
+	public ModelAndView doPaymentInfo(HttpServletRequest request, HttpServletResponse response) {
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("pops/payment");
+		return modelAndView;
+	
+	}
+	
+	@RequestMapping(value = "/checkout/paymentorreview") 
+	public ModelAndView doCheckoutGoToPaymentOrReview(HttpServletRequest request, HttpServletResponse response) {
+
+		// If the cart has no money involved, that means meal selected, go right to review, otherwise, go to payment page
+
+		String nextPage = "pops/orderreview";
+        Order cart = CartState.getCart();
+        BigDecimal subTotal = cart.getSubTotal().getAmount();
+        if (subTotal.compareTo( BigDecimal.ZERO) > 0) {
+        	nextPage = "pops/payment";
+        }
+        
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName(nextPage);
+		return modelAndView;
+	
+			
+	}
 	
 }
