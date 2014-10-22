@@ -102,7 +102,7 @@ public class DaoUtil {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
 			// Look up our data source
-			DataSource ds = (DataSource) envCtx.lookup("jdbc/web");
+			DataSource ds = (DataSource) envCtx.lookup(Constants.JNDI_DATASOURCE);
 			conn = ds.getConnection();
 			
 			stmt = conn.createStatement();
@@ -151,7 +151,7 @@ public class DaoUtil {
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
 			// Look up our data source
-			DataSource ds = (DataSource) envCtx.lookup("jdbc/web");
+			DataSource ds = (DataSource) envCtx.lookup(Constants.JNDI_DATASOURCE);
 			conn = ds.getConnection();
 
 			LOG.info("Connected database successfully...");
