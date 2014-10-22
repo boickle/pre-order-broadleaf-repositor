@@ -346,9 +346,9 @@ public class DaoImpl implements Dao {
 		return result;
 	}
 
-	public List<Product> getMealsForFlight(String flightNumber,
+	public List<Product> getMealsForFlightID(String flightID,
 			String mealType, String locale) {
-		LOG.info("trying to find meals for flight: " + flightNumber + " type:"
+		LOG.info("trying to find meals for flight: " + flightID + " type:"
 				+ mealType);
 		List<Product> result = null;
 
@@ -357,8 +357,7 @@ public class DaoImpl implements Dao {
 				+ " where blc_product.product_id=meal_id"
 				+ " and sku_id = default_sku_id and sku_id = blc_sku_sku_id and blc_sku_media_map.media_id = blc_media.media_id"
 				+ " and map_key='primary'"
-				+ " and flight_number='"
-				+ flightNumber + "'" + " and meal_type='" + mealType + "' order by meal_id";
+				+ " and flight_meal.flight_ID="+ flightID + " and meal_type='" + mealType + "' order by meal_id";
 
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
@@ -600,10 +599,16 @@ public class DaoImpl implements Dao {
 	}
 
 	
-	public FlightData getFlightDataForFlight(String flightNumber) {
-		LOG.info("Getting flight info for "+flightNumber);
+	public FlightData getFlightDataForFlight(String flightNumber,
+			String flightDate, String originStation, String destinationStation) {
+		
+		LOG.info("Getting flight info for "+flightNumber+" date="+flightDate+" origin="+originStation+" dest="+destinationStation);
 		FlightData result = null;
-		String sql = "select flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo where flight_number='"+flightNumber+"'";
+		String sql = "select id, flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo "
+				    + " where flight_number='"+flightNumber+"' and to_char(departure_time,'MM/DD/YYYY') = '"+flightDate+"'"
+				    + " and origin_location='"+originStation+"'"
+	    			+ " and destination_location='"+destinationStation+"'";
+		
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		if (rs != null) {
 
@@ -611,17 +616,18 @@ public class DaoImpl implements Dao {
 				if (rs.next()) {
 					// TODO: beautify what you are passing so the view can display nicely easily (such as translate that YVR to Vancouver)
 					result = new FlightData();
-					result.setFlightNumber(rs.getString(1));
-					result.setOriginStation(rs.getString(2));
-					result.setDestinationStation(rs.getString(3));
+					result.setFlightID(rs.getString(1));
+					result.setFlightNumber(rs.getString(2));
+					result.setOriginStation(rs.getString(3));
+					result.setDestinationStation(rs.getString(4));
 					
-					Timestamp ts1 = rs.getTimestamp(4);
-					Timestamp ts2 = rs.getTimestamp(5);
+					Timestamp ts1 = rs.getTimestamp(5);
+					Timestamp ts2 = rs.getTimestamp(6);
 					LOG.info("departure time:"+ts1);
 					LOG.info("arrival time:"+ts2);
 					
-					result.setDepartureDate(rs.getTimestamp(4));
-					result.setArrivalDate(rs.getTimestamp(5));
+					result.setDepartureDate(ts1);
+					result.setArrivalDate(ts2);
 				}
 				rs.close();
 			} catch (SQLException e) {
@@ -737,7 +743,7 @@ public class DaoImpl implements Dao {
 		LOG.info("The flight was:"+flightNumber);
 		
 		if (flightNumber!=null) {
-			return getFlightDataForFlight(flightNumber);
+			return getFlightDataForFlightID(flightNumber);
 		}
 		return null;
 	}
@@ -766,5 +772,40 @@ public class DaoImpl implements Dao {
 		}
 		return result;
 		
+	}
+
+
+	@Override
+	public FlightData getFlightDataForFlightID(String flightID) {
+		LOG.info("Getting flight info for ID:"+flightID);
+		FlightData result = null;
+		String sql = "select id, flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo "
+				    + " where flight_number="+flightID;
+		
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		if (rs != null) {
+
+			try {
+				if (rs.next()) {
+					// TODO: beautify what you are passing so the view can display nicely easily (such as translate that YVR to Vancouver)
+					result = new FlightData();
+					result.setFlightID(rs.getString(1));
+					result.setFlightNumber(rs.getString(2));
+					result.setOriginStation(rs.getString(3));
+					result.setDestinationStation(rs.getString(4));
+					
+					Timestamp ts1 = rs.getTimestamp(5);
+					Timestamp ts2 = rs.getTimestamp(6);
+
+					result.setDepartureDate(ts1);
+					result.setArrivalDate(ts2);
+				}
+				rs.close();
+			} catch (SQLException e) {
+				LOG.error("sql exception", e);
+			}
+		}
+		return result;
+
 	}
 }

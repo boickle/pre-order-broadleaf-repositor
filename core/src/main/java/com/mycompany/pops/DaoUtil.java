@@ -22,7 +22,7 @@ public class DaoUtil {
 	public static String getFlightNumberFromRequest(HttpServletRequest request) {
 		String result = null;
 		try {
-			result = request.getSession().getAttribute("flight").toString();
+			result = request.getSession().getAttribute("flightID").toString();
 		} catch (Exception e) {
 			// do not have flight number, hmmm
 			LOG.info("cannot find flight number from session");

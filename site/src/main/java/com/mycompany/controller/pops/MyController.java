@@ -90,9 +90,7 @@ public class MyController {
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
-		session.setAttribute("flight", flight);
 		
-
 		Dao u = new DaoImpl();
 		u.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
 		
@@ -225,9 +223,9 @@ public class MyController {
 		modelAndView.setViewName("pops/mealselect");
 		modelAndView.addObject("categories", l);
 		modelAndView.addObject("flightNumber",flightNumber);
-		modelAndView.addObject("breakfast",dao.getMealsForFlight(flightNumber,Constants.BREAKFAST,locale));
-		modelAndView.addObject("lunch",dao.getMealsForFlight(flightNumber,Constants.LUNCH,locale));
-		modelAndView.addObject("dinner",dao.getMealsForFlight(flightNumber,Constants.DINNER,locale));
+		modelAndView.addObject("breakfast",dao.getMealsForFlightID(flightNumber,Constants.BREAKFAST,locale));
+		modelAndView.addObject("lunch",dao.getMealsForFlightID(flightNumber,Constants.LUNCH,locale));
+		modelAndView.addObject("dinner",dao.getMealsForFlightID(flightNumber,Constants.DINNER,locale));
 
 		return modelAndView;
 	}
@@ -258,7 +256,7 @@ public class MyController {
 		modelAndView.setViewName("pops/dashboard");
 		modelAndView.addObject("meals",meals);
 		modelAndView.addObject("orders", orders);
-    	FlightData f = dao.getFlightDataForFlight(flightNumber);
+    	FlightData f = dao.getFlightDataForFlightID(flightNumber);
 		modelAndView.addObject("flightData",f);
 		
 		return modelAndView;
@@ -334,7 +332,7 @@ public class MyController {
     	modelAndView.addObject("email",email);
     	
     	//debating... should this be lookup or displaying whatever passed in?
-    	FlightData f = dao.getFlightDataForFlight(flightNumber);
+    	FlightData f = dao.getFlightDataForFlight(flightNumber, flightDate, originStation, destinationStation);
     	if(f!=null)
     		LOG.info("Flight Info: " + f.getFlightNumber() );
     	else{
@@ -356,8 +354,11 @@ public class MyController {
     		f.setDestinationStation(destinationStation);
     	}
     	//String depart = f.getDepartureDate();
+ 
     	HttpSession session = request.getSession();
 		session.setAttribute("flightdata", f);
+		session.setAttribute("flightID", f.getFlightID());
+		
     	modelAndView.addObject("flightdata",f);
     	modelAndView.addObject("loginlink",loginLink);
     	String absolutePath=request.getServerName();
@@ -400,7 +401,7 @@ public class MyController {
 		// Adding flight info to prevent header from failing when showing done
 		// page. Probably a better way to do this.
 		Dao dao = new DaoImpl();
-		FlightData f = dao.getFlightDataForFlight(flight);
+		FlightData f = dao.getFlightDataForFlight(flight,flightDate,originStation,destinationStation);
 		HttpSession session = request.getSession();
 		if (f == null) {
 			// This is just to prevent flightdata is null in the session

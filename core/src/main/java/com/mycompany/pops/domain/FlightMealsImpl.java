@@ -24,6 +24,9 @@ public class FlightMealsImpl implements FlightMeals {
 	@Column(name = "FLIGHT_NUMBER")
 	protected String flightNumber;
 
+	@Column(name = "FLIGHT_ID")
+	protected long flightID;
+
 	@Column(name = "MEAL_TYPE")
 	protected String mealType;
 
@@ -70,4 +73,11 @@ public class FlightMealsImpl implements FlightMeals {
 		this.meal_id = meal_id;
 	}
 
+	public long getFlightID() {
+		return flightID;
+	}
+
+	public void setFlightID(long flightID) {
+		this.flightID = flightID;
+	}
 }

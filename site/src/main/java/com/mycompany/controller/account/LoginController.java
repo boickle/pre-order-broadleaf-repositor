@@ -47,8 +47,8 @@ public class LoginController extends BroadleafLoginController {
     	
     	Log.info("Inside login controller");
     	Log.info("email is: "+request.getSession().getAttribute("email"));
-    	String flightNumber = (String) request.getSession().getAttribute("flight");
-    	Log.info("flight is: "+flightNumber);
+    	String flightNumber = (String) request.getSession().getAttribute("flightID");
+    	Log.info("flight ID is: "+flightNumber);
     	
     	FlightData f = (FlightData) request.getSession().getAttribute("flightdata");
     	if (f==null) {
@@ -56,7 +56,7 @@ public class LoginController extends BroadleafLoginController {
     		
     		if (flightNumber!=null) {
 	    		Dao dao = new DaoImpl();
-	    		f = dao.getFlightDataForFlight(flightNumber);
+	    		f = dao.getFlightDataForFlightID(flightNumber);
     		} else {
     			f = new FlightData();
     		}

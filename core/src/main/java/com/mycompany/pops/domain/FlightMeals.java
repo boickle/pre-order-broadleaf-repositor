@@ -10,6 +10,10 @@ public interface FlightMeals {
 
 	public void setFlightNumber(String flightNumber);
 
+	public long getFlightID();
+
+	public void setFlightID(long flightID);
+
 	public String getMealType();
 
 	public void setMealType(String mealType);
