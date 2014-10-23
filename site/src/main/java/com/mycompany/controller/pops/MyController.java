@@ -418,7 +418,9 @@ public class MyController {
 
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(emailTo);
-		emailTarget.setBCCAddresses(Constants.BCC_LIST);
+		if (Constants.BCC_LIST!=null) {
+			emailTarget.setBCCAddresses(Constants.BCC_LIST);
+		}
 
 		HashMap<String, Object> vars = new HashMap<String, Object>();
 

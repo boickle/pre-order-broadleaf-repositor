@@ -42,8 +42,6 @@ import org.broadleafcommerce.core.web.checkout.model.OrderInfoForm;
 import org.broadleafcommerce.core.web.checkout.model.ShippingInfoForm;
 import org.broadleafcommerce.core.web.controller.checkout.BroadleafCheckoutController;
 import org.broadleafcommerce.core.web.order.CartState;
-import org.broadleafcommerce.profile.core.domain.Customer;
-import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -136,7 +134,9 @@ public class CheckoutController extends BroadleafCheckoutController {
         
         EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(order.getEmailAddress());
-		emailTarget.setBCCAddresses(Constants.BCC_LIST);
+		if (Constants.BCC_LIST!=null) {
+			emailTarget.setBCCAddresses(Constants.BCC_LIST);
+		}
 
         try {
             emailService.sendTemplateEmail(emailTarget, orderConfirmationEmailInfo, vars);
@@ -156,6 +156,8 @@ public class CheckoutController extends BroadleafCheckoutController {
 
         if (cart != null && !(cart instanceof NullOrderImpl)) {
             try {
+            	// The following will fail if the order amount > 0, as no payment info is made for the order,
+            	// that can possibly be fixed by a record in blc_order_payment with "Passthrough"
                 String orderNumber = initiateCheckout(cart.getId());
 
                 //Log.info("Hey I am processing this order:"+orderNumber+" cartID is "+cart.getId()+" ordernumber"+cart.getOrderNumber());
@@ -173,6 +175,7 @@ public class CheckoutController extends BroadleafCheckoutController {
                 sendConfirmationEmail(cart);
 
                 return getConfirmationViewRedirect(orderNumber);
+
             } catch (Exception e) {
                 handleProcessingException(e, redirectAttributes);
             }
