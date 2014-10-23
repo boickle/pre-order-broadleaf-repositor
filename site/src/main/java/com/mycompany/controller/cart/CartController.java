@@ -108,8 +108,10 @@ public class CartController extends BroadleafCartController {
         	LOG.info("Your item is: "+productName+". is it meal? "+isBreakfast+" "+isLunch+" "+isDinner);
 
             // This is to save to the MEAL_SELECTION table
-		    String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
-            saveMeal(flightNumber,productID);
+            if (isBreakfast||isLunch||isDinner) {
+    		    String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
+            	saveMeal(flightNumber,productID);
+            }
 
             // Cart Items themselves has no idea what product ID was that (so looking at the name for clue)
             boolean hasBreakfast=false, hasLunch=false, hasDinner=false;
