@@ -41,11 +41,11 @@
 					<h4>Credit Card </h4>
 					
 					<p> 
-						VISA ending <strong>4567</strong> <br/>
-						<strong>Exp.</strong> 07/2017
+						VISA ending <strong th:text="${payment.last4CC}"/> <br/>
+						<strong>Exp.</strong> <div th:text="${payment.expdate}" th:remove="tag"/>
 					</p>
 				
-					<a href="/Payment" class="btn btn-default">Edit</a>
+					<a href="javascript:history.back(1)" class="btn btn-default">Edit</a>
 					
 				</div>
 				
@@ -53,12 +53,12 @@
 				<div class="col-xs-7">
 					
 					<h4>Billing Address</h4>
-					
-					<address>
-					  Donald McMains<br/>
-					  30 Danforth St. Suite 304<br/>
-					  Portland, ME 04101<br/>
-					  <abbr title="Phone">P:</abbr> (207) 221-2618
+					 
+					<address th:inline="text">
+					  [[*{payment.billingFirstName}]] [[*{payment.billingLastName}]] <br/>
+					  [[*{payment.billingAddress1}]] <br/>
+					  [[*{payment.billingAddress2}]]<br/>
+					  <abbr title="Phone">P:</abbr> [[*{payment.billingPhone}]]
 					</address>
 					
 					

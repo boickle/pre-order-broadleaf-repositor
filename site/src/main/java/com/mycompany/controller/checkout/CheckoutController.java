@@ -59,6 +59,7 @@ import com.mycompany.pops.Constants;
 import com.mycompany.pops.Dao;
 import com.mycompany.pops.DaoImpl;
 import com.mycompany.pops.DaoUtil;
+import com.mycompany.pops.domain.BillingInfo;
 import com.mycompany.pops.pojo.FlightData;
 
 @Controller
@@ -194,13 +195,39 @@ public class CheckoutController extends BroadleafCheckoutController {
 	@RequestMapping(value = "/checkout/mealorderreview")
 	public ModelAndView doOrderReview(HttpServletRequest request, HttpServletResponse response) {
 
-		//TODO: get that payment info and pass along to display it
         Order cart = CartState.getCart();
         
+        BillingInfo b = null;
+        
+        if (request.getParameter("ccNumber")!=null) {
+        	b = new BillingInfo();
+	        b.setBillingAddress1(request.getParameter("billingAddress1"));
+	        b.setBillingAddress2(request.getParameter("billingAddress2"));
+	        b.setBillingEmail(request.getParameter("billingEmail"));
+	        b.setBillingPhone(request.getParameter("billingPhone"));
+	        b.setBillingFirstName(request.getParameter("billingFirstName"));
+	        b.setBillingLastName(request.getParameter("billingLastName"));
+	        b.setCcMonth(request.getParameter("ccExpMonth"));
+	        b.setCcYear(request.getParameter("ccExpYear"));
+	        b.setCcNumber(request.getParameter("ccNumber"));
+        
+			LOG.info("Payment Info in review");
+			LOG.info("=============");
+			LOG.info("Billing first name:"+b.getBillingFirstName());
+			LOG.info("Billing last name:"+b.getBillingLastName());
+			LOG.info("Billing email:"+b.getBillingEmail());
+			LOG.info("Billing Phone:"+b.getBillingPhone());
+			LOG.info("Billing billingAddress1:"+b.getBillingAddress1());
+			LOG.info("Billing billingAddress2:"+b.getBillingAddress2());
+			LOG.info("ccNumber:"+b.getCcNumber());
+			LOG.info("ccExpMonth:"+b.getCcMonth());
+			LOG.info("ccExpYear:"+b.getCcYear());
+        }
+		
 		ModelAndView modelAndView = new ModelAndView();
     	modelAndView.setViewName("pops/orderreview");
-    	modelAndView.addObject("payment",null);
-    	modelAndView.addObject("shipping",null);
+    	modelAndView.addObject("payment",b);
+    	modelAndView.addObject("shipping",null); // <-TODO: are we collecting shipping address 
     	modelAndView.addObject("cart",cart);
     	return modelAndView;
 
@@ -208,19 +235,9 @@ public class CheckoutController extends BroadleafCheckoutController {
 	
 	@RequestMapping(value = "/checkout/savepaymentinfo")
 	public ModelAndView doSavePaymentInfo(HttpServletRequest request, HttpServletResponse response) {
-		//TODO: complete this method to store info in the right place, waita minute you're not supposed to store credit card info?
+		//TODO: complete this method to store info in the right place
 
-		LOG.info("Payment Info");
-		LOG.info("=============");
-		LOG.info("Billing first name:"+request.getParameter("billingFirstName"));
-		LOG.info("Billing last name:"+request.getParameter("billingLastName"));
-		LOG.info("Billing email:"+request.getParameter("billingEmail"));
-		LOG.info("Billing Phone:"+request.getParameter("billingPhone"));
-		LOG.info("Billing billingAddress1:"+request.getParameter("billingAddress1"));
-		LOG.info("Billing billingAddress2:"+request.getParameter("billingAddress2"));
-		LOG.info("ccNumber:"+request.getParameter("ccNumber"));
-		LOG.info("ccExpMonth:"+request.getParameter("ccExpMonth"));
-		LOG.info("ccExpYear:"+request.getParameter("ccExpYear"));
+
 		
 		return doOrderReview(request,response);
 
