@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Constants {
-	public static int PRIMARY_NAV = 2; // the category ID for main nav
 	
 	public static String JNDI_DATASOURCE = "jdbc/web";
 	
@@ -20,9 +19,6 @@ public class Constants {
 	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "MM/dd/yyyy";
 	public static String ORDER_DATE_FORMAT_IN_EMAIL = "EEEE, MMMM dd'th' yyyy 'at' HH:mm";
 
-	//TODO: get this out of constants! (however the order confirmation email has no clue what server it is on)
-	public static String SERVERPATH_FOR_EMAIL = "pops.egatesoln.com";
-	
 	//TODO: make this in a database is better way to do this
 	public static final Map<String , String> AIRPORTS = new HashMap<String , String>() {{
 		    put("ORD", "O'Hare International Airport");
@@ -32,9 +28,6 @@ public class Constants {
 		    
 	}};
 	
-	// Exec list (and some more), set to null if no one wants it.
-	public static final String[] BCC_LIST = null;
-
 	/*
 	public static final String[] BCC_LIST = new String[] {
 			"jElyea@gategourmet.com", "EVanHorne@egate-solutions.com",

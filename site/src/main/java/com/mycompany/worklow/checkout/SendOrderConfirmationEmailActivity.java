@@ -28,10 +28,11 @@ import org.broadleafcommerce.core.checkout.service.workflow.CheckoutSeed;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.workflow.BaseActivity;
 import org.broadleafcommerce.core.workflow.ProcessContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mycompany.pops.Constants;
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.configuration.AppConfiguration;
+import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.pojo.FlightData;
 
 
@@ -51,6 +52,18 @@ public class SendOrderConfirmationEmailActivity extends BaseActivity<ProcessCont
     @Resource(name = "blOrderConfirmationEmailInfo")
     protected EmailInfo orderConfirmationEmailInfo;
     
+	private final Dao dao;
+	private final String EMAIL_SERVER_HOST;
+	
+	@Autowired
+	public SendOrderConfirmationEmailActivity(
+			Dao dao,
+			AppConfiguration appConfiguration) {
+		this.dao = dao;
+		this.EMAIL_SERVER_HOST = appConfiguration.emailServerHost();
+	}
+        
+    
     @Override
     public ProcessContext<CheckoutSeed> execute(ProcessContext<CheckoutSeed> context) throws Exception {
         Order order = context.getSeedData().getOrder();
@@ -58,9 +71,8 @@ public class SendOrderConfirmationEmailActivity extends BaseActivity<ProcessCont
         vars.put("customer", order.getCustomer());
         vars.put("orderNumber", order.getOrderNumber());
         vars.put("order", order);
-        vars.put("serverpath", Constants.SERVERPATH_FOR_EMAIL);
+        vars.put("serverpath", EMAIL_SERVER_HOST);
 
-	    Dao dao = new DaoImpl();
         FlightData f = dao.getFlightInfoFromMealOrder(order.getOrderNumber());
 
         vars.put("flightData", f);

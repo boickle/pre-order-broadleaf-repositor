@@ -24,6 +24,7 @@ import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.core.web.controller.account.BroadleafLoginController;
 import org.broadleafcommerce.core.web.controller.account.ResetPasswordForm;
 import org.mortbay.log.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,8 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.pojo.FlightData;
 
 /**
@@ -41,6 +41,13 @@ import com.mycompany.pops.pojo.FlightData;
  */
 @Controller
 public class LoginController extends BroadleafLoginController {
+	
+	private final Dao dao;
+	
+	@Autowired
+	public LoginController(Dao dao) {
+		this.dao = dao;
+	}	
     
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -55,7 +62,6 @@ public class LoginController extends BroadleafLoginController {
     		Log.info("Cannot find flight data in session! Trying to read it again");
     		
     		if (flightNumber!=null) {
-	    		Dao dao = new DaoImpl();
 	    		f = dao.getFlightDataForFlightID(flightNumber);
     		} else {
     			f = new FlightData();

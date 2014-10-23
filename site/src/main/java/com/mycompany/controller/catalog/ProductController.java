@@ -29,12 +29,12 @@ import org.broadleafcommerce.common.locale.domain.Locale;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.web.catalog.ProductHandlerMapping;
 import org.broadleafcommerce.core.web.controller.catalog.BroadleafProductController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mycompany.pops.Constants;
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.configuration.AppConfiguration;
+import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.pojo.Category;
 
 /**
@@ -47,6 +47,17 @@ import com.mycompany.pops.pojo.Category;
 public class ProductController extends BroadleafProductController {
     
 	protected static final Log LOG = LogFactory.getLog(ProductController.class);
+
+	private final Dao dao;
+	private final Integer PRIMARY_NAV;
+	
+	@Autowired
+	public ProductController(
+			Dao dao,
+			AppConfiguration appConfiguration) {
+		this.dao = dao;
+		this.PRIMARY_NAV = appConfiguration.primaryNav();
+	}
 	
 	private String getLocale(HttpServletRequest request) {
 		String locale=null;
@@ -77,11 +88,10 @@ public class ProductController extends BroadleafProductController {
         long productID = product.getId();
         
         // [JMAK] Adding left-nav and breadcrumb
-		Dao u = new DaoImpl();
 		String locale = getLocale(request);
-		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,locale);
+		List<Category> l = dao.getCategories(PRIMARY_NAV, locale);
 		
-		m.addObject("breadcrumb",u.getBreadCrumbForProduct(productID,locale));
+		m.addObject("breadcrumb", dao.getBreadCrumbForProduct(productID,locale));
 		m.addObject("categories", l);
         return m;
     }

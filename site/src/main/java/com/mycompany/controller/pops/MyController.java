@@ -26,15 +26,16 @@ import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycompany.pops.Constants;
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
-import com.mycompany.pops.DaoUtil;
+import com.mycompany.pops.dao.Dao;
+import com.mycompany.pops.dao.DaoUtil;
+import com.mycompany.pops.configuration.AppConfiguration;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
@@ -54,6 +55,20 @@ public class MyController {
     
     @Resource(name = "preselectionEmailInfo")
     protected EmailInfo preSelectionEmailInfo;
+    
+	private final Dao dao;
+	private final Integer PRIMARY_NAV;
+	private final String[] BCC_LIST;
+	
+    @Autowired
+    public MyController(
+    		AppConfiguration appConfiguration, 
+    		Dao dao
+    ) {
+		this.dao = dao;
+		this.PRIMARY_NAV = appConfiguration.primaryNav();
+		this.BCC_LIST = appConfiguration.emailBccList();
+    }
 	
 	/**
 	 * This is the controller for auto login, which is the first step.
@@ -93,8 +108,7 @@ public class MyController {
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
 		
-		Dao u = new DaoImpl();
-		u.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
+		dao.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
 		
 		return "redirect:/login";
 	}	
@@ -136,13 +150,12 @@ public class MyController {
 	public ModelAndView doGetAllCategories(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside doGetAllCategories!");
 		
-		Dao u = new DaoImpl();
-		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,getLocale(request));
+		List<Category> l = dao.getCategories(PRIMARY_NAV, getLocale(request));
 		String locale = getLocale(request);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/categories");
-		modelAndView.addObject("breadcrumb",u.getBreadCrumbForCategory(Constants.PRIMARY_NAV,locale)); // going to be blank
+		modelAndView.addObject("breadcrumb",dao.getBreadCrumbForCategory(PRIMARY_NAV, locale)); // going to be blank
 		modelAndView.addObject("categories", l);
 		return modelAndView;
 	}
@@ -151,13 +164,12 @@ public class MyController {
 	public ModelAndView doGetSubCategories(@PathVariable int categoryID, HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside doGetSubCategories!");
 		
-		Dao u = new DaoImpl();
-		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,getLocale(request));
+		List<Category> l = dao.getCategories(PRIMARY_NAV, getLocale(request));
 		String locale = getLocale(request);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/categories");
-		modelAndView.addObject("breadcrumb",u.getBreadCrumbForCategory(categoryID,locale));
+		modelAndView.addObject("breadcrumb", dao.getBreadCrumbForCategory(categoryID,locale));
 		modelAndView.addObject("categories", l);
 		modelAndView.addObject("categoryID",categoryID);
 		return modelAndView;
@@ -174,8 +186,6 @@ public class MyController {
 		LOG.info("Inside doProductListing!");
 		if (categoryID==0) categoryID=2002; //2002 means hot sauce (just in case nothing is passed)
 
-		Dao u = new DaoImpl();
-		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/products");
 
@@ -185,11 +195,11 @@ public class MyController {
 
 // for bigroom one
 		String locale = getLocale(request);
-		List<Category> l = u.getCategories(Constants.PRIMARY_NAV,locale);
-		List<Product> productList = u.getProductsForCategory(categoryID,locale); 
+		List<Category> l = dao.getCategories(PRIMARY_NAV, locale);
+		List<Product> productList = dao.getProductsForCategory(categoryID,locale); 
 
 		modelAndView.addObject("categories", l);
-		modelAndView.addObject("breadcrumb",u.getBreadCrumbForCategory(categoryID,locale));
+		modelAndView.addObject("breadcrumb", dao.getBreadCrumbForCategory(categoryID,locale));
 		modelAndView.addObject("products", productList);
 
 		return modelAndView;
@@ -217,9 +227,8 @@ public class MyController {
 	    	flightNumber=DaoUtil.getFlightNumberFromRequest(request);
 	    }
 
-		Dao dao = new DaoImpl();
 	    String locale = getLocale(request);
-		List<Category> l = dao.getCategories(Constants.PRIMARY_NAV,locale);
+		List<Category> l = dao.getCategories(PRIMARY_NAV, locale);
 
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/mealselect");
@@ -251,7 +260,6 @@ public class MyController {
 			orders = orderService.findOrdersForCustomer(customer, OrderStatus.SUBMITTED);
 		}
 
-		Dao dao = new DaoImpl();
     	FlightData f = dao.getFlightDataForFlightID(new Long(flightID).longValue());
 
 		List<Meal> meals = dao.getMealsForCustomer(customerID,flightID,f.getFlightNumber());
@@ -284,7 +292,6 @@ public class MyController {
 				String flightID=DaoUtil.getFlightNumberFromRequest(request);
 
 				if (flightID!=null) {
-					Dao dao = new DaoImpl();
 					List<Meal> meals = dao.getMealsForCustomer(customerID,flightID, ""); // flight number doesn't matter here
 					if (meals!=null && !meals.isEmpty()) {
 						return doDashBoard(request,response);
@@ -327,7 +334,6 @@ public class MyController {
 				+ originStation + "&destinationStation=" + destinationStation;
     	
 		LOG.info("Name: " + firstName );
-    	Dao dao = new DaoImpl();
 		ModelAndView modelAndView = new ModelAndView();
     	modelAndView.setViewName("pops/flightconfirmation");
     	modelAndView.addObject("firstname",firstName);
@@ -403,7 +409,6 @@ public class MyController {
 
 		// Adding flight info to prevent header from failing when showing done
 		// page. Probably a better way to do this.
-		Dao dao = new DaoImpl();
 		FlightData f = dao.getFlightDataForFlight(flight,flightDate,originStation,destinationStation);
 		HttpSession session = request.getSession();
 		if (f == null) {
@@ -418,8 +423,8 @@ public class MyController {
 
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(emailTo);
-		if (Constants.BCC_LIST!=null) {
-			emailTarget.setBCCAddresses(Constants.BCC_LIST);
+		if (BCC_LIST != null && BCC_LIST.length != 0) {
+			emailTarget.setBCCAddresses(BCC_LIST);
 		}
 
 		HashMap<String, Object> vars = new HashMap<String, Object>();
