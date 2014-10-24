@@ -21,58 +21,16 @@
 	
 	<property name="runtime.environment" value="development"/>
 	
-    <target name="jetty-demo">
-        <delete dir="war/WEB-INF/lib"/>
-        <artifact:mvn mavenHome="${maven.home}" fork="true" >
-            <jvmarg value="-XX:MaxPermSize=512M" />
-            <jvmarg value="-Xmx1024M" />
-            <jvmarg value="-Xdebug" />
-            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8001" />
-            <jvmarg value="-javaagent:${spring.instrument.path}" />
-            <jvmarg value="-Druntime.environment=${runtime.environment}" />  
-            <arg value="compile"/>
-            <arg value="war:exploded"/>
-            <arg value="jetty:run"/>
-        </artifact:mvn>
-    </target>
-
-    <target name="jetty-demo-jrebel">
-        <delete dir="war/WEB-INF/lib"/>
-        <artifact:mvn mavenHome="${maven.home}" fork="true">
-            <jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-Xmx512M" />
-            <jvmarg value="-Xdebug" />
-            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=n" />
-            <jvmarg value="-Drebel.root=${project.root}" />
-            <jvmarg value="-Dlogs.dir=${logs.dir}" />
-            <jvmarg value="-noverify" />
-            <jvmarg value="-javaagent:${jrebel.path}" />
-            <jvmarg value="-javaagent:${spring.instrument.path}" />
-            <jvmarg value="-Druntime.environment=${runtime.environment}" />  
-            <arg value="compile"/>
-            <arg value="war:exploded"/>
-            <arg value="jetty:run"/>
-        </artifact:mvn>
-    </target>
-
-    <target name="jetty-stop">
-        <artifact:mvn mavenHome="${maven.home}" fork="true" >
-            <jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-Xmx512M" />
-            <arg value="jetty:stop"/>
-        </artifact:mvn>
-    </target>
-    
-    <!-- Project Reference Targets -->
-    <!-- build the application and create the war artifact -->
-    <target name="build-app">
-        <delete dir="war/WEB-INF/lib"/>
-        <artifact:mvn mavenHome="${maven.home}" fork="true">
-            <arg value="-Dgwt.logLevel=DEBUG"/>
-            <arg value="-Dgwt.compiler.strict=true"/>
-            <arg value="-Dmaven.test.skip=true"/>
-            <arg value="gwt:compile"/>
-            <arg value="install"/>
-        </artifact:mvn>
-    </target>
+ <target name="tomcat-demo">
+	<echo message="hey, tomcat" />
+    <delete dir="war/WEB-INF/lib"/>
+    <artifact:mvn mavenHome="${maven.home}" fork="true" 
+    jvmargs="-DbroadleafCoreDirectory=${broadleafCoreDirectory} -DbroadleafWorkspaceDirectory=${broadleafWorkspaceDirectory} -XX:MaxPermSize=256M -Xmx512M">
+        <arg value="compile"/>
+        <arg value="war:exploded"/>
+        <arg value="tomcat7:run-war"/>
+    </artifact:mvn>
+    <echo message="hey, tomcat done" />
+</target>
+ 
 </project>
