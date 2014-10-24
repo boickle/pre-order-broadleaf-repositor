@@ -12,12 +12,12 @@ import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.email.domain.EmailTargetImpl;
 import org.broadleafcommerce.common.email.service.EmailService;
 import org.broadleafcommerce.common.email.service.info.EmailInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
+import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.domain.FlightInfoImpl;
 import com.mycompany.pops.pojo.MealSelectionData;
@@ -37,6 +37,14 @@ public class TestController {
 	
     @Resource(name = "preselectionEmailInfo")
     protected EmailInfo preSelectionEmailInfo;
+
+	private final Dao dao;
+	
+	@Autowired
+	public TestController(Dao dao) {
+		this.dao = dao;
+	}
+    
     
 	@RequestMapping(value = "/some/path")
 	public String doSomething() {
@@ -91,8 +99,7 @@ public class TestController {
 		f.setFlightNumber("A" + data.getData3());
 		f.setOriginLocation(data.getData1());
 		f.setDestinationLocation(data.getData2());
-		Dao u = new DaoImpl();
-		u.insertFlight(f);
+		dao.insertFlight(f);
 	}
 
 	@RequestMapping(value = "/loginNew")
@@ -168,8 +175,7 @@ public class TestController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/mealresults");
 		
-		Dao u = new DaoImpl();
-		List<MealSelectionData> data = u.getAllMealSelections();
+		List<MealSelectionData> data = dao.getAllMealSelections();
 		modelAndView.addObject("data", data);
 
 		return modelAndView;

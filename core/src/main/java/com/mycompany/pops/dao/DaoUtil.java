@@ -1,4 +1,4 @@
-package com.mycompany.pops;
+package com.mycompany.pops.dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,12 +10,17 @@ import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
+import com.sun.rowset.CachedRowSetImpl;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sun.rowset.CachedRowSetImpl;
+import com.mycompany.pops.Constants;
 
 public class DaoUtil {
+	
+	// Static facade, cannot instantiate
+	private DaoUtil() {}
 
 	protected static final Log LOG = LogFactory.getLog(DaoUtil.class);
 

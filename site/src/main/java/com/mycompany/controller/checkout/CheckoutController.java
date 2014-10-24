@@ -42,6 +42,7 @@ import org.broadleafcommerce.core.web.checkout.model.OrderInfoForm;
 import org.broadleafcommerce.core.web.checkout.model.ShippingInfoForm;
 import org.broadleafcommerce.core.web.controller.checkout.BroadleafCheckoutController;
 import org.broadleafcommerce.core.web.order.CartState;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,9 +55,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mycompany.pops.Constants;
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
-import com.mycompany.pops.DaoUtil;
+import com.mycompany.pops.configuration.AppConfiguration;
+import com.mycompany.pops.dao.Dao;
+import com.mycompany.pops.dao.DaoUtil;
 import com.mycompany.pops.domain.BillingInfo;
 import com.mycompany.pops.pojo.FlightData;
 
@@ -70,6 +71,20 @@ public class CheckoutController extends BroadleafCheckoutController {
     
 	@Resource(name = "blEmailService")
 	protected EmailService emailService;
+	
+	private final Dao dao;
+	private final String EMAIL_SERVER_HOST;
+	private final String[] BCC_LIST;
+	
+	@Autowired
+	public CheckoutController(
+			Dao dao,
+			AppConfiguration appConfiguration) {
+		this.dao = dao;
+		this.EMAIL_SERVER_HOST = appConfiguration.emailServerHost();
+		this.BCC_LIST = appConfiguration.emailBccList();
+	}
+    
 	
     @RequestMapping("/checkout")
     public String checkout(HttpServletRequest request, HttpServletResponse response, Model model,
@@ -125,17 +140,16 @@ public class CheckoutController extends BroadleafCheckoutController {
 	    }
         vars.put("order_submitDateFormatted", df);
         
-        vars.put("serverpath", Constants.SERVERPATH_FOR_EMAIL);
+        vars.put("serverpath", EMAIL_SERVER_HOST);
 
-	    Dao dao = new DaoImpl();
         FlightData f = dao.getFlightInfoFromMealOrder(order.getOrderNumber());
 
         vars.put("flightData", f);
         
         EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(order.getEmailAddress());
-		if (Constants.BCC_LIST!=null) {
-			emailTarget.setBCCAddresses(Constants.BCC_LIST);
+		if (BCC_LIST != null && BCC_LIST.length != 0) {
+			emailTarget.setBCCAddresses(BCC_LIST);
 		}
 
         try {
@@ -163,12 +177,11 @@ public class CheckoutController extends BroadleafCheckoutController {
                 //Log.info("Hey I am processing this order:"+orderNumber+" cartID is "+cart.getId()+" ordernumber"+cart.getOrderNumber());
                 String flightNumber = DaoUtil.getFlightNumberFromRequest(request);
 
-                Dao u = new DaoImpl();
-                u.insertBlankAddressToOrder(cart.getId());
+                dao.insertBlankAddressToOrder(cart.getId());
                 
                 LOG.info("inside checkout, flight is: "+flightNumber);
                 if (flightNumber!=null) {
-                	u.saveFlightInfoForOrder(cart.getCustomer().getId(),flightNumber,cart.getOrderNumber());
+                	dao.saveFlightInfoForOrder(cart.getCustomer().getId(),flightNumber,cart.getOrderNumber());
                 }
                 
                 // odd that the SendOrderConfirmationEmailActivity went too early! before I can save the flight info for order

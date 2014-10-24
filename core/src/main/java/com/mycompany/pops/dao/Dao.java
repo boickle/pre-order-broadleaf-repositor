@@ -1,4 +1,4 @@
-package com.mycompany.pops;
+package com.mycompany.pops.dao;
 
 import java.util.List;
 

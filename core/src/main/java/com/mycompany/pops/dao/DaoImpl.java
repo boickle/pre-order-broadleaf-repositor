@@ -1,4 +1,4 @@
-package com.mycompany.pops;
+package com.mycompany.pops.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +14,12 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mycompany.pops.Constants;
+import com.mycompany.pops.configuration.AppConfiguration;
 import com.mycompany.pops.domain.FlightInfo;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
@@ -23,6 +27,7 @@ import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.MealSelectionData;
 import com.mycompany.pops.pojo.Product;
 
+@Service
 public class DaoImpl implements Dao {
 	protected static final Log LOG = LogFactory.getLog(Dao.class);
 
@@ -31,6 +36,13 @@ public class DaoImpl implements Dao {
 	// old JDBC
 	@PersistenceContext(unitName = "blPU")
 	protected EntityManager em;
+	
+	private final Integer PRIMARY_NAV;
+	
+	@Autowired
+	public DaoImpl(AppConfiguration appConfiguration) {
+		this.PRIMARY_NAV = appConfiguration.primaryNav();
+	}
 
 	// ---------------------------------
 	// an experimental method
@@ -284,17 +296,17 @@ public class DaoImpl implements Dao {
 		LOG.info("trying to get breadcrumb for categorry " + categoryID);
 
 		List<Category> result = new ArrayList<Category>();
-		if (categoryID != Constants.PRIMARY_NAV) {
+		if (categoryID != PRIMARY_NAV) {
 			result.add(getCategoryInfo(categoryID, locale));
 		}
 
 		int p = getParentCategory(categoryID);
-		if (p > Constants.PRIMARY_NAV) {
+		if (p > PRIMARY_NAV) {
 			// keep going
 			int i = 0;
 
 			// trying to prevent infinite loop just in case
-			while (i < 5 && p < Constants.PRIMARY_NAV) {
+			while (i < 5 && p < PRIMARY_NAV) {
 				LOG.info("yo, p is " + p);
 				result.add(getCategoryInfo(p, locale));
 				p = getParentCategory(p);

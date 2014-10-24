@@ -42,6 +42,7 @@ import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.core.web.order.model.AddToCartItem;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,15 +51,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mycompany.pops.Dao;
-import com.mycompany.pops.DaoImpl;
-import com.mycompany.pops.DaoUtil;
+import com.mycompany.pops.dao.Dao;
+import com.mycompany.pops.dao.DaoUtil;
 
 @Controller
 @RequestMapping("/cart")
 public class CartController extends BroadleafCartController {
     
     protected static final Log LOG = LogFactory.getLog(CartController.class);	
+    
+	private final Dao dao;
+	
+	@Autowired
+	public CartController(Dao dao) {
+		this.dao = dao;
+	}
     
     @Override
     @RequestMapping("")
@@ -74,7 +81,6 @@ public class CartController extends BroadleafCartController {
 		    long customerID = customer.getId();
 			
 			LOG.info("saveMeal in cart: flight:"+flightNumber+" id:"+customerID+" mealID:"+mealID);
-			Dao dao = new DaoImpl();
 			dao.saveMealSelection(customerID, flightNumber, mealID);
 			
 	    }
