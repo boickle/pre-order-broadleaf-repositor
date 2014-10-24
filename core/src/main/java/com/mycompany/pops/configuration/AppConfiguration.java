@@ -1,8 +1,5 @@
 package com.mycompany.pops.configuration;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
