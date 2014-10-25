@@ -80,9 +80,9 @@
         <warSourceDirectory>${webappDirectory}</warSourceDirectory>
         <port>8080</port>
         <systemProperties>
-            <database.username>postgres</database.username>
-            <database.password>admin</database.password>
-            <database.url>jdbc:postgresql://localhost:5432/POPS</database.url>
+            <database.username>${database.username}</database.username>
+            <database.password>${database.password}</database.password>
+            <database.url>${database.url}</database.url>
         </systemProperties>
     </configuration>
 </plugin>
