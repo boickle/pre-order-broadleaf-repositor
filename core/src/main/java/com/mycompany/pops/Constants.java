@@ -15,7 +15,11 @@ public class Constants {
 	public static String BREAKFAST_DESC = "Breakfast";
 	public static String LUNCH_DESC = "Lunch";
 	public static String DINNER_DESC = "Dinner";
-	
+
+	public static long BREAKFAST_CATEGORY = 2008;
+	public static long LUNCH_CATEGORY = 2009;
+	public static long DINNER_CATEGORY = 2010;
+
 	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "MM/dd/yyyy";
 	public static String ORDER_DATE_FORMAT_IN_EMAIL = "EEEE, MMMM dd'th' yyyy 'at' HH:mm";
 
@@ -28,16 +32,5 @@ public class Constants {
 		    
 	}};
 	
-	/*
-	public static final String[] BCC_LIST = new String[] {
-			"jElyea@gategourmet.com", "EVanHorne@egate-solutions.com",
-			"SDivi@egate-solutions.com", "kkiran@egate-solutions.com",
-			"tvanhorne@newfrontiermg.com","max@bigroomstudios.com",
-			"MMotherway@egate-solutions.com",
-			"DSandadi@egate-solutions.com",
-			"jmak@egate-solutions.com"
-	}; 
-	 */
-	//public static final String[] BCC_LIST = new String[] {"tvanhorne@newfrontiermg.com","max@bigroomstudios.com"};
 
 }

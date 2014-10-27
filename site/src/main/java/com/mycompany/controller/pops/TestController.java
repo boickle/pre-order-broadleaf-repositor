@@ -181,4 +181,9 @@ public class TestController {
 		return modelAndView;
 
 	}
+	
+	@RequestMapping(value = "/teststatic")
+	public String doSomething10() {
+		return "pops/static";
+	}
 }

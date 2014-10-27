@@ -25,10 +25,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.core.catalog.domain.Product;
+import org.broadleafcommerce.core.catalog.domain.ProductOption;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
+import org.broadleafcommerce.core.order.domain.DiscreteOrderItem;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.broadleafcommerce.core.order.service.exception.AddToCartException;
@@ -51,6 +54,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mycompany.pops.Constants;
 import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.dao.DaoUtil;
 
@@ -99,6 +103,7 @@ public class CartController extends BroadleafCartController {
     @RequestMapping(value = "/add", produces = "application/json")
     public @ResponseBody Map<String, Object> addJson(HttpServletRequest request, HttpServletResponse response, Model model,
             @ModelAttribute("addToCartItem") AddToCartItem addToCartItem) throws IOException, PricingException, AddToCartException {
+    	
         Map<String, Object> responseMap = new HashMap<String, Object>();
         try {
 
@@ -106,10 +111,14 @@ public class CartController extends BroadleafCartController {
             
         	boolean isBreakfast=false,isLunch=false,isDinner=false;
         	String productName = catalogService.findProductById(addToCartItem.getProductId()).getName();
-        	//TODO: there should be a better way to handle this (like organize meal into subcategories and check where it belong)
-        	if (productName.endsWith("(breakfast)")) isBreakfast = true;
-        	if (productName.endsWith("(lunch)")) isLunch = true;
-        	if (productName.endsWith("(dinner)")) isDinner = true;
+
+        	LOG.info("This meal is a: "+request.getParameter("mealType"));
+        	String mealType = request.getParameter("mealType");
+        	if (mealType!=null) {
+        		isBreakfast=mealType.equals(Constants.BREAKFAST);
+        		isLunch=mealType.equals(Constants.LUNCH);
+        		isDinner=mealType.equals(Constants.DINNER);
+        	}
 
         	LOG.info("Your item is: "+productName+". is it meal? "+isBreakfast+" "+isLunch+" "+isDinner);
 
@@ -126,12 +135,16 @@ public class CartController extends BroadleafCartController {
 	        if (items!=null) {
 		        for (OrderItem orderitem : items) {
 		        	String existingItemName = orderitem.getName();
-		        	if (existingItemName.endsWith("(breakfast)")) hasBreakfast = true;
-		        	if (existingItemName.endsWith("(lunch)")) hasLunch = true;
-		        	if (existingItemName.endsWith("(dinner)")) hasDinner = true;
+		        	
+		        	DiscreteOrderItem d = (DiscreteOrderItem) orderitem;
+		        	LOG.info("The order item "+existingItemName+" is a: "+d.getCategory().getId());
+		        	long categoryID = d.getCategory().getId();
+		        	if (categoryID == Constants.BREAKFAST_CATEGORY) hasBreakfast = true;
+		        	if (categoryID == Constants.LUNCH_CATEGORY) hasLunch = true;
+		        	if (categoryID == Constants.DINNER_CATEGORY) hasDinner = true;
 	
 	    	        if ((isBreakfast && hasBreakfast) || (isLunch && hasLunch) || (isDinner && hasDinner)) {
-	    	        	// then don't add, just update the cart item (and bye)
+	    	        	// then don't add, remove that pre-existing one and then add new item
 	    	        	LOG.info("You already had existing meal, trying to save:"+hasBreakfast+" "+hasLunch+" "+hasDinner);
 
 	    	        	// remove it
