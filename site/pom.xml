@@ -11,7 +11,10 @@
 	<packaging>war</packaging>
 	<name>site</name>
 	<description>Web Module For Broadleaf Commerce Based ECommerce Site</description>
-
+	<properties>
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+	</properties>
+	
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 		<finalName>mycompany</finalName>
@@ -25,7 +28,7 @@
 			</plugin>
 
 
-			<!-- Supply the database information and webappDirectory via Debug/Run Configuration Parameter value pairs -->
+			<!-- Supply the database information via Debug/Run Configuration Parameter value pairs -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
