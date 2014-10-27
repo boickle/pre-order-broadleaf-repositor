@@ -50,7 +50,7 @@
 		
 		<div class="categoryList">
 		
-					<!-- Row  -->
+			<!-- Row  -->
 		    <div class="row row-no-gutter" th:unless="${#lists.isEmpty(breakfast)}">
 		    
 		    	<!-- Grid Item -->		
@@ -94,6 +94,7 @@
 						<div class="add_to_cart">
 			            <blc:form method="POST"  th:action="@{/cart/add}">
 			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
+			               <input type="hidden" name="mealType" value="B"/>
 			               <input type="hidden" name="quantity" value="1" />
 			               <input type="hidden" name="hasProductOptions" value="false" />
 			               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
@@ -156,6 +157,7 @@
 						<div class="add_to_cart">
 			            <blc:form method="POST"  th:action="@{/cart/add}">
 			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
+			               <input type="hidden" name="mealType" value="L"/>
 			               <input type="hidden" name="quantity" value="1" />
 			               <input type="hidden" name="hasProductOptions" value="false" />
 			               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
@@ -215,10 +217,15 @@
 													
 							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
 
+
+
+ 						
 						<div class="add_to_cart">
 			            <blc:form method="POST"  th:action="@{/cart/add}">
+
 			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
 			               <input type="hidden" name="quantity" value="1" />
+			               <input type="hidden" name="mealType" value="D"/>
 			               <input type="hidden" name="hasProductOptions" value="false" />
 			               <input th:id="${'mealform'+product.product_ID}" style="display:none" type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
 			

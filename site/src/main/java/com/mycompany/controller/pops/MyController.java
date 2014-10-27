@@ -126,15 +126,15 @@ public class MyController {
 			Locale l = (Locale) s.getAttribute("blLocale");
 			if (l!=null) {
 				locale = l.getLocaleCode();
-				LOG.info("trying to read the session variable for locale: "+locale);
-				
-				BroadleafCurrency currency = (BroadleafCurrency) s.getAttribute("blCurrency");
-				if (currency!=null) {
-					LOG.info("currency code is: "+currency.getCurrencyCode());
-				}
-				else {
-					LOG.info("I don't have a currency code from session");
-				}
+//				LOG.info("trying to read the session variable for locale: "+locale);
+//				
+//				BroadleafCurrency currency = (BroadleafCurrency) s.getAttribute("blCurrency");
+//				if (currency!=null) {
+//					LOG.info("currency code is: "+currency.getCurrencyCode());
+//				}
+//				else {
+//					LOG.info("I don't have a currency code from session");
+//				}
 			}
 		}
 		return locale;
@@ -160,20 +160,6 @@ public class MyController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/subcategories/{categoryID}")
-	public ModelAndView doGetSubCategories(@PathVariable int categoryID, HttpServletRequest request, HttpServletResponse response) {
-		LOG.info("Inside doGetSubCategories!");
-		
-		List<Category> l = dao.getCategories(PRIMARY_NAV, getLocale(request));
-		String locale = getLocale(request);
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("pops/categories");
-		modelAndView.addObject("breadcrumb", dao.getBreadCrumbForCategory(categoryID,locale));
-		modelAndView.addObject("categories", l);
-		modelAndView.addObject("categoryID",categoryID);
-		return modelAndView;
-	}
 	
 	/**
 	 * This is for the product listing page, for a particular category
@@ -189,11 +175,6 @@ public class MyController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("pops/products");
 
-// for the simple product page		
-//		modelAndView.addObject("categoryName",u.getCategoryName(categoryID));
-//		modelAndView.addObject("products", l);
-
-// for bigroom one
 		String locale = getLocale(request);
 		List<Category> l = dao.getCategories(PRIMARY_NAV, locale);
 		List<Product> productList = dao.getProductsForCategory(categoryID,locale); 
@@ -205,10 +186,7 @@ public class MyController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/teststatic")
-	public String doSomething10() {
-		return "pops/static";
-	}
+
 
 	
 	/**
@@ -274,6 +252,15 @@ public class MyController {
 	}
 	
 
+	/**
+	 * This is called by home.html, and responsible for redirecting
+	 * if not logged in, take you to the comingsoon page
+	 * if logged in and have meal: go to dashboard
+	 * if logged in but not have meal: go meal select
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/welcome")
 	public ModelAndView doRedirect(HttpServletRequest request, HttpServletResponse response) {
 
