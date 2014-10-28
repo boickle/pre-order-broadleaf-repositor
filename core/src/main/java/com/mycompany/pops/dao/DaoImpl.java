@@ -39,8 +39,8 @@ public class DaoImpl implements Dao {
 			this.PRIMARY_NAV = appConfiguration.primaryNav();
 		}
 		else {
-			//TODO: so admin can use the appConfiguration too, but 2002 staying as Constants.java actually is... fine, I think
-			this.PRIMARY_NAV = 2002; 
+			//TODO: so admin can use the appConfiguration too, but this value staying in Constants.java actually is... fine, I think
+			this.PRIMARY_NAV = 2; 
 		}
 	}
 
