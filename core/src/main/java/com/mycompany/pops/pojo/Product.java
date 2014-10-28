@@ -2,7 +2,7 @@ package com.mycompany.pops.pojo;
 
 public class Product {
 
-	private int product_ID;
+	private long product_ID;
 	private String manufacture;
 	private String url;
 	private String name;
@@ -12,11 +12,11 @@ public class Product {
 
 	private String imageUrl;
 
-	public int getProduct_ID() {
+	public long getProduct_ID() {
 		return product_ID;
 	}
 
-	public void setProduct_ID(int product_ID) {
+	public void setProduct_ID(long product_ID) {
 		this.product_ID = product_ID;
 	}
 

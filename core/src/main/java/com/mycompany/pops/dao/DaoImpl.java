@@ -31,19 +31,25 @@ import com.mycompany.pops.pojo.Product;
 public class DaoImpl implements Dao {
 	protected static final Log LOG = LogFactory.getLog(Dao.class);
 
-
-	// TODO get handle to EntityManager so we can use hibernate instead of good
-	// old JDBC
-	@PersistenceContext(unitName = "blPU")
-	protected EntityManager em;
-	
 	private final Integer PRIMARY_NAV;
 	
 	@Autowired
 	public DaoImpl(AppConfiguration appConfiguration) {
-		this.PRIMARY_NAV = appConfiguration.primaryNav();
+		if (appConfiguration!=null) {
+			this.PRIMARY_NAV = appConfiguration.primaryNav();
+		}
+		else {
+			//TODO: so admin can use the appConfiguration too, but 2002 staying as Constants.java actually is... fine, I think
+			this.PRIMARY_NAV = 2002; 
+		}
 	}
 
+
+	// TODO get handle to EntityManager so we can use hibernate instead of good
+	// old JDBC
+	
+	@PersistenceContext(unitName = "blPU")
+	protected EntityManager em;
 	// ---------------------------------
 	// an experimental method
 	@Transactional(value = "blTransactionManager")
@@ -201,7 +207,7 @@ public class DaoImpl implements Dao {
 					if (result == null)
 						result = new ArrayList<Product>();
 					Product p = new Product();
-					p.setProduct_ID(rs.getInt(1));
+					p.setProduct_ID(rs.getLong(1));
 					p.setManufacture(rs.getString(2));
 					p.setUrl(rs.getString(3));
 					p.setRetail_price(rs.getDouble(4));
@@ -419,7 +425,38 @@ public class DaoImpl implements Dao {
 		}
 		return result;
 	}
-	
+
+	public List<Long> getMealsIDForFlightID(String flightID,
+			String mealType, String locale) {
+		LOG.info("trying to find meal IDs for flight: " + flightID + " type:"
+				+ mealType);
+		List<Long> result = null;
+
+		String sql = "select meal_id from flight_meal"
+				+ " where flight_meal.flight_ID="+ flightID + " and meal_type='" + mealType + "' order by meal_id";
+
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		if (rs != null) {
+
+			try {
+				while (rs.next()) {
+					if (result == null)
+						result = new ArrayList<Long>();
+
+					result.add(rs.getLong(1));
+
+				}
+				rs.close();
+			} catch (SQLException e) {
+				LOG.error("sql exception", e);
+			}
+		}
+		if (result != null) {
+			LOG.info("I am returning this many items: " + result.size());
+		}
+		return result;
+	}
+
 	private String findMealTypeForMealID(long mealID) {
 		String sql = "select distinct meal_type from flight_meal where meal_id="+mealID;
 
@@ -814,4 +851,36 @@ public class DaoImpl implements Dao {
 		return result;
 
 	}
+	
+	public List<FlightData> getAllFlights() {
+
+		List<FlightData> result = new ArrayList<FlightData>();
+		String sql = "select id, flight_number, origin_location, destination_location, departure_time,arrival_time from flightinfo";
+		
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		if (rs != null) {
+
+			try {
+				while (rs.next()) {
+					// TODO: beautify what you are passing so the view can display nicely easily (such as translate that YVR to Vancouver)
+					FlightData f = new FlightData();
+					f = new FlightData();
+					f.setFlightID(rs.getLong(1));
+					f.setFlightNumber(rs.getString(2));
+					f.setOriginStation(rs.getString(3));
+					f.setDestinationStation(rs.getString(4));
+
+					f.setDepartureDate(rs.getTimestamp(5));
+					f.setArrivalDate(rs.getTimestamp(6));
+					result.add(f);
+				}
+				rs.close();
+			} catch (SQLException e) {
+				LOG.error("sql exception", e);
+			}
+		}
+		return result;
+
+	}
+	
 }
