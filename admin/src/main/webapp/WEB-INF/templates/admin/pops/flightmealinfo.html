@@ -1,0 +1,43 @@
+<h3 th:text="'Flight Meal Info for #'+${flightNumber}"/>
+
+<br/><br/>
+<h4>Breakfast</h4>
+<table>
+<tr th:each="breakfast : ${allbreakfast}">
+  <td width="80" align="center">
+  <input type="checkbox" th:id="'breakfast'+${breakfast.product_ID}" th:checked="${flightbreakfast==null? 'false' : #lists.contains(flightbreakfast,breakfast.product_ID)?'true':'false'}"/>
+  </td>
+  <td><img th:src="'/admin/'+${breakfast.imageUrl}" width="200" height="100" /></td>
+  <td th:text="${breakfast.name}" />
+</tr>
+</table>
+
+<br/><br/><br/><br/>
+<h4>Lunch</h4>
+<table>
+<tr th:each="lunch : ${alllunch}">
+  <td width="80" align="center">
+  <input type="checkbox" th:id="'lunch'+${lunch.product_ID}" th:checked="${flightlunch==null? 'false' : #lists.contains(flightlunch,lunch.product_ID)?'true':'false'}"/>
+  </td>
+
+  <td><img th:src="'/admin/'+${lunch.imageUrl}" width="200" height="100" /></td>
+  <td th:text="${lunch.name}" />
+</tr>
+</table>
+
+<br/><br/><br/><br/>
+<h4>Dinner</h4>
+<table>
+<tr th:each="dinner : ${alldinner}">
+  <td width="80" align="center">
+  <input type="checkbox" th:id="'dinner'+${dinner.product_ID}" th:checked="${flightdinner==null? 'false' : #lists.contains(flightdinner,dinner.product_ID)?'true':'false'}"/>
+  </td>
+
+  <td><img th:src="'/admin/'+${dinner.imageUrl}" width="200" height="100" /></td>
+  <td th:text="${dinner.name}" />
+</tr>
+</table>
+
+<input type="button" value="Update" onclick="javascript:alert('Under construction')"/>
+<p/>
+<hr/>

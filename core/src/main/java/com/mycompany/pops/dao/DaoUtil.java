@@ -99,7 +99,6 @@ public class DaoUtil {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
-			LOG.info("Trying tomcat jndi cached rowset...");
 			LOG.info("sql=" + sql);
 			
 //			Class.forName(Constants.JDBC_DRIVER);
@@ -150,7 +149,7 @@ public class DaoUtil {
 		Statement stmt = null;
 		try {
 			
-			LOG.info("Trying insert/update with JNDI");
+			LOG.info("Trying insert/update with JNDI, sql="+sql);
 
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -159,13 +158,9 @@ public class DaoUtil {
 			DataSource ds = (DataSource) envCtx.lookup(Constants.JNDI_DATASOURCE);
 			conn = ds.getConnection();
 
-			LOG.info("Connected database successfully...");
-
 			stmt = conn.createStatement();
 
-			LOG.info("sql=" + sql);
 			stmt.executeUpdate(sql);
-			LOG.info("Inserted record into the table...");
 
 		} catch (Exception e) {
 			// Handle errors for Class.forName

@@ -164,4 +164,14 @@ public class FlightData {
 		return Constants.AIRPORTS.get(originStation)+" ("+originStation+")";
 	}
 
+	public String getDepartureDateTime() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		return sdf.format(departureDate);
+	}
+
+	public String getArrivalDateTime() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		return sdf.format(arrivalDate);
+	}
+
 }

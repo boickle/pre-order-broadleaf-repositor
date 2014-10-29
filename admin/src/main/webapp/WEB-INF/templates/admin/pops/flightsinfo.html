@@ -1,0 +1,23 @@
+
+<h2>Flights</h2>
+
+<table id="flightTable"  class="tablesorter">
+<thead>
+<tr>
+<th>Flight Number</th>
+<th>Departure Time</th>
+<th>Arrival Time</th>
+<th>Origin</th>
+<th>Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr th:each="flight: ${data}">
+<td><a th:href="'/admin/flightMeals/'+${flight.flightID}+'/'+${flight.flightNumber}" th:text="${flight.flightNumber}"/></td>
+<td width="30%" th:text="${flight.departureDateTime}"/>
+<td width="30%" th:text="${flight.arrivalDateTime}"/>
+<td width="10%" th:text="${flight.originStation}"/>
+<td width="10%" th:text="${flight.destinationStation}"/>
+</tr>
+</tbody>
+</table>
