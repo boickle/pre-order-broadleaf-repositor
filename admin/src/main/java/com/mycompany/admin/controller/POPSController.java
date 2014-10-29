@@ -2,6 +2,11 @@ package com.mycompany.admin.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +28,8 @@ import com.mycompany.pops.pojo.Product;
 @Secured("PERMISSION_OTHER_DEFAULT")
 public class POPSController  {
 	
-
+	protected static final Log LOG = LogFactory.getLog(POPSController.class);
+	
 	@RequestMapping(value = "/showflights")
 	public ModelAndView doShowFlights() {
 
@@ -66,4 +72,10 @@ public class POPSController  {
 		return modelAndView;
 
 	}
+
+	@RequestMapping(value = "/testpage")
+	public String doTestPage(HttpServletRequest request, HttpServletResponse response) {
+		return "pops/test";
+	}
+
 }

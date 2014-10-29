@@ -17,13 +17,16 @@
 package com.mycompany.controller.checkout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.common.email.domain.EmailTargetImpl;
@@ -32,6 +35,8 @@ import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.common.exception.ServiceException;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.common.vendor.service.exception.PaymentException;
+import org.broadleafcommerce.core.catalog.domain.ProductOption;
+import org.broadleafcommerce.core.order.domain.DiscreteOrderItem;
 import org.broadleafcommerce.core.order.domain.NullOrderImpl;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
@@ -60,6 +65,8 @@ import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.dao.DaoUtil;
 import com.mycompany.pops.domain.BillingInfo;
 import com.mycompany.pops.pojo.FlightData;
+import com.mycompany.pops.pojo.Meal;
+import com.mycompany.pops.pojo.Passenger;
 
 @Controller
 public class CheckoutController extends BroadleafCheckoutController {
@@ -145,12 +152,60 @@ public class CheckoutController extends BroadleafCheckoutController {
         FlightData f = dao.getFlightInfoFromMealOrder(order.getOrderNumber());
 
         vars.put("flightData", f);
+
+        // Creating meal list by personalized name
+        List<DiscreteOrderItem> items = order.getDiscreteOrderItems();
+        HashMap<String,List<Meal>> passengerMealsMap = new HashMap<String,List<Meal>>();
+        if (items!=null) {
+
+        	List<Meal> mealList;
+	        for (DiscreteOrderItem orderitem : items) {
+	        	
+	        	// loop through the attributes to find out who this meal belong to.
+	        	String personalizedName="";
+	        	for (String i : orderitem.getOrderItemAttributes().keySet()) {
+	                for (ProductOption option : orderitem.getProduct().getProductOptions()) {
+	                    if (option.getAttributeName().equals(i) && !StringUtils.isEmpty(orderitem.getOrderItemAttributes().get(i).toString())) {
+	                        if ("Personalized Name".equals(option.getLabel())) {
+	                        	personalizedName=orderitem.getOrderItemAttributes().get(i).toString();
+	                        }
+	                    }
+	                }
+	            }
+	        	
+	        	if (!passengerMealsMap.containsKey(personalizedName)) {
+	        		passengerMealsMap.put(personalizedName, new ArrayList<Meal>());
+	        	}
+	        	mealList = passengerMealsMap.get(personalizedName);
+//	        	LOG.info("I am putting stuff in hashmap: "+orderitem.getName()+" for "+personalizedName);
+	        	Meal m = new Meal();
+	        	m.setName(orderitem.getName());
+	        	m.setImageUrl("http://"+EMAIL_SERVER_HOST+orderitem.getProduct().getMedia().get("primary").getUrl() + "?thumbnail");
+	        	
+	        	mealList.add(m);
+	        }
+	        
+	        // set into a list for easy retrieval
+	        List<Passenger> passengerMeals = new ArrayList<Passenger>();
+	        for (String key : passengerMealsMap.keySet()) {
+	        	Passenger p = new Passenger();
+	        	p.setDisplayName(key);
+	        	p.setMealSelection(passengerMealsMap.get(key));
+//	        	LOG.info("setting passengerMeals:"+p.getDisplayName());
+	        	for (Meal m : p.getMealSelection()) {
+//	        		LOG.info("setting passengerMeals:"+m.getName()+" "+m.getImageUrl());
+	        	}
+	        	passengerMeals.add(p);
+	        }
+	        vars.put("passengerMeals", passengerMeals);
+        }
         
+        LOG.info("Email address to send confirm letter: "+order.getEmailAddress());
         EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(order.getEmailAddress());
-		if (BCC_LIST != null && BCC_LIST.length != 0) {
-			emailTarget.setBCCAddresses(BCC_LIST);
-		}
+//		if (BCC_LIST != null && BCC_LIST.length != 0) {
+//			emailTarget.setBCCAddresses(BCC_LIST);
+//		}
 
         try {
             emailService.sendTemplateEmail(emailTarget, orderConfirmationEmailInfo, vars);
