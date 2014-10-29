@@ -91,8 +91,25 @@
 													
 							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
 
+						<!-- This is for the personalized name attribute. TODO: fill automatically with passenger -->
+						<div class="product-options hidden">
+						<div id="product-option-data" hidden="hidden" data-product-option-pricing="[]" data-product-options="[{&quot;id&quot;:3,&quot;type&quot;:&quot;TEXT&quot;,&quot;values&quot;:{},&quot;selectedValue&quot;:null}]"></div>
+						<ul style="display:none">
+						   <li class="product-option-group cf">
+						      <label>Personalized Name</label>: 
+						      <span class="option-value" data-optiontype="TEXT" id="NAME"></span>
+						      <ul class="cf">
+						         <li>
+						            <input value="" maxlength="255" name="itemAttributes[null]" type="org.broadleafcommerce.core.catalog.service.type.ProductOptionType@273d4c" />
+						         </li>
+						      </ul>
+						   </li>
+						</ul>
+						</div>
+						
 						<div class="add_to_cart">
 			            <blc:form method="POST"  th:action="@{/cart/add}">
+ 			               <select name="itemAttributes[NAME]" style="display:none" />
 			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
 			               <input type="hidden" name="mealType" value="B"/>
 			               <input type="hidden" name="quantity" value="1" />
@@ -154,8 +171,25 @@
 													
 							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
 
+						<!-- This is for the personalized name attribute. TODO: fill automatically with passenger -->
+						<div class="product-options hidden">
+						<div id="product-option-data" hidden="hidden" data-product-option-pricing="[]" data-product-options="[{&quot;id&quot;:3,&quot;type&quot;:&quot;TEXT&quot;,&quot;values&quot;:{},&quot;selectedValue&quot;:null}]"></div>
+						<ul style="display:none">
+						   <li class="product-option-group cf">
+						      <label>Personalized Name</label>: 
+						      <span class="option-value" data-optiontype="TEXT" id="NAME"></span>
+						      <ul class="cf">
+						         <li>
+						            <input value="" maxlength="255" name="itemAttributes[null]" type="org.broadleafcommerce.core.catalog.service.type.ProductOptionType@273d4c" />
+						         </li>
+						      </ul>
+						   </li>
+						</ul>
+						</div>
+						
 						<div class="add_to_cart">
 			            <blc:form method="POST"  th:action="@{/cart/add}">
+						   <select name="itemAttributes[NAME]" style="display:none" />
 			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
 			               <input type="hidden" name="mealType" value="L"/>
 			               <input type="hidden" name="quantity" value="1" />
@@ -217,12 +251,25 @@
 													
 							<span data-toggle="modal" data-target="#mealSelectedModal"  class="btn btn-primary selectMealBtn" th:id="${'selectmeal'+product.product_ID}">Select Meal</span>
 
-
-
+						<!-- This is for the personalized name attribute. TODO: fill automatically with passenger -->
+						<div class="product-options hidden">
+						<div id="product-option-data" hidden="hidden" data-product-option-pricing="[]" data-product-options="[{&quot;id&quot;:3,&quot;type&quot;:&quot;TEXT&quot;,&quot;values&quot;:{},&quot;selectedValue&quot;:null}]"></div>
+						<ul style="display:none">
+						   <li class="product-option-group cf">
+						      <label>Personalized Name</label>: 
+						      <span class="option-value" data-optiontype="TEXT" id="NAME"></span>
+						      <ul class="cf">
+						         <li>
+						            <input value="" maxlength="255" name="itemAttributes[null]" type="org.broadleafcommerce.core.catalog.service.type.ProductOptionType@273d4c" />
+						         </li>
+						      </ul>
+						   </li>
+						</ul>
+						</div>
  						
 						<div class="add_to_cart">
 			            <blc:form method="POST"  th:action="@{/cart/add}">
-
+ 			               <select name="itemAttributes[NAME]" style="display:none" />
 			               <input type="hidden" name="productId" th:value="${product.product_ID}" />
 			               <input type="hidden" name="quantity" value="1" />
 			               <input type="hidden" name="mealType" value="D"/>

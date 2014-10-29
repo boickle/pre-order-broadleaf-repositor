@@ -138,6 +138,21 @@ public class CartController extends BroadleafCartController {
 		        	
 		        	DiscreteOrderItem d = (DiscreteOrderItem) orderitem;
 		        	LOG.info("The order item "+existingItemName+" is a: "+d.getCategory().getId());
+
+		        	String personalizedName="";
+		        	for (String i : d.getOrderItemAttributes().keySet()) {
+		                for (ProductOption option : d.getProduct().getProductOptions()) {
+		                    if (option.getAttributeName().equals(i) && !StringUtils.isEmpty(d.getOrderItemAttributes().get(i).toString())) {
+		                        if ("Personalized Name".equals(option.getLabel())) {
+		                        	personalizedName=d.getOrderItemAttributes().get(i).toString();
+		                        }
+//	                        	LOG.info("label:"+option.getLabel());
+//		                        LOG.info("value:"+d.getOrderItemAttributes().get(i).toString());
+		                    }
+		                }
+		            }
+		        	LOG.info("This meal is for :"+personalizedName);
+		        	
 		        	long categoryID = d.getCategory().getId();
 		        	if (categoryID == Constants.BREAKFAST_CATEGORY) hasBreakfast = true;
 		        	if (categoryID == Constants.LUNCH_CATEGORY) hasLunch = true;
