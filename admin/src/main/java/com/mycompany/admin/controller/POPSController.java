@@ -78,4 +78,8 @@ public class POPSController  {
 		return "pops/test";
 	}
 
+	@RequestMapping(value = "/addmeal")
+	public String doAddMeal(HttpServletRequest request, HttpServletResponse response) {
+		return "pops/newmeal";
+	}
 }

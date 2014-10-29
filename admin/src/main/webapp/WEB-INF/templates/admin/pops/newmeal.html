@@ -1,0 +1,53 @@
+<div class="section-container" role="main">
+<section class="main">
+
+<h2>Add New Meal</h2>
+
+<form name="theform">
+<table>
+<tr>
+<td>Name:</td>
+<td><input type="text" name="mealName" onkeyup="updateimagepath()"/></td>
+</tr>
+
+<tr>
+<td>Type:</td>
+<td>
+<select name="mealType">
+  <option value="">(Not Selected)</option>
+  <option value="B">Breakfast</option>
+  <option value="L">Lunch</option>
+  <option value="D">Dinne</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Image path:</td>
+<td id="imagepath"></td>
+</tr>
+
+<tr>
+<td>Description:</td>
+<td>
+<textarea name="desc" cols="50" rows="12"/>
+</td>
+</tr>
+
+<tr><td colspan="2">
+<input type="button" value="Submit" onclick="alert('Under Construction')"/>
+</td></tr>
+</table>
+</form>
+</section>
+</div>
+
+<script>
+function updateimagepath() {
+var mealname=document.theform.mealName.value
+mealname=mealname.replace(/ /gi, "-");
+mealname=mealname+".jpg"
+mealname=mealname.toLowerCase()
+document.getElementById("imagepath").innerHTML='Please put image here: core/src/main/resources/cms/static/img/meal/'+mealname
+}
+</script>
