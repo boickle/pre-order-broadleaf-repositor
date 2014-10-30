@@ -1,2 +1,10 @@
 .project
 target/
+admin/
+.classpath
+.settings
+.DS_Store
+${webappDirectory}/
+pom.xml
+logs/
+.gitignore

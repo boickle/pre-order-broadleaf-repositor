@@ -102,6 +102,7 @@
                 <value>/null-giftcard/**</value>
                 <value>/hosted/null-checkout/**</value>
                 <value>/myform/**</value>
+                <value>/sendWelcomeEmailPost</value>
             </list>
         </property>
     </bean>

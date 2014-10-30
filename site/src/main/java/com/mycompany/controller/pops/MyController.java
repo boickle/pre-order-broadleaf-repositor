@@ -1,6 +1,7 @@
 package com.mycompany.controller.pops;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.broadleafcommerce.common.currency.domain.BroadleafCurrency;
 import org.broadleafcommerce.common.email.domain.EmailTargetImpl;
 import org.broadleafcommerce.common.email.service.EmailService;
 import org.broadleafcommerce.common.email.service.info.EmailInfo;
@@ -27,19 +27,30 @@ import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycompany.pops.Constants;
+import com.mycompany.pops.configuration.AppConfiguration;
 import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.dao.DaoUtil;
-import com.mycompany.pops.configuration.AppConfiguration;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
+import com.mycompany.pops.pojo.Passenger;
+import com.mycompany.pops.pojo.PopsCustomer;
 import com.mycompany.pops.pojo.Product;
+import com.mycompany.pops.pojo.Transaction;
+import com.mycompany.pops.tools.UserToken;
 
 @Controller
 public class MyController {
@@ -98,17 +109,17 @@ public class MyController {
 		LOG.info("Inside autologin");
 
 		String email = request.getParameter("email");
-		String flight = request.getParameter("flight");
+		/*String flight = request.getParameter("flight");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String flightDateParameter = request.getParameter("flightDate");
 		String originStation = request.getParameter("originStation");
-		String destinationStation = request.getParameter("destinationStation");
+		String destinationStation = request.getParameter("destinationStation");*/
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("email", email);
 		
-		dao.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
+		//dao.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
 		
 		return "redirect:/login";
 	}	
@@ -363,7 +374,73 @@ public class MyController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/sendWelcomeEmail")
+	@RequestMapping(value = "/sendWelcomeEmailPost", method = RequestMethod.POST)
+	public ResponseEntity<String> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
+		UserToken token = new UserToken(transaction.getCustomer());
+		
+		
+		//Transaction transaction = new Transaction();
+		//System.out.println(System.currentTimeMillis());
+		String jsonResponse = "{\"Status\":\"Success\"}";
+		if(transaction.getFlights()==null){
+			//TODO
+		}
+		for(int i=0;i<transaction.getFlights().size();i++){
+			FlightData flight = transaction.getFlights().get(i);
+			if(flight==null){
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			}
+			List<Passenger> passengers = flight.getPassengers();
+			for(int z=0;z<passengers.size();z++){
+				Passenger p = passengers.get(z);
+				if(p==null){
+					return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				}
+				dao.insertNewTransaction(token, transaction);
+				//dao.insertNewCustomer(p.getLastName(),p.getLastName(),p.getEmail(),flight.getFlightNumber(),flight.getDepartureDateOnly(),flight.getOriginStation(),flight.getDestinationStation());
+			}	
+		}
+
+		PopsCustomer c = transaction.getCustomer();
+		EmailTargetImpl emailTarget = new EmailTargetImpl();
+		emailTarget.setEmailAddress(c.getEmail());
+		//if (BCC_LIST != null && BCC_LIST.length != 0) {
+			//emailTarget.setBCCAddresses(BCC_LIST);
+		//}
+
+		HashMap<String, Object> vars = new HashMap<String, Object>();
+		
+		ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = sra.getRequest();  
+		String absolutePath = request.getServerName();
+
+		// in case you are not running on port 80
+		int port = request.getServerPort();
+		if (port > 80) {
+			absolutePath = absolutePath + ":" + port;
+		}
+
+		LOG.info("absolutePath:" + absolutePath);
+		LOG.info("email ab: " + absolutePath);
+		vars.put("firstname", c.getFirstName());
+		vars.put("absolutepath", absolutePath);
+
+		String url = "http://" + absolutePath + "/loginAuto?email=" + c.getEmail();
+				
+		LOG.info("email url: " + url);
+		vars.put("link", url);
+
+		try {
+			emailService.sendTemplateEmail(emailTarget, preSelectionEmailInfo, vars);
+		} catch (Exception e) {
+			LOG.info("sorry, error in send email", e);
+		}
+	
+		return new ResponseEntity<String>(jsonResponse,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/sendWelcomeEmail", method = RequestMethod.POST)
+	@ResponseBody
 	public ModelAndView doSendWelcomeEmail(HttpServletRequest request,
 			HttpServletResponse response) {
 		

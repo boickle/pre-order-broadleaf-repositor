@@ -25,7 +25,11 @@ import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.MealSelectionData;
+import com.mycompany.pops.pojo.Passenger;
+import com.mycompany.pops.pojo.PopsCustomer;
 import com.mycompany.pops.pojo.Product;
+import com.mycompany.pops.pojo.Transaction;
+import com.mycompany.pops.tools.UserToken;
 
 @Service
 public class DaoImpl implements Dao {
@@ -880,6 +884,86 @@ public class DaoImpl implements Dao {
 			}
 		}
 		return result;
+
+	}
+	
+	@Override
+	public void insertNewTransaction(UserToken token, Transaction transaction) {
+		for(int i=0;i<transaction.getFlights().size();i++){
+			FlightData flight = transaction.getFlights().get(i);
+			List<Passenger> passengers = flight.getPassengers();
+			for(int z=0;z<passengers.size();z++){
+				Passenger p = passengers.get(z);
+				long customerId = this.insertNewCustomer(p);
+				long flightid = this.insertCustomerFlight(customerId, flight);
+				long id = DaoUtil.newSequenceForTable("POPS_TRANSACTION", "ID");
+				String sql = "insert into POPS_TRANSACTION (ID, TOKEN, CUSTOERFLIGHTID, CUSTOMERID, TIMESTAMP) values ("
+						+ id + "," + token.getToken() + ",'" + flightid + "','" + customerId + "','" + token.gettimestamp().getTime() + ")";
+				LOG.info("sql=" + sql);
+				DaoUtil.jdbcInsertUpdateWrapper(sql);
+			}	
+		}
+	}
+	
+	private long insertNewCustomer(PopsCustomer customer){
+		long customerID = findCustomerIDByUserName(customer.getEmail());
+
+		if (customerID==0) {
+			
+			customerID = DaoUtil.newSequenceForTable("blc_customer","customer_id");
+	
+			String newCustomerSQL = "insert into blc_customer (customer_id,deactivated,email_address,first_name,last_name,password,password_change_required,is_registered,user_name) values ("
+					+ customerID
+					+ ','
+					+ "'f','"
+					+ customer.getEmail()
+					+ "','"
+					+ customer.getFirstName()
+					+ "','"
+					+ customer.getLastName()
+					+ "','Welcome1{"+customerID+"}',"
+					+ "'f','t','"
+					+ customer.getEmail()+"')";
+			LOG.info("sql=" + newCustomerSQL);
+			DaoUtil.jdbcInsertUpdateWrapper(newCustomerSQL);
+		}
+		return customerID;
+	}
+	
+	private long insertCustomerFlight(long customerId, FlightData flight){
+		
+		String dateFormatForDB = "MM/dd/yyyy";
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK);
+		
+		SimpleDateFormat sdfForDB = new SimpleDateFormat(dateFormatForDB);
+		Date flightDate = null;
+		String flightDateForDB = flight.getDepartureDate().toString();
+		try {
+			flightDate = sdf.parse(flight.getDepartureDate().toString());
+			LOG.info("flightDate:"+flightDate);
+			flightDateForDB = sdfForDB.format(flightDate);
+			LOG.info("flightDateForDB:"+flightDateForDB);
+		}
+		catch (Exception e) {
+			flightDate = new Date(); // just so life goes on
+			LOG.error("Error parsing flight date",e);
+		}
+
+		FlightData f = getFlightDataForFlight(flight.getFlightNumber(), flight.getDepartureDate().toString(), flight.getOriginStation(), flight.getDestinationStation());
+		long flightID = 0;
+		if (f==null) {
+			LOG.error("Cannot find flight data: flightNumber:"+flight.getFlightNumber()+" flightDate:"+flight.getDepartureDate().toString()+" origin:"+flight.getOriginStation()+" destination:"+flight.getDestinationStation());
+		}
+		else {
+			flightID=f.getFlightID();
+		}
+		
+		int pk = DaoUtil.newSequenceForTable("customer_flight");
+		String sql = "insert into customer_flight (id,customer_id, FLIGHT_NUMBER, FLIGHT_DATE, ORIGIN_STATION, DESTINATION_STATION, FLIGHT_ID) values ("
+				+pk+","+ customerId + ",'" + flight.getFlightNumber()+"',to_date('"+flightDateForDB+"','"+dateFormatForDB+"'),'"+flight.getOriginStation()+"','"+flight.getDestinationStation()+"',"+flightID+")";
+		LOG.info(sql);
+		DaoUtil.jdbcInsertUpdateWrapper(sql);
+		return pk;
 
 	}
 	

@@ -3,6 +3,7 @@ package com.mycompany.pops.pojo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +30,7 @@ public class FlightData {
 	private String fArrivalDate;
 	private String aircraftType;
 	private String carrier;
+	private List<Passenger> passengers;
 
 	public long getFlightID() {
 		return flightID;
@@ -174,4 +176,11 @@ public class FlightData {
 		return sdf.format(arrivalDate);
 	}
 
+	public List<Passenger> getPassengers(){
+		return this.passengers;
+	}
+	
+	public void setPassengers(List<Passenger> passengers){
+		this.passengers = passengers;
+	}
 }

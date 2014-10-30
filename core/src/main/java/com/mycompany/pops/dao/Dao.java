@@ -8,6 +8,8 @@ import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
 import com.mycompany.pops.pojo.MealSelectionData;
 import com.mycompany.pops.pojo.Product;
+import com.mycompany.pops.pojo.Transaction;
+import com.mycompany.pops.tools.UserToken;
 
 public interface Dao {
 
@@ -38,6 +40,8 @@ public interface Dao {
 	public FlightData getFlightDataForFlightID(long flightID);
 	
 	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate, String originStation, String destinationStation);
+	
+	public void insertNewTransaction(UserToken token, Transaction trans);	
 	
 	public void insertBlankAddressToOrder(long orderID);
 	

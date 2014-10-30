@@ -200,7 +200,7 @@ public class CheckoutController extends BroadleafCheckoutController {
 	        vars.put("passengerMeals", passengerMeals);
         }
         
-        LOG.info("Email address to send confirm letter: "+order.getEmailAddress());
+	        LOG.info("Email address to send confirm letter: "+order.getEmailAddress());
         EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(order.getEmailAddress());
 //		if (BCC_LIST != null && BCC_LIST.length != 0) {
