@@ -1,12 +1,12 @@
 package com.mycompany.pops.pojo;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 import com.mycompany.pops.Constants;
 
@@ -72,13 +72,14 @@ public class FlightData {
 		return fDepartureDate;
 	}
 
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setDepartureDate(Date departureDate) {
 		try {
 			this.departureDate = departureDate;
-			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(departureDate.toString());
+			Date date = this.departureDate;//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(departureDate.toString());
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm");
 	        this.fDepartureDate = format.format(date);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 				LOG.error("Parse error at setting departure date, which is "+departureDate,e);
 		}
 	}
@@ -107,13 +108,14 @@ public class FlightData {
 		return fArrivalDate;
 	}
 
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setArrivalDate(Date arrivalDate) {
 		try {
 			this.arrivalDate = arrivalDate;
-			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(arrivalDate.toString());
+			Date date = this.arrivalDate;//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(arrivalDate.toString());
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm");
 	        this.fArrivalDate = format.format(date);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			LOG.error("Parse error at setting arrival date, which is "+arrivalDate,e);
 		}
 	}

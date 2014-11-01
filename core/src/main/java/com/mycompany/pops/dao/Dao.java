@@ -39,9 +39,7 @@ public interface Dao {
 	
 	public FlightData getFlightDataForFlightID(long flightID);
 	
-	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate, String originStation, String destinationStation);
-	
-	public void insertNewTransaction(UserToken token, Transaction trans);	
+	public void insertNewCustomer(String lastName, String firstName, String email, String flightNumber, String flightDate, String originStation, String destinationStation);	
 	
 	public void insertBlankAddressToOrder(long orderID);
 	

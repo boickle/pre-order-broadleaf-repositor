@@ -18,7 +18,7 @@ public class Transaction {
 		return this.flights;
 	}
 	
-	public void setPassengers(List<FlightData> flights){
+	public void setFlights(List<FlightData> flights){
 		this.flights = flights;
 	}
 }

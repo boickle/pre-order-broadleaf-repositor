@@ -1,7 +1,6 @@
 package com.mycompany.controller.pops;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ import com.mycompany.pops.Constants;
 import com.mycompany.pops.configuration.AppConfiguration;
 import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.dao.DaoUtil;
+import com.mycompany.pops.dao.TransactionDaoImpl;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
@@ -376,11 +376,7 @@ public class MyController {
 	
 	@RequestMapping(value = "/sendWelcomeEmailPost", method = RequestMethod.POST)
 	public ResponseEntity<String> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
-		UserToken token = new UserToken(transaction.getCustomer());
-		
-		
-		//Transaction transaction = new Transaction();
-		//System.out.println(System.currentTimeMillis());
+		TransactionDaoImpl tranDao = new TransactionDaoImpl(dao);
 		String jsonResponse = "{\"Status\":\"Success\"}";
 		if(transaction.getFlights()==null){
 			//TODO
@@ -396,11 +392,14 @@ public class MyController {
 				if(p==null){
 					return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 				}
-				dao.insertNewTransaction(token, transaction);
+				
 				//dao.insertNewCustomer(p.getLastName(),p.getLastName(),p.getEmail(),flight.getFlightNumber(),flight.getDepartureDateOnly(),flight.getOriginStation(),flight.getDestinationStation());
 			}	
 		}
-
+		
+		UserToken token = new UserToken(transaction.getCustomer());
+		tranDao.insertNewTransaction(token, transaction);
+		
 		PopsCustomer c = transaction.getCustomer();
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
 		emailTarget.setEmailAddress(c.getEmail());
@@ -425,7 +424,7 @@ public class MyController {
 		vars.put("firstname", c.getFirstName());
 		vars.put("absolutepath", absolutePath);
 
-		String url = "http://" + absolutePath + "/loginAuto?email=" + c.getEmail();
+		String url = "http://" + absolutePath + "/loginAuto?token=" + token.getToken();
 				
 		LOG.info("email url: " + url);
 		vars.put("link", url);

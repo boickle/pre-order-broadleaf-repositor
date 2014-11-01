@@ -31,8 +31,11 @@ public class PopsTransactionImpl implements PopsTransaction {
 	@Column(name = "TOKEN")
 	protected String token;
 	
-	@Column(name = "CUSTOERFLIGHTID")
-	protected Long customerFlightId;
+	@Column(name = "PASSENGERFLIGHTID")
+	protected Long passengerFlightId;
+	
+	//@Column(name = "PASSENGERID")
+	//protected Long passengerId;
 	
 	@Column(name = "CUSTOMERID")
 	protected Long customerId;
@@ -51,8 +54,8 @@ public class PopsTransactionImpl implements PopsTransaction {
 	}
 
 	@Override
-	public long getCustomerFlightId() {
-		return customerFlightId;
+	public long getPassengerFlightId() {
+		return passengerFlightId;
 	}
 
 	@Override
@@ -71,8 +74,8 @@ public class PopsTransactionImpl implements PopsTransaction {
 	}
 
 	@Override
-	public void setCustomerFlightId(long customerFlightId) {
-		this.customerFlightId=customerFlightId;
+	public void setPassengerFlightId(long passengerFlightId) {
+		this.passengerFlightId=passengerFlightId;
 	}
 
 	@Override
@@ -89,5 +92,15 @@ public class PopsTransactionImpl implements PopsTransaction {
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	//@Override
+	//public long getPassengerId() {
+	//	return this.passengerId;
+	//}
+
+	//@Override
+	//public void setPassengerId(long passengerId) {
+	//	this.passengerId=passengerId;
+//	}
 
 }

@@ -22,6 +22,8 @@ public class Constants {
 
 	public static String FLIGHT_DATE_FORMAT_FROM_EMAIL_LINK = "MM/dd/yyyy";
 	public static String ORDER_DATE_FORMAT_IN_EMAIL = "EEEE, MMMM dd'th' yyyy 'at' HH:mm";
+	
+	public static String ACCEPTED_DATE_FORMAT = "MM/dd/yyyy";
 
 	//TODO: make this in a database is better way to do this
 	public static final Map<String , String> AIRPORTS = new HashMap<String , String>() {{
