@@ -96,8 +96,9 @@ public class MyController {
 		// so don't need to read parameters and set session variables then read it back from flight info
 		TransactionDaoImpl tranDao = new TransactionDaoImpl(dao);
 		String token = request.getParameter("token");
-		tranDao.getTransaction(token);
-		
+		Transaction t = tranDao.getTransaction(token);
+		HttpSession session = request.getSession();
+		session.setAttribute("transaction", t);
 		return this.doFlightInfo(request, response);
 	}	
 
@@ -379,10 +380,11 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/sendWelcomeEmailPost", method = RequestMethod.POST)
-	public ResponseEntity<String> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
+	//public ResponseEntity<String> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
+		public ResponseEntity<Transaction> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
 		TransactionDaoImpl tranDao = new TransactionDaoImpl(dao);
 		String jsonResponse = "{\"Status\":\"Success\"}";
-		if(transaction.getFlights()==null){
+		/*if(transaction.getFlights()==null){
 			//TODO
 		}
 		for(int i=0;i<transaction.getFlights().size();i++){
@@ -399,10 +401,12 @@ public class MyController {
 				
 				//dao.insertNewCustomer(p.getLastName(),p.getLastName(),p.getEmail(),flight.getFlightNumber(),flight.getDepartureDateOnly(),flight.getOriginStation(),flight.getDestinationStation());
 			}	
-		}
+		}*/
 		
 		UserToken token = new UserToken(transaction.getCustomer());
 		tranDao.insertNewTransaction(token, transaction);
+		
+		Transaction t = tranDao.getTransaction(token.getToken());
 		
 		PopsCustomer c = transaction.getCustomer();
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
@@ -439,7 +443,8 @@ public class MyController {
 			LOG.info("sorry, error in send email", e);
 		}
 	
-		return new ResponseEntity<String>(jsonResponse,HttpStatus.OK);
+		//return new ResponseEntity<String>(jsonResponse,HttpStatus.OK);
+		return new ResponseEntity<Transaction>(t, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/sendWelcomeEmail", method = RequestMethod.POST)

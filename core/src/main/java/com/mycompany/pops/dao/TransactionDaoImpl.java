@@ -98,7 +98,7 @@ public class TransactionDaoImpl implements TransactionDao{
 					f.setFlightNumber(rs.getString("flight_number"));
 					f.setOriginStation(rs.getString("origin_location"));
 					f.setFlightID(rs.getLong("id"));
-					f.setPassengers(this.getPassengers(token));
+					f.setPassengers(this.getPassengers(token, f.getFlightID()));
 					flights.add(f);
 				}
 				rs.close();
@@ -112,10 +112,10 @@ public class TransactionDaoImpl implements TransactionDao{
 		return flights;
 	}
 	
-	private List<Passenger> getPassengers(String token){
+	private List<Passenger> getPassengers(String token, long flightId){
 		String sql = "select id, first_name, last_name, seat_number from pops_passenger where id "
 				+ "IN (select passenger_id from passenger_flight where id "
-				+ "IN (select passengerflightid from pops_transaction where token='"+ token +"'))";
+				+ "IN (select passengerflightid from pops_transaction where token='"+ token +"') and flight_id='"+ flightId +"')";
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		List<Passenger> passengers = new ArrayList<Passenger>();
 		if (rs != null) {
