@@ -94,6 +94,10 @@ public class MyController {
 		// but now we want to show flight info first. so this is now completely useless
 		// can be eliminated if the welcome email goes to flight info instead
 		// so don't need to read parameters and set session variables then read it back from flight info
+		TransactionDaoImpl tranDao = new TransactionDaoImpl(dao);
+		String token = request.getParameter("token");
+		tranDao.getTransaction(token);
+		
 		return this.doFlightInfo(request, response);
 	}	
 

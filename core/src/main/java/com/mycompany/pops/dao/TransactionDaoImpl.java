@@ -53,35 +53,37 @@ public class TransactionDaoImpl implements TransactionDao{
 	public Transaction getTransaction(String token) {
 		LOG.info("Grabing transaction with token: " + token);
 		Transaction t = new Transaction();
-	
-		String sql = "select customerid, passengerflightid, timestamp from pops_transaction"
-				+ " where token ='"+ token + "'";
-		List<Long> result = null;
-		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
-		if (rs != null) {
-			try {
-				while (rs.next()) {
-					if (result == null)
-						result = new ArrayList<Long>();
-
-					result.add(rs.getLong(1));
-
-				}
-				rs.close();
-			} catch (SQLException e) {
-				LOG.error("sql exception", e);
-			}
-		}
-		if (result != null) {
-			LOG.info("I am returning this many items: " + result.size());
-		}
+		t.setFlights(this.getFlights(token));
+		t.setCustomer(this.getCustomer(token));
 		return t;
 	}
 	
+	private PopsCustomer getCustomer(String token){
+		PopsCustomer customer = null;
+		String sql = "select email_address, first_name, last_name from blc_customer where customer_id IN (select customerid from pops_transaction where token = '"+ token +"' limit 1)";
+		
+		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		try {
+			if (rs.next()) {
+				customer = new PopsCustomer();
+				customer.setEmail(rs.getString("email_address"));
+				customer.setFirstName(rs.getString("first_name"));
+				customer.setLastName(rs.getString("last_name"));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			LOG.error("sql exception", e);
+		}
+		if(customer==null){
+			LOG.info("No customer found for sql=" + sql);
+		}
+		return customer;
+	}
+	
 	private List<FlightData> getFlights(String token){
-		String sql = "select id, aircraft_type, arrival_time, carrier, departure_time, destination_location, flight_number, origin_location" + " from flightinfo where id "
+		String sql = "select id, aircraft_type, arrival_time, carrier, departure_time, destination_location, flight_number, origin_location from flightinfo where id "
 				+ "IN (select flight_id from passenger_flight where id "
-				+ "IN (select passengerflightid from pops_transaction where token='"+ token +"))";
+				+ "IN (select passengerflightid from pops_transaction where token='"+ token +"'))";
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
 		List<FlightData> flights = new ArrayList<FlightData>();
 		if (rs != null) {
@@ -94,8 +96,9 @@ public class TransactionDaoImpl implements TransactionDao{
 					f.setDepartureDate(rs.getDate("departure_time"));
 					f.setDestinationStation(rs.getString("destination_location"));
 					f.setFlightNumber(rs.getString("flight_number"));
-					f.setOriginStation(rs.getString("origin_station"));
+					f.setOriginStation(rs.getString("origin_location"));
 					f.setFlightID(rs.getLong("id"));
+					f.setPassengers(this.getPassengers(token));
 					flights.add(f);
 				}
 				rs.close();
@@ -109,54 +112,30 @@ public class TransactionDaoImpl implements TransactionDao{
 		return flights;
 	}
 	
-	private FlightData getFlightData(long passengerFlightId){
-		FlightData flight= new FlightData();
-		String sql = "select flight_id, passenger_id from passenger_flight where id="+passengerFlightId;
-
-		String result = "";
-		long flight_id = -1;
-		long passenger_id = -1;
-		
+	private List<Passenger> getPassengers(String token){
+		String sql = "select id, first_name, last_name, seat_number from pops_passenger where id "
+				+ "IN (select passenger_id from passenger_flight where id "
+				+ "IN (select passengerflightid from pops_transaction where token='"+ token +"'))";
 		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
+		List<Passenger> passengers = new ArrayList<Passenger>();
 		if (rs != null) {
-
 			try {
-				if (rs.next()) {
-					flight_id = rs.getLong("flight_id");
-					passenger_id = rs.getLong("passenger_id");
-				}
-				rs.close();
-			} catch (SQLException e) {
-				LOG.error("sql exception", e);
-			}
-		}
-		
-		return flight;
-	}
-	
-	private Passenger getPassenger(long id){
-		Passenger p = null;
-		String sql = "select first_name, last_name, seat_number from pops_passenger where id="+id;
-
-		String result = "";
-		
-		ResultSet rs = DaoUtil.jdbcSelectWrapper(sql);
-		if (rs != null) {
-
-			try {
-				if (rs.next()) {
-					p=new Passenger();
+				while (rs.next()) {
+					Passenger p = new Passenger();
 					p.setFirstName(rs.getString("first_name"));
 					p.setLastName(rs.getString("last_name"));
 					p.setSeatNumber(rs.getString("seat_number"));
+					passengers.add(p);
 				}
 				rs.close();
 			} catch (SQLException e) {
 				LOG.error("sql exception", e);
 			}
 		}
-		
-		return p;
+		if (passengers.isEmpty()) {
+			LOG.info("No passengers found for sql=" + sql);
+		}
+		return passengers;
 	}
 	
 	private long insertNewCustomer(PopsCustomer customer){
