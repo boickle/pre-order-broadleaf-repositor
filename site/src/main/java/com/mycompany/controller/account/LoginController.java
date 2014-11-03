@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.pojo.FlightData;
+import com.mycompany.pops.pojo.Transaction;
 
 /**
  * The controller responsible for all actions involving logging a customer in
@@ -57,17 +58,18 @@ public class LoginController extends BroadleafLoginController {
     	Long flightNumber = (Long) request.getSession().getAttribute("flightID");
     	Log.info("flight ID is: "+flightNumber);
     	
-    	FlightData f = (FlightData) request.getSession().getAttribute("flightdata");
-    	if (f==null) {
-    		Log.info("Cannot find flight data in session! Trying to read it again");
+    	//FlightData f = (FlightData) request.getSession().getAttribute("flightdata");
+    	Transaction t = (Transaction) request.getSession().getAttribute("transaction");
+    	if (t==null) {
+    		Log.info("Cannot find flight data in session!");
     		
-    		if (flightNumber!=null) {
+    		/*if (flightNumber!=null) {
 	    		f = dao.getFlightDataForFlightID(flightNumber);
     		} else {
     			f = new FlightData();
     		}
 	        HttpSession session = request.getSession();
-    		session.setAttribute("flightdata", f);
+    		session.setAttribute("flightdata", f);*/
     	}
         return super.login(request, response, model);
     }

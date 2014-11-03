@@ -1,9 +1,14 @@
 package com.mycompany.pops.pojo;
 
+import java.util.List;
+
 public class Passenger {
 	private String firstName = "";
 	private String lastName = "";
 	private String seatNumber = "";
+	private String displayName = "";
+	private List<Meal> mealSelection;
+	
 	public void setFirstName(String firstName){
 		this.firstName = firstName;
 	}
@@ -21,7 +26,8 @@ public class Passenger {
 	}
 
 	public String getDisplayName(){
-		return firstName + " " + lastName;
+		return displayName;
+		//return firstName + " " + lastName;
 	}
 	
 	public String getSeatNumber(){
@@ -30,6 +36,18 @@ public class Passenger {
 	
 	public void setSeatNumber(String seatNumber){
 		this.seatNumber=seatNumber;
+	}
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public List<Meal> getMealSelection() {
+		return mealSelection;
+	}
+
+	public void setMealSelection(List<Meal> mealSelection) {
+		this.mealSelection = mealSelection;
 	}
 
 

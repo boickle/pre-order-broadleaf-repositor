@@ -5,6 +5,4 @@ admin/
 .settings
 .DS_Store
 ${webappDirectory}/
-pom.xml
 logs/
-.gitignore

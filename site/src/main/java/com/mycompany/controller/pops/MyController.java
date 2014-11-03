@@ -43,6 +43,7 @@ import com.mycompany.pops.configuration.AppConfiguration;
 import com.mycompany.pops.dao.Dao;
 import com.mycompany.pops.dao.DaoUtil;
 import com.mycompany.pops.dao.TransactionDaoImpl;
+import com.mycompany.pops.exceptions.FlightDoesNotExistException;
 import com.mycompany.pops.pojo.Category;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Meal;
@@ -99,7 +100,19 @@ public class MyController {
 		Transaction t = tranDao.getTransaction(token);
 		HttpSession session = request.getSession();
 		session.setAttribute("transaction", t);
-		return this.doFlightInfo(request, response);
+		
+		String loginLink = "redirect:/login";
+		ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName("pops/flightconfirmation");
+    	modelAndView.addObject("loginlink",loginLink);
+    	modelAndView.addObject("firstname",t.getCustomer().getFirstName());
+    	modelAndView.addObject("lastname",t.getCustomer().getLastName());
+    	modelAndView.addObject("email",t.getCustomer().getEmail());
+    	String absolutePath=request.getServerName();
+    	modelAndView.addObject("absolutepath",absolutePath);
+    	
+		//return this.doFlightInfo(request, response);
+    	return modelAndView;
 	}	
 
 	/**
@@ -113,16 +126,16 @@ public class MyController {
 	public String doCreateUserAndLogin(HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("Inside autologin");
 
-		String email = request.getParameter("email");
-		/*String flight = request.getParameter("flight");
+		/*String email = request.getParameter("email");
+		String flight = request.getParameter("flight");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String flightDateParameter = request.getParameter("flightDate");
 		String originStation = request.getParameter("originStation");
 		String destinationStation = request.getParameter("destinationStation");*/
 		
-		HttpSession session = request.getSession();
-		session.setAttribute("email", email);
+		//HttpSession session = request.getSession();
+		//session.setAttribute("email", email);
 		
 		//dao.insertNewCustomer(lastName,firstName,email,flight,flightDateParameter,originStation,destinationStation);
 		
@@ -380,33 +393,20 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/sendWelcomeEmailPost", method = RequestMethod.POST)
-	//public ResponseEntity<String> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
-		public ResponseEntity<Transaction> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
+	public ResponseEntity<String> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
+		//public ResponseEntity<Transaction> doSendWelcomeEmailPost(@RequestBody Transaction transaction) {
 		TransactionDaoImpl tranDao = new TransactionDaoImpl(dao);
 		String jsonResponse = "{\"Status\":\"Success\"}";
-		/*if(transaction.getFlights()==null){
-			//TODO
-		}
-		for(int i=0;i<transaction.getFlights().size();i++){
-			FlightData flight = transaction.getFlights().get(i);
-			if(flight==null){
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-			}
-			List<Passenger> passengers = flight.getPassengers();
-			for(int z=0;z<passengers.size();z++){
-				Passenger p = passengers.get(z);
-				if(p==null){
-					return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-				}
-				
-				//dao.insertNewCustomer(p.getLastName(),p.getLastName(),p.getEmail(),flight.getFlightNumber(),flight.getDepartureDateOnly(),flight.getOriginStation(),flight.getDestinationStation());
-			}	
-		}*/
-		
 		UserToken token = new UserToken(transaction.getCustomer());
+		try{
 		tranDao.insertNewTransaction(token, transaction);
+		}catch(FlightDoesNotExistException e){
+			e.printStackTrace();
+			jsonResponse = "{\"Status\":\"Failed\",\"Reason\":\"" + e.getMessage() +"\"}";
+			return new ResponseEntity<String>(jsonResponse,HttpStatus.OK);
+		}
 		
-		Transaction t = tranDao.getTransaction(token.getToken());
+		//Transaction t = tranDao.getTransaction(token.getToken());
 		
 		PopsCustomer c = transaction.getCustomer();
 		EmailTargetImpl emailTarget = new EmailTargetImpl();
@@ -443,8 +443,8 @@ public class MyController {
 			LOG.info("sorry, error in send email", e);
 		}
 	
-		//return new ResponseEntity<String>(jsonResponse,HttpStatus.OK);
-		return new ResponseEntity<Transaction>(t, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResponse,HttpStatus.OK);
+		//return new ResponseEntity<Transaction>(t, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/sendWelcomeEmail", method = RequestMethod.POST)

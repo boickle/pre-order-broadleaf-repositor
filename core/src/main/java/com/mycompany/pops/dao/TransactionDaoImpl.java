@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mycompany.pops.exceptions.FlightDoesNotExistException;
 import com.mycompany.pops.pojo.FlightData;
 import com.mycompany.pops.pojo.Passenger;
 import com.mycompany.pops.pojo.PopsCustomer;
@@ -27,7 +28,7 @@ public class TransactionDaoImpl implements TransactionDao{
 	}
 	
 	@Override
-	public void insertNewTransaction(UserToken token, Transaction transaction) {
+	public void insertNewTransaction(UserToken token, Transaction transaction) throws FlightDoesNotExistException{
 		long customerId = insertNewCustomer(transaction.getCustomer());
 		for(int i=0;i<transaction.getFlights().size();i++){
 			FlightData flight = transaction.getFlights().get(i);
@@ -37,6 +38,9 @@ public class TransactionDaoImpl implements TransactionDao{
 				Passenger p = passengers.get(z);
 				long passengerId = this.insertNewPassenger(p);
 				long flightId = this.insertPassengerFlight(passengerId, flight);
+				if(flightId==-1){
+					throw new FlightDoesNotExistException("Flight " + flight.getFlightNumber() + " does not exist.");
+				}
 				long id = DaoUtil.newSequenceForTable("POPS_TRANSACTION", "ID");
 				String dateFormatForDB = "yyyy-MM-dd HH:mm:ssZ";
 				SimpleDateFormat sdfForDB = new SimpleDateFormat(dateFormatForDB);

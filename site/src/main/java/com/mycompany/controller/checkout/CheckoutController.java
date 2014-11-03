@@ -187,7 +187,7 @@ public class CheckoutController extends BroadleafCheckoutController {
 	        
 	        // set into a list for easy retrieval
 	        List<Passenger> passengerMeals = new ArrayList<Passenger>();
-	       /* for (String key : passengerMealsMap.keySet()) {
+	        for (String key : passengerMealsMap.keySet()) {
 	        	Passenger p = new Passenger();
 	        	p.setDisplayName(key);
 	        	p.setMealSelection(passengerMealsMap.get(key));
@@ -196,7 +196,7 @@ public class CheckoutController extends BroadleafCheckoutController {
 //	        		LOG.info("setting passengerMeals:"+m.getName()+" "+m.getImageUrl());
 	        	}
 	        	passengerMeals.add(p);
-	        }*/
+	        }
 	        vars.put("passengerMeals", passengerMeals);
         }
         
